@@ -1,0 +1,11 @@
+{
+  "name": "destro-system",
+  "version": "0.0.0",
+  "description": "system destro",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test:ci"
+  },
+  "author": "",
+  "license": "ISC"
+}
