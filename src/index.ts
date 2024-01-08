@@ -7,5 +7,5 @@ main()
     console.log(result, 'a')
   })
   .catch((err) => {
-    console.log(err)
+    console.log(err, 'a')
   })
