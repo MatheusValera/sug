@@ -1,0 +1,24 @@
+{
+  "extends": ["standard-with-typescript", "plugin:cypress/recommended"],
+  "parserOptions": {
+    "project": ["./tsconfig.json", "./cypress/tsconfig.json"]
+  },
+  "parser": "@typescript-eslint/parser",
+  "rules": {
+    "@typescript-eslint/comma-spacing": [
+      "error",
+      {
+        "before": false,
+        "after": true
+      }
+    ],
+    "@typescript-eslint/no-extraneous-class": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/consistent-type-definitions": "off",
+    "@typescript-eslint/return-await": "off",
+    "@typescript-eslint/no-redeclare": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/method-signature-style": ["error", "method"]
+  },
+  "plugins": ["pug", "cypress"]
+}
