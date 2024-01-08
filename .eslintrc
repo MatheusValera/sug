@@ -1,7 +1,7 @@
 {
-  "extends": ["standard-with-typescript", "plugin:cypress/recommended"],
+  "extends": ["standard-with-typescript"],
   "parserOptions": {
-    "project": ["./tsconfig.json", "./cypress/tsconfig.json"]
+    "project": ["./tsconfig.json"]
   },
   "parser": "@typescript-eslint/parser",
   "rules": {
@@ -12,13 +12,15 @@
         "after": true
       }
     ],
+    "@typescript-eslint/prefer-nullish-coalescing": "off",
     "@typescript-eslint/no-extraneous-class": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/return-await": "off",
     "@typescript-eslint/no-redeclare": "off",
     "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/semi": "off",
     "@typescript-eslint/method-signature-style": ["error", "method"]
   },
-  "plugins": ["pug", "cypress"]
+  "plugins": ["pug"]
 }
