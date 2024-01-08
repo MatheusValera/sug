@@ -4,8 +4,8 @@ async function main (): Promise<any> {
 
 main()
   .then((result) => {
-    console.log(result, 'a', 'b')
+    console.log(result)
   })
   .catch((err) => {
-    console.log(err, 'a', 'b')
+    console.log(err)
   })
