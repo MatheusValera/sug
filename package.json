@@ -7,5 +7,7 @@
     "test": "npm run test:ci"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+  }
 }
