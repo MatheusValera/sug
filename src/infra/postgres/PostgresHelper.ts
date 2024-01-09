@@ -1,6 +1,7 @@
 import path from 'path'
 import { Pool } from 'pg'
 import * as dotenv from 'dotenv'
+import { IPostgresHelper } from '../../domain/infra/postgres/IPostgresHelper'
 dotenv.config({ path: path.join(__dirname, '../../../.env') })
 
 const client = new Pool({
@@ -12,11 +13,10 @@ const client = new Pool({
   port: 5432
 })
 
-export const PostgresHelper = {
-  query: (textQuery, params) => client.query(textQuery, params)
+export const PostgresHelper: IPostgresHelper = {
+  query: (textQuery: string, params?: any[]) => client.query(textQuery, params)
 }
 
 export const getClient = async (): Promise<any> => {
-  console.log('Test')
   return client.connect()
 }
