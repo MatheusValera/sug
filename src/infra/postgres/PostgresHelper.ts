@@ -3,6 +3,8 @@ import { Pool } from 'pg'
 import * as dotenv from 'dotenv'
 dotenv.config({ path: path.join(__dirname, '../../../.env') })
 
+console.log('a')
+
 const client = new Pool({
   host: process.env.DW_POSTGRES_HOST,
   user: process.env.DW_POSTGRES_USER,
