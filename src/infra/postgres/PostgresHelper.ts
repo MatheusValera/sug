@@ -17,5 +17,6 @@ export const PostgresHelper = {
 }
 
 export const getClient = async (): Promise<any> => {
+  console.log('Test')
   return client.connect()
 }
