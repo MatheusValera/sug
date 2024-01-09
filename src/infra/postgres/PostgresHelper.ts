@@ -13,7 +13,7 @@ const client = new Pool({
 })
 
 export const PostgresHelper = {
-  query: (text, params) => client.query(text, params)
+  query: (textQuery, params) => client.query(textQuery, params)
 }
 
 export const getClient = async (): Promise<any> => {
