@@ -8,7 +8,7 @@ export class PrismaPermissionsUserRepository implements IUserPermissionsReposito
   async insertPermissionToUser (permissionsUser: IPermissionsUser): Promise<IPermissionsUser> {
     const existingPermissionsUser = await this._prismaClient.permissionsUser.findFirst({
       where: {
-        permissionsId: permissionsUser.permissionsId,
+        permissionId: permissionsUser.permissionId,
         userId: permissionsUser.userId
       }
     })

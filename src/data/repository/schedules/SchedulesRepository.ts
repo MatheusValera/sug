@@ -6,7 +6,7 @@ export class PrismaSchedulesRepository implements ISchedulesRepository {
   constructor (private readonly _prismaClient: PrismaClient) {}
 
   async insertSchedule (schedulesData: ISchedule): Promise<ISchedule> {
-    const schedules = await this._prismaClient.schedules.create({
+    const schedules = await this._prismaClient.schedule.create({
       data: schedulesData
     })
 
@@ -16,7 +16,7 @@ export class PrismaSchedulesRepository implements ISchedulesRepository {
   async updateSchedule (schedulesToUpdate: ISchedule): Promise<ISchedule> {
     const { id, ...data } = schedulesToUpdate
 
-    const schedules = await this._prismaClient.schedules.update({
+    const schedules = await this._prismaClient.schedule.update({
       data,
       where: { id }
     })
@@ -25,29 +25,29 @@ export class PrismaSchedulesRepository implements ISchedulesRepository {
   }
 
   async getSchedule (schedulesId: number): Promise<ISchedule | null> {
-    return this._prismaClient.schedules.findUnique({
+    return this._prismaClient.schedule.findUnique({
       where: { id: schedulesId }
     })
   }
 
   async getSchedules (): Promise<ISchedule[] | null> {
-    return this._prismaClient.schedules.findMany({ })
+    return this._prismaClient.schedule.findMany({ })
   }
 
   async getScheduleByUserId (userId: number): Promise<ISchedule[]> {
-    return this._prismaClient.schedules.findMany({
+    return this._prismaClient.schedule.findMany({
       where: { userId }
     })
   }
 
   async getScheduleByConstructionId (constructionId: number): Promise<ISchedule[]> {
-    return this._prismaClient.schedules.findMany({
+    return this._prismaClient.schedule.findMany({
       where: { constructionId }
     })
   }
 
   async getScheduleByAllocationId (allocationId: number): Promise<ISchedule[]> {
-    return this._prismaClient.schedules.findMany({
+    return this._prismaClient.schedule.findMany({
       where: { allocationId }
     })
   }
@@ -59,7 +59,7 @@ export class PrismaSchedulesRepository implements ISchedulesRepository {
       throw new Error('[ENTITY - SCHEDULES]: Agendamento não encontrado')
     }
 
-    await this._prismaClient.schedules.delete({
+    await this._prismaClient.schedule.delete({
       where: { id: schedulesId }
     })
 
