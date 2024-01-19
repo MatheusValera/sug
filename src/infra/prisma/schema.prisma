@@ -8,12 +8,12 @@ datasource db {
 }
 
 model User {
-  id           Int          @id @default(autoincrement())
-  cpf          String       @unique
-  email        String       @unique
-  admin        Boolean      @default(false)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime     @default(now()) @updatedAt
+  id           Int               @id @default(autoincrement())
+  cpf          String            @unique
+  email        String            @unique
+  admin        Boolean           @default(false)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @default(now()) @updatedAt
   city         String
   road         String
   phone        String
@@ -23,30 +23,23 @@ model User {
   password     String
   numberHouse  String
   neighborhood String
-  UserRules    UserRules[]
-  Allocation   Allocation[]
-  Schedules    Schedules[]
   Report       Report[]
-}
-
-model UserRules {
-  id              Int               @id @default(autoincrement())
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @default(now()) @updatedAt
-  User            User              @relation(fields: [userId], references: [id])
-  PermissionsUser PermissionsUser[]
-  userId          Int
+  Schedules    Schedule[]
+  Allocation   Allocation[]
+  UserRules    PermissionsUser[]
 }
 
 model PermissionsUser {
-  id            Int         @id @default(autoincrement())
-  Permissions   Permissions @relation(fields: [permissionsId], references: [id])
-  UserRules     UserRules   @relation(fields: [userRulesId], references: [id])
-  permissionsId Int
-  userRulesId   Int
+  id           Int        @id @default(autoincrement())
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now()) @updatedAt
+  User         User       @relation(fields: [userId], references: [id])
+  Permission   Permission @relation(fields: [permissionId], references: [id])
+  permissionId Int
+  userId       Int
 }
 
-model Permissions {
+model Permission {
   id              Int               @id @default(autoincrement())
   description     String
   PermissionsUser PermissionsUser[]
@@ -70,7 +63,7 @@ model Construction {
   Company    Company      @relation(fields: [companyId], references: [id])
   companyId  Int
   Allocation Allocation[]
-  Schedules  Schedules[]
+  Schedule   Schedule[]
   Report     Report[]
 }
 
@@ -80,17 +73,20 @@ model Allocation {
   Construction   Construction @relation(fields: [constructionId], references: [id])
   userId         Int
   constructionId Int
-  Schedules      Schedules[]
+  Schedule       Schedule[]
 }
 
-model Schedules {
+model Schedule {
   id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @default(now()) @updatedAt
   User           User         @relation(fields: [userId], references: [id])
   Allocation     Allocation   @relation(fields: [allocationId], references: [id])
   Construction   Construction @relation(fields: [constructionId], references: [id])
   userId         Int
   allocationId   Int
   constructionId Int
+  dateSchedule   DateTime
   Report         Report[]
 }
 
@@ -99,9 +95,9 @@ model Report {
   createdAt      DateTime     @default(now())
   description    String
   User           User         @relation(fields: [userId], references: [id])
-  Schedules      Schedules    @relation(fields: [schedulesId], references: [id])
+  Schedule       Schedule     @relation(fields: [scheduleId], references: [id])
   Construction   Construction @relation(fields: [constructionId], references: [id])
   userId         Int
-  schedulesId    Int
+  scheduleId     Int
   constructionId Int
 }
