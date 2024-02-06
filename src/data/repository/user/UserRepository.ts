@@ -5,7 +5,7 @@ import { IUserRepository } from '../../../domain/data/repository/user/IUserRepos
 export class PrismaUserRepository implements IUserRepository {
   constructor (readonly _prismaClient: PrismaClient) {}
 
-  async insertUser (data: IUser): Promise<IUser> {
+  async insertUser (data: Omit<IUser, 'id' | 'createdAt'>): Promise<IUser> {
     if (!data.cpf) {
       throw new Error('[ENTITY- USER]: CPF Obrigatório')
     }
@@ -52,7 +52,7 @@ export class PrismaUserRepository implements IUserRepository {
   }
 
   async getUsers (): Promise<IUser[]> {
-    const listUser = await this._prismaClient.user.findMany()
+    const listUser = await this._prismaClient.user.findMany({})
 
     return listUser
   }

@@ -5,7 +5,7 @@ import { ICompanyRepository } from '../../../domain/data/repository/company/ICom
 export class PrismaCompanyRepository implements ICompanyRepository {
   constructor (readonly _prismaClient: PrismaClient) {}
 
-  async insertCompany (data: ICompany): Promise<ICompany> {
+  async insertCompany (data: Omit<ICompany, 'id' |'createdAt'>): Promise<ICompany> {
     if (!data.cnpj) {
       throw new Error('[ENTITY- COMPANY]: CNPJ obrigatório')
     }

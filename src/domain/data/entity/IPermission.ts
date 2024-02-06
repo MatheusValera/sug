@@ -1,3 +1,4 @@
 export interface IPermission {
-  description: string
+  readonly id: number
+  readonly description: string
 }

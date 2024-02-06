@@ -1,4 +1,5 @@
 export interface ICompany {
+  readonly id: number
   readonly cnpj: string
   readonly contact: string
   readonly createdAt: Date

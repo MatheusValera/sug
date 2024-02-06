@@ -1,4 +1,5 @@
 export interface IPermissionsUser {
-  userId: number
-  permissionId: number
+  readonly id: number
+  readonly userId: number
+  readonly permissionId: number
 }

@@ -5,7 +5,7 @@ import { ISchedulesRepository } from '../../../domain/data/repository/schedule/I
 export class PrismaSchedulesRepository implements ISchedulesRepository {
   constructor (private readonly _prismaClient: PrismaClient) {}
 
-  async insertSchedule (schedulesData: ISchedule): Promise<ISchedule> {
+  async insertSchedule (schedulesData: Omit<ISchedule, 'id' | 'createdAt'>): Promise<ISchedule> {
     const schedules = await this._prismaClient.schedule.create({
       data: schedulesData
     })

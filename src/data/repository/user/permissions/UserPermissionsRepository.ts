@@ -5,7 +5,7 @@ import { IUserPermissionsRepository } from '../../../../domain/data/repository/u
 export class PrismaPermissionsUserRepository implements IUserPermissionsRepository {
   constructor (readonly _prismaClient: PrismaClient) {}
 
-  async insertPermissionToUser (permissionsUser: IPermissionsUser): Promise<IPermissionsUser> {
+  async insertPermissionToUser (permissionsUser: Omit<IPermissionsUser, 'id'>): Promise<IPermissionsUser> {
     const existingPermissionsUser = await this._prismaClient.permissionsUser.findFirst({
       where: {
         permissionId: permissionsUser.permissionId,

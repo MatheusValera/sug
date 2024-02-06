@@ -5,7 +5,7 @@ import { IAllocationRepository } from '../../../domain/data/repository/allocatio
 export class PrismaAllocationRepository implements IAllocationRepository {
   constructor (readonly _prismaClient: PrismaClient) {}
 
-  async insertAllocation (allocationData: IAllocation): Promise<IAllocation> {
+  async insertAllocation (allocationData: Omit<IAllocation, 'id'>): Promise<IAllocation> {
     const allocation = await this._prismaClient.allocation.create({
       data: allocationData
     })

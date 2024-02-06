@@ -5,7 +5,7 @@ import { IConstructionRepository } from '../../../domain/data/repository/constru
 export class PrismaConstructionRepository implements IConstructionRepository {
   constructor (readonly _prismaClient: PrismaClient) {}
 
-  async insertConstruction (constructionData: IConstruction): Promise<IConstruction> {
+  async insertConstruction (constructionData: Omit<IConstruction, 'id'>): Promise<IConstruction> {
     const construction = await this._prismaClient.construction.create({
       data: constructionData
     })

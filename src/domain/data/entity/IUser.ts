@@ -1,4 +1,5 @@
 export interface IUser {
+  readonly id: number
   readonly cpf: string
   readonly city: string
   readonly road: string
@@ -8,7 +9,7 @@ export interface IUser {
   readonly admin: boolean
   readonly office: string
   readonly zipCode: string
-  readonly updatedAt: Date
+  readonly updatedAt?: Date
   readonly createdAt: Date
   readonly password: string
   readonly numberHouse: string

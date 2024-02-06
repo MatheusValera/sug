@@ -4,14 +4,15 @@
   "description": "system destro",
   "main": "index.js",
   "scripts": {
+    "docker:dev": "docker-compose up",
+    "test:verbose": "jest --passWithNoTests --runInBand",
     "test:ci:all": "npm test --  --coverage --forceExit",
     "test": "jest --silent --passWithNoTests --runInBand",
     "test:staged": "npm test -- --findRelatedTests --forceExit",
     "test:unit": "npm test -- --watchAll -c jest-unit.config.js",
     "prisma:format": "npx prisma format --schema ./src/infra/prisma/schema.prisma",
     "test:ci": "export NODE_ENV=test && npm test -- -c jest-unit.config.js --coverage --forceExit",
-    "prisma:migrate": "npx prisma migrate dev --name init --schema ./src/infra/prisma/schema.prisma",
-    "docker:dev": "docker-compose up"
+    "prisma:migrate": "npx prisma migrate dev --name init --schema ./src/infra/prisma/schema.prisma"
   },
   "author": "",
   "license": "ISC",

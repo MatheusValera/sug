@@ -5,7 +5,7 @@ import { IReportRepository } from '../../../domain/data/repository/report/IRepor
 export class PrismaReportRepository implements IReportRepository {
   constructor (readonly _prismaClient: PrismaClient) {}
 
-  async insertReport (reportData: IReport): Promise<IReport> {
+  async insertReport (reportData: Omit<IReport, 'id' | 'createdAt'>): Promise<IReport> {
     const report = await this._prismaClient.report.create({
       data: reportData
     })

@@ -1,9 +1,9 @@
 export interface ISchedule {
-  id: number
-  userId: number
-  createdAt: Date
-  updatedAt?: Date
-  dateSchedule: Date
-  allocationId: number
-  constructionId: number
+  readonly id: number
+  readonly userId: number
+  readonly createdAt: Date
+  readonly updatedAt?: Date
+  readonly dateSchedule: Date
+  readonly allocationId: number
+  readonly constructionId: number
 }

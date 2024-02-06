@@ -1,5 +1,5 @@
 export interface IConstruction {
-  id: number
-  name: string
-  companyId: number
+  readonly id: number
+  readonly name: string
+  readonly companyId: number
 }
