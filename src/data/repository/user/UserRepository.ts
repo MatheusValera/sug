@@ -57,14 +57,17 @@ export class PrismaUserRepository implements IUserRepository {
     return listUser
   }
 
-  async getUser (cpf: string): Promise<IUser> {
-    const user = await this._prismaClient.user.findUnique({ where: { cpf: cpf } })
+  async getUser (key: string, value: string): Promise<IUser> {
+    const search: any = {}
+    search[key] = value
+
+    const user = await this._prismaClient.user.findUnique({ where: search })
 
     return user
   }
 
   async deleteUser (cpf: string): Promise<IUser> {
-    const user = await this.getUser(cpf)
+    const user = await this.getUser('cpf', cpf)
 
     if (!user) {
       throw new Error('[ENTITY- USER]: Usuário não encontrado')

@@ -179,7 +179,7 @@ describe('PrismaUserRepository', () => {
     // @ts-expect-error
     prismaMock.user.findUnique.mockResolvedValue(userData)
 
-    const result = await sut.getUser(userCpf)
+    const result = await sut.getUser('cpf', userCpf)
 
     expect(result).toEqual(userData)
     expect(prismaMock.user.findUnique).toHaveBeenCalledWith({ where: { cpf: userCpf } })
@@ -193,7 +193,7 @@ describe('PrismaUserRepository', () => {
     // @ts-expect-error
     prismaMock.user.findUnique.mockResolvedValue(null)
 
-    const result = await sut.getUser(userCpf)
+    const result = await sut.getUser('cpf', userCpf)
 
     expect(result).toBeNull()
     expect(prismaMock.user.findUnique).toHaveBeenCalledWith({ where: { cpf: userCpf } })
