@@ -25,20 +25,19 @@ export class ConstructionController implements IController {
   }
 
   async handler (request: IRequest, response: IResponse): Promise<any> {
-    const constructions = await this._constructionService.getUsersService.handler()
+    const constructions = await this._constructionService.getConstructionsService.handler()
     response.status(200).render('./construction.pug', { constructions })
   }
 
   async getConstruction (req: IRequest, res: IResponse): Promise<IResponse> {
     try {
-      const key = req.body.key
-      const value = req.body.value
+      const id = parseInt(req.body.id)
 
-      if (!key || !value) {
+      if (!id) {
         return BadRequestResponse.handler(res, 'No values provided.')
       }
 
-      const construction = await this._constructionService.getConstructionService.handler(key, value)
+      const construction = await this._constructionService.getConstructionService.handler(id)
 
       return SuccessResponse.handler(res, JSON.stringify(construction))
     } catch (error) {

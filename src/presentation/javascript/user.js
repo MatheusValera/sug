@@ -1,9 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
   const editUserForm = document.getElementById('editUserForm')
   const editButtons = document.querySelectorAll('.editBtn')
+  const addUser = document.querySelectorAll('.addUser')
   const deleteButtons = document.querySelectorAll('.deleteBtn')
   const editModal = document.getElementById('editModal')
   const closeModal = document.querySelector('.closeModal')
+  const errorMessage = document.getElementById('errorMessage')
 
   const nameInput = document.getElementById('name')
   const emailInput = document.getElementById('email')
@@ -49,9 +51,6 @@ document.addEventListener('DOMContentLoaded', function () {
           console.error(error)
         })
       editModal.style.display = 'block'
-      // Carregar os dados do usuário no modal (isso depende da implementação)
-      // Por exemplo, você pode fazer uma requisição AJAX para obter os dados do usuário
-      // e preencher os campos do formulário de edição
     })
   })
 
@@ -92,29 +91,80 @@ document.addEventListener('DOMContentLoaded', function () {
     const neighborhood = document.getElementById('neighborhood').value
     const admin = document.getElementById('admin').value === '0'
 
-    // eslint-disable-next-line no-undef
-    axios.post('/user/updateUser', {
-      id,
-      createdAt,
-      name,
-      email,
-      admin,
-      password,
-      cpf,
-      phone,
-      zipCode,
-      city,
-      road,
-      office,
-      numberHouse,
-      neighborhood
+    if (id) {
+      // eslint-disable-next-line no-undef
+      axios.post('/user/updateUser', {
+        id,
+        createdAt,
+        name,
+        email,
+        admin,
+        password,
+        cpf,
+        phone,
+        zipCode,
+        city,
+        road,
+        office,
+        numberHouse,
+        neighborhood
+      })
+        .then(function (response) {
+          console.log(response.data)
+          window.location.reload()
+        })
+        .catch(function (error) {
+          console.error(error)
+          errorMessage.textContent = error.message
+          errorMessage.style.display = 'block'
+        })
+    } else {
+      // eslint-disable-next-line no-undef
+      axios.post('/user/saveUser', {
+        name,
+        email,
+        admin,
+        password,
+        cpf,
+        phone,
+        zipCode,
+        city,
+        road,
+        office,
+        numberHouse,
+        neighborhood
+      })
+        .then(function (response) {
+          console.log(response.data)
+          window.location.reload()
+        })
+        .catch(function (error) {
+          console.error(error)
+          errorMessage.textContent = error.message
+          errorMessage.style.display = 'block'
+        })
+    }
+  })
+
+  addUser.forEach(button => {
+    button.addEventListener('click', function () {
+      // eslint-disable-next-line no-undef
+
+      nameInput.value = ''
+      emailInput.value = ''
+      cpfInput.value = ''
+
+      passwordInput.value = ''
+      phoneInput.value = ''
+      zipCodeInput.value = ''
+      cityInput.value = ''
+      roadInput.value = ''
+      officeInput.value = ''
+      numberHouseInput.value = ''
+      neighborhoodInput.value = ''
+      adminInput.checked = false
+
+      editModal.style.display = 'block'
     })
-      .then(function (response) {
-        console.log(response.data)
-        window.location.reload()
-      })
-      .catch(function (error) {
-        console.error(error)
-      })
   })
 })

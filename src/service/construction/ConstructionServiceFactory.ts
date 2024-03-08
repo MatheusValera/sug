@@ -1,24 +1,34 @@
+import { makeGetConstructionService } from './getConstruction/GetConstructionServiceFactory'
+import { makeGetConstructionsService } from './getConstructions/GetConstructionServiceFactory'
+import { makeSaveConstructionService } from './saveConstruction/SaveConstructionServiceFactory'
+import { makeDeleteConstructionService } from './deleteConstruction/DeleteConstructionServiceFactory'
+import { makeUpdateConstructionService } from './updateConstruction/UpdateConstructionServiceFactory'
+import { IGetConstructionService } from '../../domain/service/construction/getConstruction/IGetConstructionService'
+import { IGetConstructionsService } from '../../domain/service/construction/getConstructions/IGetConstructionsService'
+import { ISaveConstructionService } from '../../domain/service/construction/saveConstruction/ISaveConstructionService'
+import { IDeleteConstructionService } from '../../domain/service/construction/deleteConstruction/IDeleteConstructionService'
+import { IUpdateConstructionService } from '../../domain/service/construction/updateConstruction/IUpdateConstructionService'
 
 export interface IConstructionService {
   getConstructionService: IGetConstructionService
-  getUConstructionService: IGetConstructionsService
+  getConstructionsService: IGetConstructionsService
   saveConstructionService: ISaveConstructionService
   updateConstructionService: IUpdateConstructionService
   deleteConstructionService: IDeleteConstructionService
 }
 
-export const makeUserService = ():  => {
-  const geConstructionService = makeGetConstructionService().geConstructionService
-  const savConstructionService = makeSaveConstructionService().savConstructionService
-  const updatConstructionService = makeUpdateConstructionService().updatConstructionService
-  const dConstructionService = makeDeleteConstructionService().dConstructionService
-  const getConstructionService = makeGetConstructionsService().getConstructionService
+export const makeConstructionService = (): IConstructionService => {
+  const getConstructionService = makeGetConstructionService().getConstructionService
+  const saveConstructionService = makeSaveConstructionService().saveConstructionService
+  const updateConstructionService = makeUpdateConstructionService().updateConstructionService
+  const deleteConstructionService = makeDeleteConstructionService().deleteConstructionService
+  const getConstructionsService = makeGetConstructionsService().getConstructionsService
 
   return {
-    geConstructionService,
-    savConstructionService,
-    updatConstructionService,
-    dConstructionService,
     getConstructionService,
+    saveConstructionService,
+    updateConstructionService,
+    deleteConstructionService,
+    getConstructionsService
   }
 }

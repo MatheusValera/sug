@@ -5,6 +5,7 @@ block head
   script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
 block content
   h1 Gerenciar Colaboradores
+  button(class="addUser") Adicionar
   main
     if users.length === 0
       p Não há colaboradores cadastrados.
@@ -58,17 +59,19 @@ block content
           label(for="road") Rua:
           input(type="text", id="road", name="road", required)
           br
-          label(for="office") Cargo:
-          input(type="text", id="office", name="office", required)
-          br
           label(for="numberHouse") Número da Casa:
           input(type="text", id="numberHouse", name="numberHouse", required)
           br
           label(for="neighborhood") Bairro:
           input(type="text", id="neighborhood", name="neighborhood", required)
           br
+          label(for="office") Cargo:
+          input(type="text", id="office", name="office", required)
+          br
           label(for="admin") Administrador:
-          input(type="checkbox", id="admin", name="admin", value=0)
+            input(type="checkbox", id="admin", name="admin", value=0)
+          br
           input(type="submit", value="Salvar")
+          label(id="errorMessage", style="display: none; color: red;")
 
     script(src="./javascript/user.js")
