@@ -83,7 +83,6 @@ export class LoginController implements IController {
         res.status(200).json({
           success: true
         })
-        res.redirect('/home')
       })
     })(req, res, next)
   }

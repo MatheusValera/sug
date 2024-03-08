@@ -17,7 +17,7 @@ export class LoginService implements ILoginService {
       return new Error(`The email address ${email} is not associated with any account. `)
     }
 
-    const isMatch = await this._hasher.compare(user.password, password)
+    const isMatch = await this._hasher.compare(password, user.password)
 
     return isMatch ? user : new Error('Incorrect password')
   }

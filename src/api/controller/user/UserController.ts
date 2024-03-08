@@ -4,10 +4,10 @@ import { isAdmin } from '../../middleware/IsAdmin'
 import { IResponse } from '../../common/IResponse'
 import { IController } from '../../common/IController'
 import { requireLogin } from '../../middleware/RequireLogin'
-import { SuccessResponse } from '../../common/responses/SuccessResponse'
-import { BadRequestResponse } from '../../common/responses/BadRequestResponse'
-import { InternalServerErrorResponse } from '../../common/responses/InternalServerErrorResponse'
 import { IUserService } from '../../../service/user/UserServiceFactory'
+import { SuccessResponse } from '../../common/responses/SuccessResponse'
+import { InternalServerErrorResponse } from '../../common/responses/InternalServerErrorResponse'
+import { BadRequestResponse } from '../../common/responses/BadRequestResponse'
 
 export class UserController implements IController {
   public router = express.Router()
@@ -41,14 +41,13 @@ export class UserController implements IController {
 
       return SuccessResponse.handler(res, JSON.stringify(user))
     } catch (error) {
-      console.log('[CONTROLLER - GET USER]: Error on get user, error is :', error)
-      return InternalServerErrorResponse.handler(res, 'Unable to get the user due to an internal server problem.')
+      return InternalServerErrorResponse.handler(res, error.message)
     }
   }
 
   async saveUser (req: IRequest, res: IResponse): Promise<IResponse> {
     try {
-      const userRaw = req.body.user
+      const userRaw = req.body
 
       if (!userRaw) {
         return BadRequestResponse.handler(res, 'No data provided.')
@@ -58,14 +57,13 @@ export class UserController implements IController {
 
       return SuccessResponse.handler(res, JSON.stringify(user))
     } catch (error) {
-      console.log('[CONTROLLER - SAVE USER]: Error on save user, error is :', error)
-      return InternalServerErrorResponse.handler(res, 'Unable to save the user due to an internal server problem.')
+      return InternalServerErrorResponse.handler(res, error.message)
     }
   }
 
   async updateUser (req: IRequest, res: IResponse): Promise<IResponse> {
     try {
-      const userRaw = req.body.user
+      const userRaw = req.body
 
       if (!userRaw) {
         return BadRequestResponse.handler(res, 'No data provided.')
@@ -75,8 +73,7 @@ export class UserController implements IController {
 
       return SuccessResponse.handler(res, JSON.stringify(user))
     } catch (error) {
-      console.log('[CONTROLLER - UPDATE USER]: Error on update user, error is :', error)
-      return InternalServerErrorResponse.handler(res, 'Unable to update the user due to an internal server problem.')
+      return InternalServerErrorResponse.handler(res, error.message)
     }
   }
 
@@ -92,8 +89,7 @@ export class UserController implements IController {
 
       return SuccessResponse.handler(res, JSON.stringify(user))
     } catch (error) {
-      console.log('[CONTROLLER - DELETE USER]: Error on delete user, error is :', error)
-      return InternalServerErrorResponse.handler(res, 'Unable to delete the user due to an internal server problem.')
+      return InternalServerErrorResponse.handler(res, error.message)
     }
   }
 }

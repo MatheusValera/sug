@@ -11,7 +11,7 @@ interface FactoryTypes {
 
 export const makeSaveUserService = (): FactoryTypes => {
   const validator = makeUserValidation()
-  const _salt = process.env.SALT as unknown as number
+  const _salt = parseInt(process.env.SALT)
   const encryptAdapter = new EncryptAdapter(_salt)
   const userRepository = new PrismaUserRepository(prismaClient.getClient())
 

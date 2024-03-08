@@ -23,7 +23,7 @@ export class SaveUserService implements ISaveUserService {
 
     const hasIncorrectValue = await this._validator.validate(user)
 
-    if (!hasIncorrectValue) {
+    if (hasIncorrectValue) {
       return hasIncorrectValue
     }
 

@@ -7,7 +7,7 @@ export class DeleteUserService implements IDeleteUserService {
 
   async handler (id: number): Promise<IUser|Error> {
     if (!id) {
-      return new Error('No id provided')
+      throw new Error('No id provided')
     }
 
     const userDeleted = await this._userRepository.deleteUser(id)

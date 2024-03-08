@@ -11,16 +11,16 @@ export class UpdateUserService implements IUpdateUserService {
 
   async handler (user: IUser): Promise<IUser|Error> {
     if (!user.id) {
-      return new Error('A user who already no has an ID cannot be saved.')
+      throw new Error('A user who already no has an ID cannot be saved.')
     }
 
     if (!isValidCPF(user.cpf)) {
-      return new Error('CPF invalid provided.')
+      throw new Error('CPF invalid provided.')
     }
 
     const hasIncorrectValue = await this._validator.validate(user)
 
-    if (!hasIncorrectValue) {
+    if (hasIncorrectValue) {
       return hasIncorrectValue
     }
 
