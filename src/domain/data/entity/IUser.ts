@@ -1,17 +1,17 @@
 export interface IUser {
-  readonly id: number
-  readonly cpf: string
-  readonly city: string
-  readonly road: string
-  readonly name: string
-  readonly email: string
-  readonly phone: string
-  readonly admin: boolean
-  readonly office: string
-  readonly zipCode: string
-  readonly updatedAt?: Date
-  readonly createdAt: Date
-  readonly password: string
-  readonly numberHouse: string
-  readonly neighborhood: string
+  id: number
+  cpf: string
+  city: string
+  road: string
+  name: string
+  email: string
+  phone: string
+  admin: boolean
+  office: string
+  zipCode: string
+  updatedAt?: Date
+  createdAt?: Date
+  password: string
+  numberHouse: string
+  neighborhood: string
 }

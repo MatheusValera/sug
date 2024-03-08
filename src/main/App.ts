@@ -6,6 +6,8 @@ import bodyParser from 'body-parser'
 import session from 'express-session'
 import cookieParser from 'cookie-parser'
 import { ErrorController } from '../api/controller/error/ErrorController'
+import { PrismaUserRepository } from '../data/repository/user/UserRepository'
+import { prismaClient } from '../infra/prisma/PrismaClient'
 dotenv.config({ path: path.join(__dirname, '../../.env') })
 
 export class App {
@@ -77,10 +79,11 @@ export class App {
       done(null, user.id)
     })
 
-    passport.deserializeUser((id, done) => {
-      // get user in this point
+    passport.deserializeUser(async (_id, done) => {
+      const userRepository = new PrismaUserRepository(prismaClient.getClient())
+      const { id, email, admin, name } = await userRepository.getUser('id', _id)
       if (id) {
-        done(null, id)
+        done(null, { id, email, admin, name })
         return
       }
       done(null, false)

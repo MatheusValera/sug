@@ -5,7 +5,7 @@ import { IUserRepository } from '../../../domain/data/repository/user/IUserRepos
 export class PrismaUserRepository implements IUserRepository {
   constructor (readonly _prismaClient: PrismaClient) {}
 
-  async insertUser (data: Omit<IUser, 'id' | 'createdAt'>): Promise<IUser> {
+  async insertUser (data: Omit<IUser, 'id'>): Promise<IUser> {
     if (!data.cpf) {
       throw new Error('[ENTITY- USER]: CPF Obrigatório')
     }
@@ -15,6 +15,8 @@ export class PrismaUserRepository implements IUserRepository {
     if (user) {
       throw new Error('[ENTITY- USER]: Usuário já cadastrado')
     }
+
+    data.createdAt = new Date()
 
     const register = await this._prismaClient.user.create({ data })
 
@@ -43,7 +45,8 @@ export class PrismaUserRepository implements IUserRepository {
       zipCode: userToUpdate.zipCode,
       password: userToUpdate.password,
       numberHouse: userToUpdate.numberHouse,
-      neighborhood: userToUpdate.neighborhood
+      neighborhood: userToUpdate.neighborhood,
+      updatedAt: new Date()
     }
 
     const register = await this._prismaClient.user.update({ data, where: { cpf: userToUpdate.cpf } })
@@ -57,7 +60,7 @@ export class PrismaUserRepository implements IUserRepository {
     return listUser
   }
 
-  async getUser (key: string, value: string): Promise<IUser> {
+  async getUser (key: string, value: any): Promise<IUser> {
     const search: any = {}
     search[key] = value
 
@@ -66,14 +69,14 @@ export class PrismaUserRepository implements IUserRepository {
     return user
   }
 
-  async deleteUser (cpf: string): Promise<IUser> {
-    const user = await this.getUser('cpf', cpf)
+  async deleteUser (id: number): Promise<IUser> {
+    const user = await this.getUser('id', id)
 
     if (!user) {
       throw new Error('[ENTITY- USER]: Usuário não encontrado')
     }
 
-    const deleted = await this._prismaClient.user.delete({ where: { cpf } })
+    const deleted = await this._prismaClient.user.delete({ where: { id } })
 
     return deleted
   }

@@ -5,15 +5,13 @@ import { INext } from '../../common/INext'
 import { IRequest } from '../../common/IRequest'
 import { IResponse } from '../../common/IResponse'
 import { IController } from '../../common/IController'
-import { prismaClient } from '../../../infra/prisma/PrismaClient'
-import { EncryptAdapter } from '../../../infra/cryptography/EncryptAdapter'
+import { ILoginService } from '../../../domain/service/login/ILoginService'
 import { BadRequestResponse } from '../../common/responses/BadRequestResponse'
-import { PrismaUserRepository } from '../../../data/repository/user/UserRepository'
 
 export class LoginController implements IController {
   public router = express.Router()
 
-  constructor (private readonly checkPasswords: EncryptAdapter) {
+  constructor (private readonly _login: ILoginService) {
     const localStrategy = new LocalStrategy(
       {
         usernameField: 'email',
@@ -91,20 +89,12 @@ export class LoginController implements IController {
   }
 
   async authenticate (req, email: string, password: string, callback): Promise<void> {
-    const userRepository = new PrismaUserRepository(prismaClient.getClient())
-    const user = await userRepository.getUser('email', email)
+    const user = await this._login.handler(email, password)
 
-    if (!user) {
+    if (user instanceof Error) {
       callback(null, false, {
-        msg:
-          `The email address ${email} is not associated with any account. `
+        msg: user.message
       })
-      return
-    }
-    const isMatch = await this.checkPasswords.compare(password, user.password)
-
-    if (!isMatch) {
-      callback(null, false, { msg: 'A senha digitada está incorreta' })
       return
     }
 

@@ -1,8 +1,7 @@
 import { LoginController } from './LoginController'
-import { EncryptAdapter } from '../../../infra/cryptography/EncryptAdapter'
+import { makeLoginService } from '../../../service/login/LoginServiceFactory'
 
 export const makeLoginController = (): LoginController => {
-  const salt = parseInt(process.env.SALT)
-  const encryptAdapter = new EncryptAdapter(salt)
-  return new LoginController(encryptAdapter)
+  const loginService = makeLoginService()
+  return new LoginController(loginService.loginService)
 }

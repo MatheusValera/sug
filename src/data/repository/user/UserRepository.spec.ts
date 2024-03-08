@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
-import { IUser } from '../../../domain/data/entity/IUser'
 import { PrismaUserRepository } from './UserRepository'
+import { IUser } from '../../../domain/data/entity/IUser'
 
 jest.mock('@prisma/client', () => ({
   PrismaClient: jest.fn().mockImplementation(() => ({
@@ -37,7 +37,7 @@ describe('PrismaUserRepository', () => {
   it('should insert user', async () => {
     const { sut, prismaMock } = makeSut()
 
-    const userData: Omit<IUser, 'id' | 'createdAt'> = {
+    const userData: Omit<IUser, 'id'> = {
       cpf: '12345678901',
       name: 'John Doe',
       email: 'john@example.com',
@@ -91,7 +91,7 @@ describe('PrismaUserRepository', () => {
 
     expect(result).toEqual(userToUpdate)
     expect(prismaMock.user.update).toHaveBeenCalledWith({
-      data: {
+      data: expect.objectContaining({
         name: userToUpdate.name,
         email: userToUpdate.email,
         phone: userToUpdate.phone,
@@ -103,7 +103,7 @@ describe('PrismaUserRepository', () => {
         zipCode: userToUpdate.zipCode,
         numberHouse: userToUpdate.numberHouse,
         neighborhood: userToUpdate.neighborhood
-      },
+      }),
       where: { cpf: userToUpdate.cpf }
     })
   })
@@ -202,7 +202,7 @@ describe('PrismaUserRepository', () => {
   it('should delete user', async () => {
     const { sut, prismaMock } = makeSut()
 
-    const userCpf = '12345678901'
+    const userId = 1
     const userData: IUser = {
       id: 1,
       createdAt: new Date(),
@@ -225,22 +225,22 @@ describe('PrismaUserRepository', () => {
     // @ts-expect-error
     prismaMock.user.delete.mockResolvedValue(userData)
 
-    const result = await sut.deleteUser(userCpf)
+    const result = await sut.deleteUser(userId)
 
     expect(result).toEqual(userData)
-    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({ where: { cpf: userCpf } })
-    expect(prismaMock.user.delete).toHaveBeenCalledWith({ where: { cpf: userCpf } })
+    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({ where: { id: userId } })
+    expect(prismaMock.user.delete).toHaveBeenCalledWith({ where: { id: userId } })
   })
 
   it('should throw error when deleting non-existing user', async () => {
     const { sut, prismaMock } = makeSut()
 
-    const userCpf = '12345678901'
+    const userId = 1
 
     // @ts-expect-error
     prismaMock.user.findUnique.mockResolvedValue(null)
 
-    await expect(sut.deleteUser(userCpf)).rejects.toThrowError('[ENTITY- USER]: Usuário não encontrado')
+    await expect(sut.deleteUser(userId)).rejects.toThrowError('[ENTITY- USER]: Usuário não encontrado')
   })
 
   it('should throw error when insert user without cpf', async () => {
