@@ -17,15 +17,16 @@ export class UserController implements IController {
   }
 
   setupRoutes (): void {
-    this.router.get('/', requireLogin, isAdmin, this.handler.bind(this))
+    this.router.get('/user', requireLogin, isAdmin, this.handler.bind(this))
     this.router.post('/user/getUser', requireLogin, isAdmin, this.getUser.bind(this))
     this.router.post('/user/saveUser', requireLogin, isAdmin, this.saveUser.bind(this))
     this.router.post('/user/updateUser', requireLogin, isAdmin, this.updateUser.bind(this))
     this.router.post('/user/deleteUser', requireLogin, isAdmin, this.deleteUser.bind(this))
   }
 
-  async handler (request: IRequest, response: IResponse): Promise<IResponse> {
-    throw new Error('Method not implemented.')
+  async handler (request: IRequest, response: IResponse): Promise<any> {
+    const users = await this._userService.getUsersService.handler()
+    response.status(200).render('./user.pug', { users })
   }
 
   async getUser (req: IRequest, res: IResponse): Promise<IResponse> {
@@ -79,13 +80,13 @@ export class UserController implements IController {
 
   async deleteUser (req: IRequest, res: IResponse): Promise<IResponse> {
     try {
-      const id = req.body.id
+      const id = parseInt(req.body.id)
 
       if (!id) {
         return BadRequestResponse.handler(res, 'No id provided.')
       }
 
-      const user = await this._userService.deleteService.handler(id)
+      const user = await this._userService.deleteUserService.handler(id)
 
       return SuccessResponse.handler(res, JSON.stringify(user))
     } catch (error) {

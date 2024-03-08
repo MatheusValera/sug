@@ -6,6 +6,6 @@ export interface IConstructionRepository {
   getConstructions (): Promise<IConstruction[]>
   deleteConstruction (constructionId: number): Promise<IConstruction>
   getConstruction (constructionId: number): Promise<IConstruction | null>
-  insertConstruction (constructionData: IConstruction): Promise<IConstruction>
+  insertConstruction (constructionData: Omit<IConstruction, 'id'>): Promise<IConstruction>
   updateConstruction (constructionToUpdate: IConstruction): Promise<IConstruction>
 }

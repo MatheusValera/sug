@@ -1,0 +1,74 @@
+extends ./layout/master
+block head
+  title Gerenciar Colaboradores
+  link(rel="stylesheet", href="./styles/user.css")
+  script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
+block content
+  h1 Gerenciar Colaboradores
+  main
+    if users.length === 0
+      p Não há colaboradores cadastrados.
+    else
+      table
+        thead
+          tr
+            th Nome
+            th Email
+            th CPF
+            th Ações
+        tbody
+          each user in users
+            tr
+              td= user.name
+              td= user.email
+              td= user.cpf
+              td
+                button(class="editBtn" data-id=user.id ) Editar
+                button(class="deleteBtn" data-id=user.id) Excluir
+
+    // Modal para edição de usuário
+    #editModal.modal
+      .modal-content
+        span.closeModal &times;
+        h2 Editar Usuário
+        form(id="editUserForm")
+          input(type="hidden", id="userId", name="userId")
+          input(id="createdAt", name="createdAt", required, type="hidden")
+          label(for="name") Nome:
+          input(type="text", id="name", name="name", required)
+          br
+          label(for="email") Email:
+          input(type="email", id="email", name="email", required)
+          br
+          label(for="password") Senha:
+          input(type="password", id="password", name="password", required)
+          br
+          label(for="cpf") CPF:
+          input(type="text", id="cpf", name="cpf", required)
+          br
+          label(for="phone") Celular:
+          input(type="text", id="phone", name="phone", required)
+          br
+          label(for="zipCode") CEP:
+          input(type="text", id="zipCode", name="zipCode", required)
+          br
+          label(for="city") Cidade:
+          input(type="text", id="city", name="city", required)
+          br
+          label(for="road") Rua:
+          input(type="text", id="road", name="road", required)
+          br
+          label(for="office") Cargo:
+          input(type="text", id="office", name="office", required)
+          br
+          label(for="numberHouse") Número da Casa:
+          input(type="text", id="numberHouse", name="numberHouse", required)
+          br
+          label(for="neighborhood") Bairro:
+          input(type="text", id="neighborhood", name="neighborhood", required)
+          br
+          label(for="admin") Administrador:
+          input(type="checkbox", id="admin", name="admin", value=0)
+          input(type="submit", value="Salvar")
+
+    script(src="./javascript/user.js")
