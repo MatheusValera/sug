@@ -1,9 +1,15 @@
+export enum EStatus {
+  active = 'active',
+  inactive = 'inactive'
+}
+
 export interface ISchedule {
-  readonly id: number
-  readonly userId: number
-  readonly createdAt: Date
-  readonly updatedAt?: Date
-  readonly dateSchedule: Date
-  readonly allocationId: number
-  readonly constructionId: number
+  id: number
+  userId: number
+  createdAt: Date
+  updatedAt?: Date
+  dateSchedule: Date
+  allocationId: number
+  constructionId: number
+  status: string
 }

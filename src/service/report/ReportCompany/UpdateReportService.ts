@@ -10,7 +10,7 @@ export class UpdateReportService implements IUpdateReportService {
 
   async handler (report: IReport): Promise<IReport|Error> {
     if (!report.id) {
-      throw new Error('A report who already no has an ID cannot be saved.')
+      return new Error('A report who already no has an ID cannot be saved.')
     }
 
     const hasIncorrectValue = await this._validator.validate(report)

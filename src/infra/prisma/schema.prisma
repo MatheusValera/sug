@@ -73,6 +73,7 @@ model Allocation {
   Construction   Construction @relation(fields: [constructionId], references: [id])
   userId         Int
   constructionId Int
+  status String
   Schedule       Schedule[]
 }
 
@@ -86,6 +87,7 @@ model Schedule {
   userId         Int
   allocationId   Int
   constructionId Int
+  status String
   dateSchedule   DateTime
   Report         Report[]
 }

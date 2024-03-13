@@ -1,7 +1,7 @@
-import { ISchedule } from '../../../domain/data/entity/ISchedule'
 import { Validation } from '../../../domain/utils/validator'
-import { ISaveScheduleService } from '../../../domain/service/schedule/saveSchedule/ISaveScheduleService'
+import { ISchedule } from '../../../domain/data/entity/ISchedule'
 import { ISchedulesRepository } from '../../../domain/data/repository/schedule/IScheduleRepository'
+import { ISaveScheduleService } from '../../../domain/service/schedule/saveSchedule/ISaveScheduleService'
 
 export class SaveScheduleService implements ISaveScheduleService {
   constructor (
@@ -18,6 +18,13 @@ export class SaveScheduleService implements ISaveScheduleService {
 
     if (hasIncorrectValue) {
       return hasIncorrectValue
+    }
+
+    const hasSchedules = await this._scheduleRepository.getScheduleByUserId(schedule.userId)
+    const hasSchedulesInSomeDate = hasSchedules.some(x => x.dateSchedule.getTime() === schedule.dateSchedule.getTime())
+
+    if (hasSchedulesInSomeDate) {
+      return new Error('User has schedule in some date.')
     }
 
     const result = this._scheduleRepository.insertSchedule(schedule)

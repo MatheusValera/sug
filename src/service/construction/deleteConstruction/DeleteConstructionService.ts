@@ -7,7 +7,7 @@ export class DeleteConstructionService implements IDeleteConstructionService {
 
   async handler (id: number): Promise<IConstruction|Error> {
     if (!id) {
-      throw new Error('No id provided')
+      return new Error('No id provided')
     }
 
     const constructionDeleted = await this._constructionRepository.deleteConstruction(id)

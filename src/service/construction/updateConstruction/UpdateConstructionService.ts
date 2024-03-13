@@ -10,7 +10,7 @@ export class UpdateConstructionService implements IUpdateConstructionService {
 
   async handler (construction: IConstruction): Promise<IConstruction|Error> {
     if (!construction.id) {
-      throw new Error('A construction who already no has an ID cannot be saved.')
+      return new Error('A construction who already no has an ID cannot be saved.')
     }
 
     const hasIncorrectValue = await this._validator.validate(construction)

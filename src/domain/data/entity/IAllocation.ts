@@ -1,5 +1,6 @@
 export interface IAllocation {
-  readonly id: number
-  readonly userId: number
-  readonly constructionId: number
+  id: number
+  userId: number
+  constructionId: number
+  status: string
 }

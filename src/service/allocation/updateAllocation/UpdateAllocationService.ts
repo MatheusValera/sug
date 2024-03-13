@@ -10,7 +10,7 @@ export class UpdateAllocationService implements IUpdateAllocationService {
 
   async handler (allocation: IAllocation): Promise<IAllocation|Error> {
     if (!allocation.id) {
-      throw new Error('A allocation who already no has an ID cannot be saved.')
+      return new Error('A allocation who already no has an ID cannot be saved.')
     }
 
     const hasIncorrectValue = await this._validator.validate(allocation)

@@ -7,7 +7,7 @@ export class DeleteAllocationService implements IDeleteAllocationService {
 
   async handler (id: number): Promise<IAllocation|Error> {
     if (!id) {
-      throw new Error('No id provided')
+      return new Error('No id provided')
     }
 
     const allocationDeleted = await this._allocationRepository.deleteAllocation(id)

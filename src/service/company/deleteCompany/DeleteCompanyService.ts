@@ -7,7 +7,7 @@ export class DeleteCompanyService implements IDeleteCompanyService {
 
   async handler (id: number): Promise<ICompany|Error> {
     if (!id) {
-      throw new Error('No id provided')
+      return new Error('No id provided')
     }
 
     const companyDeleted = await this._companyRepository.deleteCompany(id)

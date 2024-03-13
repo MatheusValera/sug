@@ -19,7 +19,7 @@ describe('requireLogin', () => {
   it('should redirect to login page if user is not authenticated', () => {
     requireLogin(req, res, next)
 
-    expect(res.redirect).toHaveBeenCalledWith('/account/?redirectTo=/')
+    expect(res.redirect).toHaveBeenCalledWith('/login')
   })
 
   it('should call next middleware if user is authenticated', () => {

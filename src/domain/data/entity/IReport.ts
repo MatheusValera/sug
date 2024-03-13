@@ -1,8 +1,8 @@
 export interface IReport {
-  readonly id: number
-  readonly userId: number
-  readonly createdAt: Date
-  readonly scheduleId: number
-  readonly description: string
-  readonly constructionId: number
+  id: number
+  userId: number
+  createdAt: Date
+  scheduleId: number
+  description: string
+  constructionId: number
 }

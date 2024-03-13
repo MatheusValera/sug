@@ -10,7 +10,7 @@ export class UpdateScheduleService implements IUpdateScheduleService {
 
   async handler (schedule: ISchedule): Promise<ISchedule|Error> {
     if (!schedule.id) {
-      throw new Error('A schedule who already no has an ID cannot be saved.')
+      return new Error('A schedule who already no has an ID cannot be saved.')
     }
 
     const hasIncorrectValue = await this._validator.validate(schedule)
