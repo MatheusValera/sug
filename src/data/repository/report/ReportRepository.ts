@@ -30,6 +30,10 @@ export class PrismaReportRepository implements IReportRepository {
     })
   }
 
+  async getReports (): Promise<IReport[] | null> {
+    return this._prismaClient.report.findMany({})
+  }
+
   async getReportByUserId (userId: number): Promise<IReport[]> {
     return this._prismaClient.report.findMany({
       where: { userId }

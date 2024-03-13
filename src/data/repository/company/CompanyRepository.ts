@@ -50,20 +50,20 @@ export class PrismaCompanyRepository implements ICompanyRepository {
     return listCompany
   }
 
-  async getCompany (cnpj: string): Promise<ICompany> {
-    const company = await this._prismaClient.company.findUnique({ where: { cnpj: cnpj } })
+  async getCompany (id: number): Promise<ICompany> {
+    const company = await this._prismaClient.company.findUnique({ where: { id: id } })
 
     return company
   }
 
-  async deleteCompany (cnpj: string): Promise<ICompany> {
-    const company = await this.getCompany(cnpj)
+  async deleteCompany (id: number): Promise<ICompany> {
+    const company = await this.getCompany(id)
 
     if (!company) {
       throw new Error('[ENTITY- COMPANY]: Empresa não encontrada')
     }
 
-    const deleted = await this._prismaClient.company.delete({ where: { cnpj } })
+    const deleted = await this._prismaClient.company.delete({ where: { id } })
 
     return deleted
   }

@@ -191,7 +191,7 @@ describe('PrismaCompanyRepository', () => {
   it('should get company by CNPJ', async () => {
     const { sut, prismaMock } = makeSut()
 
-    const cnpj = '12345678901234'
+    const id = 1
     const company: ICompany = {
       id: 1,
       createdAt: new Date(),
@@ -205,18 +205,18 @@ describe('PrismaCompanyRepository', () => {
     // @ts-expect-error
     prismaMock.company.findUnique.mockResolvedValue(company)
 
-    const result = await sut.getCompany(cnpj)
+    const result = await sut.getCompany(id)
 
     expect(result).toEqual(company)
-    expect(prismaMock.company.findUnique).toHaveBeenCalledWith({ where: { cnpj } })
+    expect(prismaMock.company.findUnique).toHaveBeenCalledWith({ where: { id } })
   })
 
   it('should undefined when getting non-existing company by CNPJ', async () => {
     const { sut } = makeSut()
 
-    const cnpj = '12345678901234'
+    const id = 1
 
-    const result = await sut.getCompany(cnpj)
+    const result = await sut.getCompany(id)
 
     expect(result).toBeUndefined()
   })
@@ -224,7 +224,7 @@ describe('PrismaCompanyRepository', () => {
   it('should delete company', async () => {
     const { sut, prismaMock } = makeSut()
 
-    const cnpj = '12345678901234'
+    const id = 1
     const company: ICompany = {
       id: 1,
       createdAt: new Date(),
@@ -240,18 +240,18 @@ describe('PrismaCompanyRepository', () => {
     // @ts-expect-error
     prismaMock.company.delete.mockResolvedValue(company)
 
-    const result = await sut.deleteCompany(cnpj)
+    const result = await sut.deleteCompany(id)
 
     expect(result).toEqual(company)
-    expect(prismaMock.company.findUnique).toHaveBeenCalledWith({ where: { cnpj } })
-    expect(prismaMock.company.delete).toHaveBeenCalledWith({ where: { cnpj } })
+    expect(prismaMock.company.findUnique).toHaveBeenCalledWith({ where: { id } })
+    expect(prismaMock.company.delete).toHaveBeenCalledWith({ where: { id } })
   })
 
   it('should throw error when deleting non-existing company', async () => {
     const { sut } = makeSut()
 
-    const cnpj = '12345678901234'
+    const id = 1
 
-    await expect(sut.deleteCompany(cnpj)).rejects.toThrowError('[ENTITY- COMPANY]: Empresa não encontrada')
+    await expect(sut.deleteCompany(id)).rejects.toThrowError('[ENTITY- COMPANY]: Empresa não encontrada')
   })
 })
