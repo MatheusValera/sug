@@ -1,0 +1,85 @@
+extends ./layout/master
+block head
+  title Gerenciar Companhias
+  link(rel="stylesheet", href="./styles/company.css")
+  script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
+  script(src="https://unpkg.com/vanilla-masker@1.1.1/lib/vanilla-masker.js")
+
+block content
+  h1 Gerenciar Companhias
+  button(onclick='openModal()' class="addUser") Adicionar
+  main
+    if companies.length === 0
+      p Não há colaboradores cadastrados.
+    else
+      table
+        thead
+          tr
+            th Id
+            th Data da criação
+            th Data de atualização
+            th CNPJ
+            th Contato
+            th Nome da companhia
+            th Nome do responsável
+            th Contato do responsável
+        tbody
+          each company in companies
+            tr
+              td= company.id
+              td= company.createdAt.toLocaleString('pt-BR', { timezone: 'UTC' })
+              td= company.updatedAt ? company.updatedAt.toLocaleString('pt-BR', { timezone: 'UTC' }): ''
+              td= company.cnpj
+              td= company.contact
+              td= company.nameCompany
+              td= company.nameResponsiblePerson
+              td= company.contactResponsiblePerson
+              td
+                button.editBtn(onclick=`openModal(${JSON.stringify(company)})` data-id=company.id ) Editar
+                button.deleteBtn(onclick=`openModalDelete(${company.id})` data-id=company.id) Excluir
+
+    #editModal.modal
+      .modal-content
+        span.closeModal &times;
+        h2 Editar Companhia
+        form(id="editUserForm")
+          input(type="hidden", id="id", name="id")
+          input(type="hidden", id="createdAt", name="createdAt")
+
+          label(for="cnpj") CNPJ:
+          input(type="text", id="cnpj", name="cnpj", required)
+
+          br
+          label(for="contact") Contato:
+          input(type="text", id="contact", name="contact", required)
+
+          br
+          label(for="nameCompany") Nome da companhia:
+          input(type="text", id="nameCompany", name="nameCompany", required)
+
+          br
+          label(for="nameResponsiblePerson") Nome do responsável:
+          input(type="text", id="nameResponsiblePerson", name="nameResponsiblePerson", required)
+
+          br
+          label(for="contactResponsiblePerson") Contato do responsável:
+          input(type="text", id="contactResponsiblePerson", name="contactResponsiblePerson", required)
+
+          br
+          button(onclick='requestModal()') Salvar
+          button(onclick='closeModal()') Cancelar
+          label(id="errorMessage", style="display: none; color: red;")
+
+    #deleteModal.modal
+      .modal-content
+        span.closeModal &times;
+        h4 Confirmar Exclusão
+        h4 Tem certeza de que deseja excluir essa companhia?
+          input(type="text", id="idDelete", name="idDelete", readonly)
+
+          br
+          button.deleteBtn(onclick='deleteModalRequest()') Excluir
+          button(onclick='closeModalDelete()') Cancelar
+          label(id="errorMessageDelete", style="display: none; color: red;")
+
+    script(src="./javascript/company.js")

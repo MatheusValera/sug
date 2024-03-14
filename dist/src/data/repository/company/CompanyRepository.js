@@ -1,0 +1,69 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PrismaCompanyRepository = void 0;
+class PrismaCompanyRepository {
+    constructor(_prismaClient) {
+        this._prismaClient = _prismaClient;
+    }
+    map(object) {
+        const company = {
+            id: object.id,
+            cnpj: object.cnpj,
+            contact: object.contact,
+            createdAt: new Date(object.createdAt),
+            nameCompany: object.nameCompany,
+            nameResponsiblePerson: object.nameResponsiblePerson,
+            contactResponsiblePerson: object.contactResponsiblePerson
+        };
+        if (object.updatedAt) {
+            company.updatedAt = new Date(object.updatedAt);
+        }
+        return company;
+    }
+    async insertCompany(data) {
+        if (!data.cnpj) {
+            throw new Error('[ENTITY- COMPANY]: CNPJ obrigatório');
+        }
+        const company = await this._prismaClient.company.findUnique({ where: { cnpj: data.cnpj } });
+        if (company) {
+            throw new Error('[ENTITY- COMPANY]: Empresa já cadastrada');
+        }
+        const register = await this._prismaClient.company.create({ data });
+        return this.map(register);
+    }
+    async updateCompany(companyToUpdate) {
+        if (!companyToUpdate.cnpj) {
+            throw new Error('[ENTITY- COMPANY]: CNPJ obrigatório');
+        }
+        const company = await this._prismaClient.company.findUnique({ where: { cnpj: companyToUpdate.cnpj } });
+        if (!company) {
+            throw new Error('[ENTITY- COMPANY]: Empresa não encontrada');
+        }
+        const data = {
+            contact: companyToUpdate.contact,
+            updatedAt: companyToUpdate.updatedAt,
+            nameCompany: companyToUpdate.nameCompany,
+            nameResponsiblePerson: companyToUpdate.nameResponsiblePerson,
+            contactResponsiblePerson: companyToUpdate.contactResponsiblePerson
+        };
+        const register = await this._prismaClient.company.update({ data, where: { cnpj: companyToUpdate.cnpj } });
+        return this.map(register);
+    }
+    async getCompanies() {
+        const listCompany = await this._prismaClient.company.findMany();
+        return listCompany.map(this.map);
+    }
+    async getCompany(id) {
+        const company = await this._prismaClient.company.findUnique({ where: { id: id } });
+        return this.map(company);
+    }
+    async deleteCompany(id) {
+        const company = await this.getCompany(id);
+        if (!company) {
+            throw new Error('[ENTITY- COMPANY]: Empresa não encontrada');
+        }
+        const deleted = await this._prismaClient.company.delete({ where: { id } });
+        return this.map(deleted);
+    }
+}
+exports.PrismaCompanyRepository = PrismaCompanyRepository;
