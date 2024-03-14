@@ -5,6 +5,22 @@ import { IConstructionRepository } from '../../../domain/data/repository/constru
 export class PrismaConstructionRepository implements IConstructionRepository {
   constructor (readonly _prismaClient: PrismaClient) {}
 
+  private map (object: any): IConstruction {
+    const construction: IConstruction = {
+      id: object.id,
+      createdAt: new Date(object.createdAt),
+      name: object.name,
+      companyId: object.companyId,
+      status: object.status
+    }
+
+    if (object.updatedAt) {
+      construction.updatedAt = new Date(object.updatedAt)
+    }
+
+    return construction
+  }
+
   async insertConstruction (constructionData: Omit<IConstruction, 'id'>): Promise<IConstruction> {
     const construction = await this._prismaClient.construction.create({
       data: constructionData
@@ -12,7 +28,7 @@ export class PrismaConstructionRepository implements IConstructionRepository {
 
     const register = construction
 
-    return register
+    return this.map(register)
   }
 
   async updateConstruction (constructionToUpdate: IConstruction): Promise<IConstruction> {
@@ -25,24 +41,26 @@ export class PrismaConstructionRepository implements IConstructionRepository {
 
     const register = construction
 
-    return register
+    return this.map(register)
   }
 
-  async getConstruction (constructionId: number): Promise<IConstruction | null> {
-    const register = this._prismaClient.construction.findUnique({
-      where: { id: constructionId }
+  async getConstruction (key: string, value: any): Promise<IConstruction | null> {
+    const search: any = {}
+    search[key] = value
+    const register = await this._prismaClient.construction.findUnique({
+      where: search
     })
 
-    return register
+    return this.map(register)
   }
 
   async getConstructions (): Promise<IConstruction[]> {
-    const register = this._prismaClient.construction.findMany({})
-    return register
+    const register = await this._prismaClient.construction.findMany({})
+    return register.map(c => this.map(c))
   }
 
   async deleteConstruction (constructionId: number): Promise<IConstruction> {
-    const construction = await this.getConstruction(constructionId)
+    const construction = await this.getConstruction('id', constructionId)
 
     if (!construction) {
       throw new Error('[ENTITY - CONSTRUCTION]: Construção não encontrada')
@@ -52,6 +70,6 @@ export class PrismaConstructionRepository implements IConstructionRepository {
       where: { id: constructionId }
     })
 
-    return construction
+    return this.map(construction)
   }
 }

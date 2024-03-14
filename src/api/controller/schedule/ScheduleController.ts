@@ -8,11 +8,21 @@ import { SuccessResponse } from '../../common/responses/SuccessResponse'
 import { BadRequestResponse } from '../../common/responses/BadRequestResponse'
 import { IScheduleService } from '../../../service/schedule/ScheduleServiceFactory'
 import { InternalServerErrorResponse } from '../../common/responses/InternalServerErrorResponse'
+import { IUserService } from '../../../service/user/UserServiceFactory'
+import { IConstructionService } from '../../../service/construction/ConstructionServiceFactory'
+import { IAllocationService } from '../../../service/allocation/AllocationServiceFactory'
+import { IUser } from '../../../domain/data/entity/IUser'
+import { ISchedule } from '../../../domain/data/entity/ISchedule'
+import { IConstruction } from '../../../domain/data/entity/IConstruction'
+import { IAllocation } from '../../../domain/data/entity/IAllocation'
 
 export class ScheduleController implements IController {
   public router = express.Router()
 
-  constructor (private readonly _scheduleService: IScheduleService) {
+  constructor (private readonly _scheduleService: IScheduleService,
+    private readonly _usersService: IUserService,
+    private readonly _constructionService: IConstructionService,
+    private readonly _allocationService: IAllocationService) {
     this.setupRoutes()
   }
 
@@ -26,8 +36,30 @@ export class ScheduleController implements IController {
   }
 
   async handler (request: IRequest, response: IResponse): Promise<any> {
-    const schedules = await this._scheduleService.getSchedulesService.handler()
-    response.status(200).render('./schedule.pug', { schedules })
+    const schedulesRaw = await this._scheduleService.getSchedulesService.handler() as ISchedule[]
+    const users = await this._usersService.getUsersService.handler() as IUser[]
+    const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
+    const allocations = await this._allocationService.getAllocationsService.handler() as IAllocation[]
+
+    const schedules = schedulesRaw.map(s => {
+      const user = users.filter(u => u.id === s.userId)[0]
+      const construction = constructions.filter(c => c.id === s.constructionId)[0]
+      const allocation = allocations.filter(a => a.id === s.allocationId)[0]
+
+      return {
+        ...s,
+        construction: {
+          name: construction.name
+        },
+        allocation: {
+          createdAt: allocation.createdAt
+        },
+        user: {
+          name: user.name
+        }
+      }
+    })
+    response.status(200).render('./schedule.pug', { schedules, users, constructions, allocations })
   }
 
   async getSchedule (req: IRequest, res: IResponse): Promise<IResponse> {

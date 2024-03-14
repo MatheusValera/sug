@@ -60,6 +60,9 @@ model Company {
 model Construction {
   id         Int          @id @default(autoincrement())
   name       String
+  status     String
+  createdAt                DateTime       @default(now())
+  updatedAt                DateTime?       
   Company    Company      @relation(fields: [companyId], references: [id])
   companyId  Int
   Allocation Allocation[]
@@ -72,6 +75,8 @@ model Allocation {
   User           User         @relation(fields: [userId], references: [id])
   Construction   Construction @relation(fields: [constructionId], references: [id])
   userId         Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime?
   constructionId Int
   status String
   Schedule       Schedule[]

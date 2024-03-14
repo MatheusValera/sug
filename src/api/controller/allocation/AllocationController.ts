@@ -8,11 +8,18 @@ import { SuccessResponse } from '../../common/responses/SuccessResponse'
 import { BadRequestResponse } from '../../common/responses/BadRequestResponse'
 import { IAllocationService } from '../../../service/allocation/AllocationServiceFactory'
 import { InternalServerErrorResponse } from '../../common/responses/InternalServerErrorResponse'
+import { IUserService } from '../../../service/user/UserServiceFactory'
+import { IConstructionService } from '../../../service/construction/ConstructionServiceFactory'
+import { IUser } from '../../../domain/data/entity/IUser'
+import { IAllocation } from '../../../domain/data/entity/IAllocation'
+import { IConstruction } from '../../../domain/data/entity/IConstruction'
 
 export class AllocationController implements IController {
   public router = express.Router()
 
-  constructor (private readonly _allocationService: IAllocationService) {
+  constructor (private readonly _allocationService: IAllocationService,
+    private readonly _userService: IUserService,
+    private readonly _constructionService: IConstructionService) {
     this.setupRoutes()
   }
 
@@ -26,8 +33,25 @@ export class AllocationController implements IController {
   }
 
   async handler (request: IRequest, response: IResponse): Promise<any> {
-    const allocations = await this._allocationService.getAllocationsService.handler()
-    response.status(200).render('./allocation.pug', { allocations })
+    const users = await this._userService.getUsersService.handler() as IUser[]
+    const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
+
+    const allocationsRaw = await this._allocationService.getAllocationsService.handler() as IAllocation[]
+    const allocations = allocationsRaw.map(a => {
+      const user = users.filter(u => u.id === a.userId)[0]
+      const construction = constructions.filter(c => c.id === a.constructionId)[0]
+
+      return {
+        ...a,
+        user: {
+          name: user.name
+        },
+        construction: {
+          name: construction.name
+        }
+      }
+    })
+    response.status(200).render('./allocation.pug', { allocations, users, constructions })
   }
 
   async getAllocation (req: IRequest, res: IResponse): Promise<IResponse> {

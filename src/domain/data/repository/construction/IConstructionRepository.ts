@@ -5,7 +5,7 @@ export interface IConstructionRepository {
   readonly _prismaClient: PrismaClient
   getConstructions (): Promise<IConstruction[]>
   deleteConstruction (constructionId: number): Promise<IConstruction>
-  getConstruction (constructionId: number): Promise<IConstruction | null>
+  getConstruction (key: string, value: any): Promise<IConstruction | null>
   insertConstruction (constructionData: Omit<IConstruction, 'id'>): Promise<IConstruction>
   updateConstruction (constructionToUpdate: IConstruction): Promise<IConstruction>
 }

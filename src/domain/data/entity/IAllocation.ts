@@ -3,4 +3,6 @@ export interface IAllocation {
   userId: number
   constructionId: number
   status: string
+  createdAt: Date
+  updatedAt?: Date
 }

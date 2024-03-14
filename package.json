@@ -2,9 +2,11 @@
   "name": "destro-system",
   "version": "0.0.0",
   "description": "system destro",
-  "main": "index.js",
+  "main": "./src/server.ts",
   "scripts": {
+    "start": "node ./dist/server.js",
     "dev": "nodemon ./src/server.ts",
+    "build": "./build.sh",
     "docker:dev": "docker-compose up",
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:ci:all": "npm test --  --coverage --forceExit",

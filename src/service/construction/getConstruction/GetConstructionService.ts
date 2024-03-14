@@ -5,12 +5,12 @@ import { IGetConstructionService } from '../../../domain/service/construction/ge
 export class GetConstructionService implements IGetConstructionService {
   constructor (private readonly _constructionRepository: IConstructionRepository) {}
 
-  async handler (id: number): Promise<IConstruction|Error> {
-    if (!id) {
-      return new Error('No id provided')
+  async handler (key: string, value: any): Promise<IConstruction|Error> {
+    if (!value) {
+      return new Error('No value provided')
     }
 
-    const construction = await this._constructionRepository.getConstruction(id)
+    const construction = await this._constructionRepository.getConstruction(key, value)
 
     return construction
   }

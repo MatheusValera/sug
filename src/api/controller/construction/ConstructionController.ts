@@ -8,25 +8,40 @@ import { SuccessResponse } from '../../common/responses/SuccessResponse'
 import { BadRequestResponse } from '../../common/responses/BadRequestResponse'
 import { IConstructionService } from '../../../service/construction/ConstructionServiceFactory'
 import { InternalServerErrorResponse } from '../../common/responses/InternalServerErrorResponse'
+import { ICompanyService } from '../../../service/company/CompanyServiceFactory'
+import { ICompany } from '../../../domain/data/entity/ICompany'
+import { IConstruction } from '../../../domain/data/entity/IConstruction'
 
 export class ConstructionController implements IController {
   public router = express.Router()
 
-  constructor (private readonly _constructionService: IConstructionService) {
+  constructor (private readonly _constructionService: IConstructionService,
+    private readonly _companyService: ICompanyService) {
     this.setupRoutes()
   }
 
   setupRoutes (): void {
     this.router.get('/construction', requireLogin, isAdmin, this.handler.bind(this))
     this.router.post('/construction/getConstruction', requireLogin, isAdmin, this.getConstruction.bind(this))
+    this.router.post('/construction/getConstructions', requireLogin, isAdmin, this.getConstructions.bind(this))
     this.router.post('/construction/saveConstruction', requireLogin, isAdmin, this.saveConstruction.bind(this))
     this.router.post('/construction/updateConstruction', requireLogin, isAdmin, this.updateConstruction.bind(this))
     this.router.post('/construction/deleteConstruction', requireLogin, isAdmin, this.deleteConstruction.bind(this))
   }
 
   async handler (request: IRequest, response: IResponse): Promise<any> {
-    const constructions = await this._constructionService.getConstructionsService.handler()
-    response.status(200).render('./construction.pug', { constructions })
+    const constructionsRaw = await this._constructionService.getConstructionsService.handler() as IConstruction[]
+    const companies = await this._companyService.getCompaniesService.handler() as ICompany[]
+    const constructions = constructionsRaw.map(c => {
+      const company = companies.filter(company => company.id === c.companyId)[0]
+      return {
+        ...c,
+        company: {
+          name: company?.nameCompany
+        }
+      }
+    })
+    response.status(200).render('./construction.pug', { constructions, companies })
   }
 
   async getConstruction (req: IRequest, res: IResponse): Promise<IResponse> {
@@ -37,7 +52,17 @@ export class ConstructionController implements IController {
         return BadRequestResponse.handler(res, 'No values provided.')
       }
 
-      const construction = await this._constructionService.getConstructionService.handler(id)
+      const construction = await this._constructionService.getConstructionService.handler('id', id)
+
+      return SuccessResponse.handler(res, JSON.stringify(construction))
+    } catch (error) {
+      return InternalServerErrorResponse.handler(res, error.message)
+    }
+  }
+
+  async getConstructions (req: IRequest, res: IResponse): Promise<IResponse> {
+    try {
+      const construction = await this._constructionService.getConstructionsService.handler()
 
       return SuccessResponse.handler(res, JSON.stringify(construction))
     } catch (error) {

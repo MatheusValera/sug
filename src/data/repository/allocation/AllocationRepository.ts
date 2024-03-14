@@ -5,12 +5,28 @@ import { IAllocationRepository } from '../../../domain/data/repository/allocatio
 export class PrismaAllocationRepository implements IAllocationRepository {
   constructor (readonly _prismaClient: PrismaClient) {}
 
+  private map (object: any): IAllocation {
+    const allocation: IAllocation = {
+      id: object.id,
+      userId: object.userId,
+      createdAt: new Date(object.createdAt),
+      constructionId: object.constructionId,
+      status: object.status
+    }
+
+    if (object.updatedAt) {
+      allocation.updatedAt = new Date(object.updatedAt)
+    }
+
+    return allocation
+  }
+
   async insertAllocation (allocationData: Omit<IAllocation, 'id'>): Promise<IAllocation> {
     const allocation = await this._prismaClient.allocation.create({
       data: allocationData
     })
 
-    return allocation
+    return this.map(allocation)
   }
 
   async updateAllocation (allocationToUpdate: IAllocation): Promise<IAllocation> {
@@ -21,29 +37,35 @@ export class PrismaAllocationRepository implements IAllocationRepository {
       where: { id }
     })
 
-    return allocation
+    return this.map(allocation)
   }
 
   async getAllocation (allocationId: number): Promise<IAllocation | null> {
-    return this._prismaClient.allocation.findUnique({
+    const result = await this._prismaClient.allocation.findUnique({
       where: { id: allocationId }
     })
+
+    return this.map(result)
   }
 
   async getAllocations (): Promise<IAllocation[] | null> {
-    return this._prismaClient.allocation.findMany({ })
+    const result = await this._prismaClient.allocation.findMany({ })
+
+    return result.map(r => this.map(r))
   }
 
   async getAllocationByUserId (userId: number): Promise<IAllocation[]> {
-    return this._prismaClient.allocation.findMany({
+    const result = await this._prismaClient.allocation.findMany({
       where: { userId }
     })
+    return result.map(r => this.map(r))
   }
 
   async getAllocationByConstructionId (constructionId: number): Promise<IAllocation[]> {
-    return this._prismaClient.allocation.findMany({
+    const result = await this._prismaClient.allocation.findMany({
       where: { constructionId }
     })
+    return result.map(r => this.map(r))
   }
 
   async deleteAllocation (allocationId: number): Promise<IAllocation> {
@@ -57,6 +79,6 @@ export class PrismaAllocationRepository implements IAllocationRepository {
       where: { id: allocationId }
     })
 
-    return allocation
+    return this.map(allocation)
   }
 }
