@@ -39,6 +39,7 @@ describe('PrismaSchedulesRepository', () => {
 
     const scheduleData: Omit<ISchedule, 'id' | 'createdAt'> = {
       userId: 1,
+      status: '',
       constructionId: 1,
       allocationId: 1,
       dateSchedule: new Date()
@@ -58,6 +59,7 @@ describe('PrismaSchedulesRepository', () => {
 
     const scheduleToUpdate: ISchedule = {
       id: 1,
+      status: '',
       userId: 1,
       allocationId: 1,
       constructionId: 1,
@@ -74,6 +76,7 @@ describe('PrismaSchedulesRepository', () => {
     expect(prismaMock.schedule.update).toHaveBeenCalledWith({
       data: {
         userId: scheduleToUpdate.userId,
+        status: scheduleToUpdate.status,
         createdAt: scheduleToUpdate.createdAt,
         allocationId: scheduleToUpdate.allocationId,
         dateSchedule: scheduleToUpdate.dateSchedule,
@@ -90,6 +93,7 @@ describe('PrismaSchedulesRepository', () => {
     const scheduleData: ISchedule = {
       id: 1,
       userId: 1,
+      status: '',
       allocationId: 1,
       constructionId: 1,
       createdAt: new Date(),
@@ -126,6 +130,7 @@ describe('PrismaSchedulesRepository', () => {
       {
         id: 1,
         userId: 1,
+        status: '',
         allocationId: 1,
         constructionId: 1,
         createdAt: new Date(),
@@ -134,6 +139,7 @@ describe('PrismaSchedulesRepository', () => {
       {
         id: 2,
         userId: 1,
+        status: '',
         allocationId: 1,
         constructionId: 1,
         createdAt: new Date(),
@@ -158,6 +164,7 @@ describe('PrismaSchedulesRepository', () => {
       {
         id: 1,
         userId: 1,
+        status: '',
         allocationId: 1,
         constructionId: 1,
         createdAt: new Date(),
@@ -166,6 +173,7 @@ describe('PrismaSchedulesRepository', () => {
       {
         id: 2,
         userId: 1,
+        status: '',
         allocationId: 1,
         constructionId: 1,
         createdAt: new Date(),
@@ -190,6 +198,7 @@ describe('PrismaSchedulesRepository', () => {
       {
         id: 1,
         userId: 1,
+        status: '',
         allocationId: 1,
         constructionId: 1,
         createdAt: new Date(),
@@ -198,6 +207,7 @@ describe('PrismaSchedulesRepository', () => {
       {
         id: 2,
         userId: 1,
+        status: '',
         allocationId: 1,
         constructionId: 1,
         createdAt: new Date(),
@@ -222,6 +232,7 @@ describe('PrismaSchedulesRepository', () => {
       {
         id: 1,
         userId: 1,
+        status: '',
         allocationId: 1,
         constructionId: 1,
         createdAt: new Date(),
@@ -232,6 +243,7 @@ describe('PrismaSchedulesRepository', () => {
         userId: 1,
         allocationId: 1,
         constructionId: 1,
+        status: '',
         createdAt: new Date(),
         dateSchedule: new Date()
       }
@@ -254,6 +266,7 @@ describe('PrismaSchedulesRepository', () => {
       id: 1,
       userId: 1,
       allocationId: 1,
+      status: '',
       constructionId: 1,
       createdAt: new Date(),
       dateSchedule: new Date()
