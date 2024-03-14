@@ -22,11 +22,20 @@ export class HomeController implements IController {
     // }
     res.status(200).render('./home.pug', {
       buttons: [{
-        link: '/user',
+        link: '/usuario',
         text: 'Gerenciar colaboradores'
       }, {
-        link: '/construction',
+        link: '/construcao',
         text: 'Gerenciar obras'
+      }, {
+        link: '/alocacao',
+        text: 'Gerenciar alocações'
+      }, {
+        link: '/companhias',
+        text: 'Gerenciar companhias'
+      }, {
+        link: '/agendamento',
+        text: 'Gerenciar agendamento'
       }]
     })
   }

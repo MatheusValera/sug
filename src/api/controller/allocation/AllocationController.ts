@@ -24,7 +24,7 @@ export class AllocationController implements IController {
   }
 
   setupRoutes (): void {
-    this.router.get('/allocation', requireLogin, isAdmin, this.handler.bind(this))
+    this.router.get('/alocacao', requireLogin, isAdmin, this.handler.bind(this))
     this.router.post('/allocation/getAllocation', requireLogin, this.getAllocation.bind(this))
     this.router.post('/allocation/getAllocations', requireLogin, this.getAllocations.bind(this))
     this.router.post('/allocation/saveAllocation', requireLogin, isAdmin, this.saveAllocation.bind(this))

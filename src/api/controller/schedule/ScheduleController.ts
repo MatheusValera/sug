@@ -27,7 +27,7 @@ export class ScheduleController implements IController {
   }
 
   setupRoutes (): void {
-    this.router.get('/schedule', requireLogin, isAdmin, this.handler.bind(this))
+    this.router.get('/agendamento', requireLogin, isAdmin, this.handler.bind(this))
     this.router.post('/schedule/getSchedule', requireLogin, this.getSchedule.bind(this))
     this.router.post('/schedule/getSchedules', requireLogin, this.getSchedules.bind(this))
     this.router.post('/schedule/saveSchedule', requireLogin, isAdmin, this.saveSchedule.bind(this))

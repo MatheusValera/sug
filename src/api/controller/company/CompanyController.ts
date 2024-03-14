@@ -17,7 +17,7 @@ export class CompanyController implements IController {
   }
 
   setupRoutes (): void {
-    this.router.get('/company', requireLogin, isAdmin, this.handler.bind(this))
+    this.router.get('/companhia', requireLogin, isAdmin, this.handler.bind(this))
     this.router.post('/company/getCompany', requireLogin, this.getCompany.bind(this))
     this.router.post('/company/getCompanies', requireLogin, this.getCompanies.bind(this))
     this.router.post('/company/saveCompany', requireLogin, isAdmin, this.saveCompany.bind(this))

@@ -21,7 +21,7 @@ export class ConstructionController implements IController {
   }
 
   setupRoutes (): void {
-    this.router.get('/construction', requireLogin, isAdmin, this.handler.bind(this))
+    this.router.get('/construcao', requireLogin, isAdmin, this.handler.bind(this))
     this.router.post('/construction/getConstruction', requireLogin, isAdmin, this.getConstruction.bind(this))
     this.router.post('/construction/getConstructions', requireLogin, isAdmin, this.getConstructions.bind(this))
     this.router.post('/construction/saveConstruction', requireLogin, isAdmin, this.saveConstruction.bind(this))
