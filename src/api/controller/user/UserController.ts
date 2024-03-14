@@ -17,7 +17,7 @@ export class UserController implements IController {
   }
 
   setupRoutes (): void {
-    this.router.get('/user', requireLogin, isAdmin, this.handler.bind(this))
+    this.router.get('/usuario', requireLogin, isAdmin, this.handler.bind(this))
     this.router.post('/user/getUser', requireLogin, isAdmin, this.getUser.bind(this))
     this.router.post('/user/saveUser', requireLogin, isAdmin, this.saveUser.bind(this))
     this.router.post('/user/updateUser', requireLogin, isAdmin, this.updateUser.bind(this))
