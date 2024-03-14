@@ -20,6 +20,8 @@ export class SaveCompanyService implements ISaveCompanyService {
       return hasIncorrectValue
     }
 
+    company.createdAt = new Date()
+
     const result = this._companyRepository.insertCompany(company)
 
     return result

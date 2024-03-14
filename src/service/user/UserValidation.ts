@@ -4,7 +4,7 @@ import { RequireFieldValidation } from '../../utils/validator-required-fields/va
 
 export const makeUserValidation = (): Validation => {
   const validations: Validation[] = []
-  for (const field of ['cpf', 'city', 'road', 'name', 'email', 'phone', 'admin', 'office', 'zipCode', 'password', 'numberHouse', 'neighborhood']) {
+  for (const field of ['cpf', 'city', 'road', 'name', 'email', 'phone', 'office', 'zipCode', 'password', 'numberHouse', 'neighborhood']) {
     validations.push(new RequireFieldValidation(field))
   }
   return new ValidationComposite(validations)

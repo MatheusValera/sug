@@ -13,7 +13,7 @@ model User {
   email        String            @unique
   admin        Boolean           @default(false)
   createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @default(now()) @updatedAt
+  updatedAt    DateTime?          
   city         String
   road         String
   phone        String
@@ -32,7 +32,7 @@ model User {
 model PermissionsUser {
   id           Int        @id @default(autoincrement())
   createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @default(now()) @updatedAt
+  updatedAt    DateTime?   
   User         User       @relation(fields: [userId], references: [id])
   Permission   Permission @relation(fields: [permissionId], references: [id])
   permissionId Int
@@ -48,7 +48,7 @@ model Permission {
 model Company {
   id                       Int            @id @default(autoincrement())
   createdAt                DateTime       @default(now())
-  updatedAt                DateTime       @default(now()) @updatedAt
+  updatedAt                DateTime?       
   cnpj                     String         @unique
   contact                  String
   nameCompany              String
@@ -80,7 +80,7 @@ model Allocation {
 model Schedule {
   id             Int          @id @default(autoincrement())
   createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @default(now()) @updatedAt
+  updatedAt      DateTime?     
   User           User         @relation(fields: [userId], references: [id])
   Allocation     Allocation   @relation(fields: [allocationId], references: [id])
   Construction   Construction @relation(fields: [constructionId], references: [id])

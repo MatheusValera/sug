@@ -5,6 +5,24 @@ import { ICompanyRepository } from '../../../domain/data/repository/company/ICom
 export class PrismaCompanyRepository implements ICompanyRepository {
   constructor (readonly _prismaClient: PrismaClient) {}
 
+  private map (object: any): ICompany {
+    const company: ICompany = {
+      id: object.id,
+      cnpj: object.cnpj,
+      contact: object.contact,
+      createdAt: new Date(object.createdAt),
+      nameCompany: object.nameCompany,
+      nameResponsiblePerson: object.nameResponsiblePerson,
+      contactResponsiblePerson: object.contactResponsiblePerson
+    }
+
+    if (object.updatedAt) {
+      company.updatedAt = new Date(object.updatedAt)
+    }
+
+    return company
+  }
+
   async insertCompany (data: Omit<ICompany, 'id' |'createdAt'>): Promise<ICompany> {
     if (!data.cnpj) {
       throw new Error('[ENTITY- COMPANY]: CNPJ obrigatório')
@@ -18,7 +36,7 @@ export class PrismaCompanyRepository implements ICompanyRepository {
 
     const register = await this._prismaClient.company.create({ data })
 
-    return register
+    return this.map(register)
   }
 
   async updateCompany (companyToUpdate: ICompany): Promise<ICompany> {
@@ -34,6 +52,7 @@ export class PrismaCompanyRepository implements ICompanyRepository {
 
     const data = {
       contact: companyToUpdate.contact,
+      updatedAt: companyToUpdate.updatedAt,
       nameCompany: companyToUpdate.nameCompany,
       nameResponsiblePerson: companyToUpdate.nameResponsiblePerson,
       contactResponsiblePerson: companyToUpdate.contactResponsiblePerson
@@ -41,19 +60,19 @@ export class PrismaCompanyRepository implements ICompanyRepository {
 
     const register = await this._prismaClient.company.update({ data, where: { cnpj: companyToUpdate.cnpj } })
 
-    return register
+    return this.map(register)
   }
 
   async getCompanies (): Promise<ICompany[]> {
     const listCompany = await this._prismaClient.company.findMany()
 
-    return listCompany
+    return listCompany.map(this.map)
   }
 
   async getCompany (id: number): Promise<ICompany> {
     const company = await this._prismaClient.company.findUnique({ where: { id: id } })
 
-    return company
+    return this.map(company)
   }
 
   async deleteCompany (id: number): Promise<ICompany> {
@@ -65,6 +84,6 @@ export class PrismaCompanyRepository implements ICompanyRepository {
 
     const deleted = await this._prismaClient.company.delete({ where: { id } })
 
-    return deleted
+    return this.map(deleted)
   }
 }

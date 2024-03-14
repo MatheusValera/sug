@@ -3,6 +3,8 @@ block head
   title Gerenciar Colaboradores
   link(rel="stylesheet", href="./styles/user.css")
   script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
+  script(src="https://unpkg.com/vanilla-masker@1.1.1/lib/vanilla-masker.js")
+
 block content
   h1 Gerenciar Colaboradores
   button(class="addUser") Adicionar
@@ -13,16 +15,37 @@ block content
       table
         thead
           tr
-            th Nome
-            th Email
+            th ID
             th CPF
-            th Ações
+            th Email
+            th Nome
+            th Data de criação
+            th Data de atualização
+            th Administrador
+            th Telefone 
+            th Cidade
+            th CEP
+            th Rua 
+            th Número da casa
+            th Bairro
+            th Cargo 
         tbody
           each user in users
             tr
-              td= user.name
-              td= user.email
+              td= user.id
               td= user.cpf
+              td= user.email
+              td= user.name
+              td= user.createdAt.toLocaleString('pt-BR', { timezone: 'UTC' })
+              td= user.updatedAt ? user.updatedAt.toLocaleString('pt-BR', { timezone: 'UTC' }): ''
+              td= user.admin
+              td= user.phone
+              td= user.city
+              td= user.zipCode
+              td= user.road
+              td= user.numberHouse
+              td= user.neighborhood
+              td= user.office
               td
                 button(class="editBtn" data-id=user.id ) Editar
                 button(class="deleteBtn" data-id=user.id) Excluir
@@ -69,7 +92,7 @@ block content
           input(type="text", id="office", name="office", required)
           br
           label(for="admin") Administrador:
-            input(type="checkbox", id="admin", name="admin", value=0)
+          input(type="checkbox", id="admin", name="admin", checked)
           br
           input(type="submit", value="Salvar")
           label(id="errorMessage", style="display: none; color: red;")

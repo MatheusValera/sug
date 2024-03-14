@@ -26,7 +26,9 @@ export class UpdateUserService implements IUpdateUserService {
       return hasIncorrectValue
     }
 
-    user.password = await this._hasher.hash(user.password)
+    const oldUser = await this._userRepository.getUser('email', user.email)
+
+    if (user.password !== oldUser.password) { user.password = await this._hasher.hash(user.password) }
 
     const result = this._userRepository.updateUser(user)
 

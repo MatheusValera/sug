@@ -10,7 +10,7 @@ export class UpdateCompanyService implements IUpdateCompanyService {
 
   async handler (company: ICompany): Promise<ICompany|Error> {
     if (!company.id) {
-      return new Error('A company who already no has an ID cannot be saved.')
+      throw new Error('A company who already no has an ID cannot be saved.')
     }
 
     const hasIncorrectValue = await this._validator.validate(company)
@@ -18,6 +18,8 @@ export class UpdateCompanyService implements IUpdateCompanyService {
     if (hasIncorrectValue) {
       return hasIncorrectValue
     }
+
+    company.updatedAt = new Date()
 
     const result = this._companyRepository.updateCompany(company)
 

@@ -26,8 +26,8 @@ export class CompanyController implements IController {
   }
 
   async handler (request: IRequest, response: IResponse): Promise<any> {
-    const companys = await this._companyService.getCompaniesService.handler()
-    response.status(200).render('./company.pug', { companys })
+    const companies = await this._companyService.getCompaniesService.handler()
+    response.status(200).render('./company.pug', { companies })
   }
 
   async getCompany (req: IRequest, res: IResponse): Promise<IResponse> {

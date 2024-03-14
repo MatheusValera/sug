@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 document.addEventListener('DOMContentLoaded', function () {
   const editUserForm = document.getElementById('editUserForm')
   const editButtons = document.querySelectorAll('.editBtn')
@@ -21,6 +23,13 @@ document.addEventListener('DOMContentLoaded', function () {
   const createdAtInput = document.getElementById('createdAt')
   const userIdInput = document.getElementById('userId')
   const adminInput = document.getElementById('admin')
+
+  VMasker(zipCodeInput).maskPattern('99999-999')
+  VMasker(phoneInput).maskPattern('(99) 99999-9999')
+  VMasker(cpfInput).maskPattern('999.999.999-99')
+  VMasker(numberHouseInput).maskPattern('99999')
+
+  zipCodeInput.addEventListener('blur', completeInformationAddress)
 
   editButtons.forEach(button => {
     button.addEventListener('click', function () {
@@ -65,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function () {
       // eslint-disable-next-line no-undef
       axios.post('/user/deleteUser', { id: userId })
         .then(function (response) {
-          console.log(response.data)
           window.location.reload()
         })
         .catch(function (error) {
@@ -89,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const office = document.getElementById('office').value
     const numberHouse = document.getElementById('numberHouse').value
     const neighborhood = document.getElementById('neighborhood').value
-    const admin = document.getElementById('admin').value === '0'
+    const admin = document.getElementById('admin').checked
 
     if (id) {
       // eslint-disable-next-line no-undef
@@ -110,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function () {
         neighborhood
       })
         .then(function (response) {
-          console.log(response.data)
           window.location.reload()
         })
         .catch(function (error) {
@@ -135,7 +142,6 @@ document.addEventListener('DOMContentLoaded', function () {
         neighborhood
       })
         .then(function (response) {
-          console.log(response.data)
           window.location.reload()
         })
         .catch(function (error) {
@@ -167,4 +173,16 @@ document.addEventListener('DOMContentLoaded', function () {
       editModal.style.display = 'block'
     })
   })
+
+  async function completeInformationAddress () {
+    const zipCode = zipCodeInput.value
+    try {
+      const result = await axios.get(`https://viacep.com.br/ws/${zipCode}/json/`)
+      if (result.data) {
+        cityInput.value = result.data.localidade
+        roadInput.value = result.data.logradouro
+        neighborhoodInput.value = result.data.bairro
+      }
+    } catch (e) {}
+  }
 })

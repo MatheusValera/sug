@@ -6,7 +6,7 @@ import { IGetScheduleService } from '../../../domain/service/schedule/getSchedul
 export class GetScheduleService implements IGetScheduleService {
   constructor (private readonly _scheduleRepository: ISchedulesRepository) {}
 
-  async handler (id: number, option: EOptions): Promise<ISchedule|Error> {
+  async handler (id: number, option: EOptions): Promise<ISchedule[]|Error> {
     if (!id) {
       return new Error('No id provided')
     }
