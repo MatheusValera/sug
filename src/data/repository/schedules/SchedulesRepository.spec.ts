@@ -45,7 +45,6 @@ describe('PrismaSchedulesRepository', () => {
       dateSchedule: new Date()
     }
 
-    // @ts-expect-error
     prismaMock.schedule.create.mockResolvedValue(scheduleData)
 
     const result = await sut.insertSchedule(scheduleData)
@@ -67,7 +66,6 @@ describe('PrismaSchedulesRepository', () => {
       dateSchedule: new Date()
     }
 
-    // @ts-expect-error
     prismaMock.schedule.update.mockResolvedValue(scheduleToUpdate)
 
     const result = await sut.updateSchedule(scheduleToUpdate)
@@ -100,7 +98,6 @@ describe('PrismaSchedulesRepository', () => {
       dateSchedule: new Date()
     }
 
-    // @ts-expect-error
     prismaMock.schedule.findUnique.mockResolvedValue(scheduleData)
 
     const result = await sut.getSchedule(scheduleId)
@@ -114,7 +111,6 @@ describe('PrismaSchedulesRepository', () => {
 
     const scheduleId = 1
 
-    // @ts-expect-error
     prismaMock.schedule.findUnique.mockResolvedValue(null)
 
     const result = await sut.getSchedule(scheduleId)
@@ -147,7 +143,6 @@ describe('PrismaSchedulesRepository', () => {
       }
     ]
 
-    // @ts-expect-error
     prismaMock.schedule.findMany.mockResolvedValue(schedules)
 
     const result = await sut.getSchedules()
@@ -181,7 +176,6 @@ describe('PrismaSchedulesRepository', () => {
       }
     ]
 
-    // @ts-expect-error
     prismaMock.schedule.findMany.mockResolvedValue(schedules)
 
     const result = await sut.getScheduleByUserId(userId)
@@ -215,7 +209,6 @@ describe('PrismaSchedulesRepository', () => {
       }
     ]
 
-    // @ts-expect-error
     prismaMock.schedule.findMany.mockResolvedValue(schedules)
 
     const result = await sut.getScheduleByConstructionId(constructionId)
@@ -249,7 +242,6 @@ describe('PrismaSchedulesRepository', () => {
       }
     ]
 
-    // @ts-expect-error
     prismaMock.schedule.findMany.mockResolvedValue(schedules)
 
     const result = await sut.getScheduleByAllocationId(allocationId)
@@ -272,9 +264,8 @@ describe('PrismaSchedulesRepository', () => {
       dateSchedule: new Date()
     }
 
-    // @ts-expect-error
     prismaMock.schedule.findUnique.mockResolvedValue(scheduleData)
-    // @ts-expect-error
+
     prismaMock.schedule.delete.mockResolvedValue(scheduleData)
 
     const result = await sut.deleteSchedule(scheduleId)
@@ -289,7 +280,6 @@ describe('PrismaSchedulesRepository', () => {
 
     const scheduleId = 1
 
-    // @ts-expect-error
     prismaMock.schedule.findUnique.mockResolvedValue(null)
 
     await expect(sut.deleteSchedule(scheduleId)).rejects.toThrowError('[ENTITY - SCHEDULES]: Agendamento não encontrado')
