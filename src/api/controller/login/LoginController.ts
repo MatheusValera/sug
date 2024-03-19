@@ -31,7 +31,7 @@ export class LoginController implements IController {
 
   async handler (req: IRequest, res: IResponse): Promise<IResponse> {
     if (req.user) {
-      res.status(200).redirect('/home')
+      res.status(200).redirect('/')
       return
     }
     res.status(200).render('./login.pug', {})

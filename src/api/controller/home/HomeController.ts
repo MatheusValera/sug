@@ -12,7 +12,7 @@ export class HomeController implements IController {
   }
 
   setupRoutes (): void {
-    this.router.get('/home', requireLogin, this.handler.bind(this))
+    this.router.get('/', requireLogin, this.handler.bind(this))
   }
 
   async handler (req: IRequest, res: IResponse): Promise<any> {

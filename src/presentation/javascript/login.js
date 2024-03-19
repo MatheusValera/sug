@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     axios.post('/login', { email, password })
       .then(function (response) {
         console.log(response.data)
-        window.location.href = '/home'
+        window.location.href = '/'
       })
       .catch(function (error) {
         console.error(error)
