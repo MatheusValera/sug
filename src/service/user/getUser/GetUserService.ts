@@ -7,7 +7,7 @@ export class GetUserService implements IGetUserService {
 
   async handler (key: string, value: any): Promise<IUser|Error> {
     if (!key || !value) {
-      return new Error('No id provided')
+      throw new Error('No id provided')
     }
 
     const user = await this._userRepository.getUser(key, value)

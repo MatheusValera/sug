@@ -7,7 +7,7 @@ export class DeleteReportService implements IDeleteReportService {
 
   async handler (id: number): Promise<IReport|Error> {
     if (!id) {
-      return new Error('No id provided')
+      throw new Error('No id provided')
     }
 
     const reportDeleted = await this._reportRepository.deleteReport(id)

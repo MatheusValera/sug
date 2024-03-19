@@ -14,11 +14,11 @@ export class SaveUserService implements ISaveUserService {
   async handler (user: Omit<IUser, 'id'>): Promise<IUser|Error> {
     // @ts-expect-error
     if (user.id) {
-      return new Error('A user who already has an ID cannot be saved.')
+      throw new Error('A user who already has an ID cannot be saved.')
     }
 
     if (!isValidCPF(user.cpf)) {
-      return new Error('CPF invalid provided.')
+      return new Error('CPF provido é inválido.')
     }
 
     const hasIncorrectValue = await this._validator.validate(user)

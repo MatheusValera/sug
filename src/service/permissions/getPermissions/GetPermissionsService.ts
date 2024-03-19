@@ -7,7 +7,7 @@ export class GetPermissionsService implements IGetPermissionsService {
 
   async handler (id: number): Promise<IPermissionsUser[]|Error> {
     if (!id) {
-      return new Error('No id provided')
+      throw new Error('No id provided')
     }
 
     const permissions = await this._permissionRepository.getPermissionToUserByUserId(id)

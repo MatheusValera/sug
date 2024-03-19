@@ -7,7 +7,7 @@ export class DeleteScheduleService implements IDeleteScheduleService {
 
   async handler (id: number): Promise<ISchedule|Error> {
     if (!id) {
-      return new Error('No id provided')
+      throw new Error('No id provided')
     }
 
     const scheduleDeleted = await this._scheduleRepository.deleteSchedule(id)

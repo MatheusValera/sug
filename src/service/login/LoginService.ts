@@ -8,17 +8,17 @@ export class LoginService implements ILoginService {
 
   async handler (email: string, password: string): Promise<IUser|Error> {
     if (!email || !password) {
-      return new Error('Email or password not provided')
+      return new Error('Email e senha não foram providos.')
     }
 
     const user = await this._userRepository.getUser('email', email)
 
     if (!user) {
-      return new Error(`The email address ${email} is not associated with any account. `)
+      return new Error(`O e-mail ${email} não está associado a nenhuma cadastro.`)
     }
 
     const isMatch = await this._hasher.compare(password, user.password)
 
-    return isMatch ? user : new Error('Incorrect password')
+    return isMatch ? user : new Error('Senha incorreta')
   }
 }

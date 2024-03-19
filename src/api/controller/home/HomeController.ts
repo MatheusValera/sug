@@ -31,7 +31,7 @@ export class HomeController implements IController {
         link: '/alocacao',
         text: 'Gerenciar alocações'
       }, {
-        link: '/companhias',
+        link: '/companhia',
         text: 'Gerenciar companhias'
       }, {
         link: '/agendamento',

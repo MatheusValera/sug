@@ -43,7 +43,7 @@ function requestModal () {
     const a = axios.post('/construction/updateConstruction', payload)
       .then(result => (result))
       .catch(function () {
-        window.location.href = '/construction'
+        window.location.href = '/construcao'
       })
 
     console.log(a)
@@ -51,7 +51,7 @@ function requestModal () {
     axios.post('/construction/saveConstruction', payload)
       .then(result => (result))
       .catch(function () {
-        window.location.href = '/construction'
+        window.location.href = '/construcao'
       })
   }
 
@@ -79,7 +79,7 @@ function deleteModalRequest () {
 
   axios.post('/construction/deleteConstruction', payload)
     .then(() => {
-      window.location.href = '/construction'
+      window.location.href = '/construcao'
     })
     .catch(error => {
       message = error.message

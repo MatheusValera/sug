@@ -14,21 +14,21 @@ export class DeleteUserService implements IDeleteUserService {
 
   async handler (id: number): Promise<IUser|Error> {
     if (!id) {
-      return new Error('No id provided')
+      throw new Error('No id provided')
     }
 
     const hasAllocations = await this._allocationService.getAllocationService.handler(id, EOptions.BY_USER) as IAllocation[]
     const hasAllocationsActive = hasAllocations.some(allocation => allocation.status === EStatus.active)
 
     if (hasAllocationsActive) {
-      return new Error('User has allocations active')
+      return new Error('Usuário possui alocação ativa.')
     }
 
     const hasSchedule = await this._scheduleService.getScheduleService.handler(id, EOptions.BY_USER) as ISchedule[]
     const hasSchedulesActive = hasSchedule.some(schedule => schedule.status === EStatus.active)
 
     if (hasSchedulesActive) {
-      return new Error('User has schedule active')
+      return new Error('Usuário possui agendamento ativo.')
     }
 
     const userDeleted = await this._userRepository.deleteUser(id)

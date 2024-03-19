@@ -10,7 +10,7 @@ export class DeleteCompanyService implements IDeleteCompanyService {
 
   async handler (id: number): Promise<ICompany|Error> {
     if (!id) {
-      return new Error('No id provided')
+      throw new Error('No id provided')
     }
 
     const constructions = await this._constructionRepository.getConstructionsService.handler() as IConstruction[]
