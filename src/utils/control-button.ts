@@ -76,7 +76,7 @@ const buttonsScheduleFeature = [
 const buttonsReportFeature = [
   {
     category: 1,
-    href: '/meus/relatorios',
+    href: '/meus-relatorios',
     name: 'Ver meus relatórios',
     adminHasNecessary: false
   },

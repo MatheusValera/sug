@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
   addUser.forEach(button => {
     button.addEventListener('click', function () {
       // eslint-disable-next-line no-undef
-
+      console.log('a')
       nameInput.value = ''
       emailInput.value = ''
       cpfInput.value = ''

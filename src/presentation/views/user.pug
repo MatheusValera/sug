@@ -14,7 +14,7 @@ block content
           h4.card-title Colaboradores
           p.card-description
             | Aqui você pode gerenciar os colaboradores 
-          button.btn.btn-primary.btn-lg.btn-block( class="addUser") Adicionar
+          button.btn.btn-primary.btn-lg.btn-block(class="addUser") Adicionar
 
           .table-responsive
             table.table
@@ -58,6 +58,7 @@ block content
     // Modal para edição de usuário
     #editModal.modal
       .modal-content
+        span.closeModal &times;
         h4.card-title Colaborador
         form.forms-sample(id="editUserForm")
           input(type="hidden", id="userId", name="userId")
@@ -93,7 +94,7 @@ block content
             label(for="neighborhood") Bairro:
             input.form-control(type="text", id="neighborhood", name="neighborhood", required)
           .form-group
-            label(for="office") Companhia:
+            label(for="office") Cargo:
             select.form-control(id="officeSelect")
               option(value=0)
               option(value='Topógrafo') Engenheiro
