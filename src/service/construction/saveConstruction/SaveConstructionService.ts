@@ -13,7 +13,6 @@ export class SaveConstructionService implements ISaveConstructionService {
     if (construction.id) {
       return new Error('A construction who already has an ID cannot be saved.')
     }
-
     const hasIncorrectValue = await this._validator.validate(construction)
 
     if (hasIncorrectValue) {

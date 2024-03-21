@@ -5,11 +5,12 @@ const id = document.getElementById('id')
 const createdAt = document.getElementById('createdAt')
 const user = document.getElementById('usersSelect')
 const construction = document.getElementById('constructionSelect')
-const allocationId = document.getElementById('allocationId')
+const allocation = document.getElementById('allocationSelect')
 const allocationCreatedAt = document.getElementById('allocationCreatedAt')
 const dateSchedule = document.getElementById('dateSchedule')
 const status = document.getElementById('statusSelect')
 const idDelete = document.getElementById('idDelete')
+const nameDelete = document.getElementById('nameDelete')
 const editModal = document.getElementById('editModal')
 const deleteModal = document.getElementById('deleteModal')
 const errorMessage = document.getElementById('errorMessage')
@@ -17,47 +18,68 @@ const errorMessageDelete = document.getElementById('errorMessageDelete')
 
 VMasker(dateSchedule).maskPattern('99/99/9999')
 
-user.addEventListener('blur', completeConstruction().then(() => {}))
-
-construction.addEventListener('blur', completeAllocation)
-
 async function completeConstruction () {
-  const constructionR = await axios.post('/construction/getConstructions', {})
-    .then(result => (result.data))
+  try {
+    const response = await axios.post('/construction/getConstructions', {})
+    const constructions = JSON.parse(response.data)
 
-  console.log(constructionR)
+    const response2 = await axios.post('/allocation/getAllocations', {})
+    const allocations = JSON.parse(response2.data)
 
-  const constructionToUser = constructionR.filter(x => x?.userId === user.value)
+    if (!Array.isArray(constructions)) {
+      console.error('Dados recebidos não são uma array', constructions)
+      return
+    }
 
-  for (const c in constructionToUser) {
-    const option = document.createElement('option')
-    option.text = c.name
-    option.value = c.id
-    construction.add(option)
-  }
+    const auxA = allocations.filter(x => x.id === parseInt(allocation.value))[0]
 
-  console.log(constructionToUser)
-  if (!constructionToUser.length) {
-    errorMessage.textContent = 'Usuário não alocação para nenhuma construção.'
-    errorMessage.style.display = 'block'
+    const constructionsToUser = constructions.filter(x => x?.id === auxA.constructionId)
+
+    console.log(constructions, auxA.constructionId)
+
+    constructionsToUser.forEach(c => {
+      const option = document.createElement('option')
+      option.text = c.name
+      option.value = c.id
+      construction.appendChild(option)
+    })
+  } catch (error) {
   }
 }
 
 async function completeAllocation () {
-  const allocationR = await axios.post('/allocation/getAllocation', { option: 5, id: construction.value })
+  try {
+    const response = await axios.post('/allocation/getAllocations', {})
+    const allocations = JSON.parse(response.data)
 
-  const allocationToUser = allocationR.filter(x => x?.userId === user.value)[0]
+    if (!Array.isArray(allocations)) {
+      console.error('Dados recebidos não são uma array', allocations)
+      return
+    }
+    const allocationToUser = allocations.filter(x => x?.userId === parseInt(user.value))
 
-  allocationCreatedAt.value = allocationToUser.createdAt
+    allocationToUser.forEach(c => {
+      const option = document.createElement('option')
+      option.text = c.createdAt.split('T')[0]
+      option.value = c.id
+      allocation.appendChild(option)
+    })
+
+    if (!allocationToUser.length) {
+      errorMessage.textContent = 'Usuário não alocado para nenhuma alocação.'
+      errorMessage.style.display = 'block'
+    }
+  } catch (error) {
+    console.error('Erro ao completar alocação:', error)
+  }
 }
 
 function openModal (schedule) {
   if (!schedule) {
     user.value = 0
     construction.value = 0
-    allocationId.value = 0
-    allocationCreatedAt.value = null
-    dateSchedule.value = null
+    allocation.value = 0
+    dateSchedule.value = ''
     status.value = 0
   } else {
     id.value = schedule.id
@@ -65,8 +87,8 @@ function openModal (schedule) {
     user.value = schedule.userId
     status.value = schedule.status
     construction.value = schedule.constructionId
-    allocationId.value = schedule.allocationId
-    dateSchedule.value = schedule.dateSchedule
+    allocation.value = schedule.allocationId
+    dateSchedule.value = schedule.dateSchedule.split('T')[0]
   }
   editModal.style.display = 'block'
 }
@@ -77,10 +99,11 @@ function requestModal () {
   const payload = {
     userId: parseInt(user.value),
     constructionId: parseInt(construction.value),
-    allocationId: parseInt(allocationId.value),
-    dateSchedule: dateSchedule.value,
+    allocationId: parseInt(allocation.value),
+    dateSchedule: new Date(dateSchedule.value),
     status: status.value
   }
+  payload.dateSchedule.setHours(payload.dateSchedule.getHours() + 3)
   if (id.value) {
     payload.id = parseInt(id.value)
     payload.createdAt = createdAt.value
@@ -90,8 +113,6 @@ function requestModal () {
       .catch(function () {
         window.location.href = '/agendamento'
       })
-
-    console.log(a)
   } else {
     axios.post('/schedule/saveSchedule', payload)
       .then(result => (result))
@@ -107,8 +128,9 @@ function closeModal () {
   editModal.style.display = 'none'
 }
 
-function openModalDelete (id) {
-  idDelete.value = parseInt(id)
+function openModalDelete (obj) {
+  idDelete.value = parseInt(obj.id)
+  nameDelete.value = obj.name
   deleteModal.style.display = 'block'
 }
 

@@ -1,0 +1,96 @@
+extends ./layout/master
+
+block head
+  title Relatórios
+  link(rel="stylesheet", href="./styles/schedule.css")
+  script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
+  script(src="https://unpkg.com/vanilla-masker@1.1.1/lib/vanilla-masker.js")
+
+block content
+  .row
+    .col-lg-16.grid-margin.stretch-card
+      .card
+        .card-body
+          h4.card-title Relatórios
+          p.card-description
+            | Aqui você pode ver os relatórios
+          if canAddReport === false
+            | Você não possui agendamentos para adicionar relatório
+          if canEdit === true && canAddReport === true
+            button.btn.btn-primary.btn-lg.btn-block( onclick="openModal()") Adicionar
+
+          .table-responsive
+            table.table
+              thead
+                tr
+                  th ID
+                  th Data da criação
+                  th Conteúdo
+                  th Nome do colaborador
+                  th Nome da construção
+                  th Data do agendamento
+                  if canEdit === true
+                    th Ações
+              tbody
+                each report in reports
+                  tr
+                    td= report.id
+                    td= report.createdAt.toLocaleString('pt-BR', { timezone: 'UTC' })
+                    td= report.description
+                    td= report.user.name
+                    td= report.construction.name
+                    td= report.schedule.dateSchedule.toLocaleString('pt-BR', { timezone: 'UTC' })
+                    if canEdit === true
+                      td
+                        button.btn.btn-warning.btn-rounded.btn-fw(onclick=`openModal(${JSON.stringify(report)})` data-id=report.id ) Editar
+                        button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" onclick=`openModalDelete({ id: ${report.id}, name: '${report.construction.name}'})` data-id=report.id) Excluir
+
+    #editModal.modal
+      .modal-content
+        h4.card-title Relatório
+        form(id="editUserForm")
+          input(type="hidden", id="id", name="id")
+          input(type="hidden", id="createdAt", name="createdAt")
+
+          .form-group
+            label(for="constructionSelect") Usuario:
+            select.form-control(id="constructionSelect")
+              option(value=user.id)= user.name
+
+          .form-group
+            label(for="allocationSelect") Agendamento:
+            select.form-control(id="allocationSelect")
+              option(value=0)
+                for schedule in schedules
+                  option(value=schedule.id)= schedule.createdAt
+          
+          .form-group
+            label(for="constructionSelect") Construção:
+            select.form-control(id="constructionSelect")
+              option(value=0)
+                for construction in constructions
+                  option(value=construction.id)= construction.name
+
+          .form-group
+            label(for="report") Descrição:
+            input.form-control(type="text", id="report", name="report", required)
+
+          .form-group
+            button.btn.btn-primary.me-2n(onclick='requestModal()') Salvar
+            button.btn.btn-light(onclick='closeModal()') Cancelar
+            label(id="errorMessage", style="display: none; color: red;")
+
+    #deleteModal.modal
+      .modal-content
+        h4.card-title Confirmar Exclusão
+        h4.card-title Tem certeza de que deseja excluir esse relatório?
+          .form-group
+              input.form-control(type="text", id="idDelete", name="idDelete", readonly)
+          .form-group
+              input.form-control(type="text", id="nameDelete", name="nameDelete", readonly)
+          .form-group
+            button.btn.btn-danger.btn-rounded.btn-fw.deleteBtn(onclick='deleteModalRequest()') Excluir
+            button.btn.btn-light(onclick='closeModalDelete()') Cancelar
+            label(id="errorMessageDelete", style="display: none; color: red;")
+
+    script(src="./javascript/schedule.js")

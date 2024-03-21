@@ -15,6 +15,7 @@ import { IUser } from '../../../domain/data/entity/IUser'
 import { ISchedule } from '../../../domain/data/entity/ISchedule'
 import { IConstruction } from '../../../domain/data/entity/IConstruction'
 import { IAllocation } from '../../../domain/data/entity/IAllocation'
+import { getUserButtons } from '../../../utils/control-button'
 
 export class ScheduleController implements IController {
   public router = express.Router()
@@ -28,6 +29,8 @@ export class ScheduleController implements IController {
 
   setupRoutes (): void {
     this.router.get('/agendamento', requireLogin, isAdmin, this.handler.bind(this))
+    this.router.get('/agendamentos', requireLogin, this.handlerViewSchedules.bind(this))
+    this.router.get('/meus-agendamentos', requireLogin, this.handlerViewUserSchedules.bind(this))
     this.router.post('/schedule/getSchedule', requireLogin, this.getSchedule.bind(this))
     this.router.post('/schedule/getSchedules', requireLogin, this.getSchedules.bind(this))
     this.router.post('/schedule/saveSchedule', requireLogin, isAdmin, this.saveSchedule.bind(this))
@@ -36,6 +39,10 @@ export class ScheduleController implements IController {
   }
 
   async handler (request: IRequest, response: IResponse): Promise<any> {
+    const email = request.user.email
+    const user = await this._usersService.getUserService.handler('email', email)
+
+    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
     const schedulesRaw = await this._scheduleService.getSchedulesService.handler() as ISchedule[]
     const users = await this._usersService.getUsersService.handler() as IUser[]
     const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
@@ -59,7 +66,69 @@ export class ScheduleController implements IController {
         }
       }
     })
-    response.status(200).render('./schedule.pug', { schedules, users, constructions, allocations })
+    response.status(200).render('./schedule.pug', { user, canEdit: true, ...buttons, schedules, users, constructions, allocations })
+  }
+
+  async handlerViewSchedules (request: IRequest, response: IResponse): Promise<any> {
+    const email = request.user.email
+    const user = await this._usersService.getUserService.handler('email', email)
+
+    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const schedulesRaw = await this._scheduleService.getSchedulesService.handler() as ISchedule[]
+    const users = await this._usersService.getUsersService.handler() as IUser[]
+    const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
+    const allocations = await this._allocationService.getAllocationsService.handler() as IAllocation[]
+
+    const schedules = schedulesRaw.map(s => {
+      const user = users.filter(u => u.id === s.userId)[0]
+      const construction = constructions.filter(c => c.id === s.constructionId)[0]
+      const allocation = allocations.filter(a => a.id === s.allocationId)[0]
+
+      return {
+        ...s,
+        construction: {
+          name: construction.name
+        },
+        allocation: {
+          createdAt: allocation.createdAt
+        },
+        user: {
+          name: user.name
+        }
+      }
+    })
+    response.status(200).render('./schedule.pug', { user, canEdit: false, ...buttons, schedules, users, constructions, allocations })
+  }
+
+  async handlerViewUserSchedules (request: IRequest, response: IResponse): Promise<any> {
+    const email = request.user.email
+    const user = await this._usersService.getUserService.handler('email', email) as IUser
+
+    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const schedulesRaw = await this._scheduleService.getSchedulesService.handler() as ISchedule[]
+    const users = await this._usersService.getUsersService.handler() as IUser[]
+    const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
+    const allocations = await this._allocationService.getAllocationsService.handler() as IAllocation[]
+
+    const schedules = schedulesRaw.filter(x => x.userId === user.id).map(s => {
+      const user = users.filter(u => u.id === s.userId)[0]
+      const construction = constructions.filter(c => c.id === s.constructionId)[0]
+      const allocation = allocations.filter(a => a.id === s.allocationId)[0]
+
+      return {
+        ...s,
+        construction: {
+          name: construction.name
+        },
+        allocation: {
+          createdAt: allocation.createdAt
+        },
+        user: {
+          name: user.name
+        }
+      }
+    })
+    response.status(200).render('./schedule.pug', { user, canEdit: false, ...buttons, schedules, users, constructions, allocations })
   }
 
   async getSchedule (req: IRequest, res: IResponse): Promise<IResponse> {

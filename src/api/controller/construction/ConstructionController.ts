@@ -11,17 +11,21 @@ import { InternalServerErrorResponse } from '../../common/responses/InternalServ
 import { ICompanyService } from '../../../service/company/CompanyServiceFactory'
 import { ICompany } from '../../../domain/data/entity/ICompany'
 import { IConstruction } from '../../../domain/data/entity/IConstruction'
+import { IUserService } from '../../../service/user/UserServiceFactory'
+import { getUserButtons } from '../../../utils/control-button'
 
 export class ConstructionController implements IController {
   public router = express.Router()
 
   constructor (private readonly _constructionService: IConstructionService,
-    private readonly _companyService: ICompanyService) {
+    private readonly _companyService: ICompanyService,
+    private readonly _userService: IUserService) {
     this.setupRoutes()
   }
 
   setupRoutes (): void {
-    this.router.get('/construcao', requireLogin, isAdmin, this.handler.bind(this))
+    this.router.get('/construcao', requireLogin, this.handler.bind(this))
+    this.router.get('/construcoes', requireLogin, this.handlerViewConstructions.bind(this))
     this.router.post('/construction/getConstruction', requireLogin, isAdmin, this.getConstruction.bind(this))
     this.router.post('/construction/getConstructions', requireLogin, isAdmin, this.getConstructions.bind(this))
     this.router.post('/construction/saveConstruction', requireLogin, isAdmin, this.saveConstruction.bind(this))
@@ -30,6 +34,10 @@ export class ConstructionController implements IController {
   }
 
   async handler (request: IRequest, response: IResponse): Promise<any> {
+    const email = request.user.email
+    const user = await this._userService.getUserService.handler('email', email)
+
+    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
     const constructionsRaw = await this._constructionService.getConstructionsService.handler() as IConstruction[]
     const companies = await this._companyService.getCompaniesService.handler() as ICompany[]
     const constructions = constructionsRaw.map(c => {
@@ -41,7 +49,26 @@ export class ConstructionController implements IController {
         }
       }
     })
-    response.status(200).render('./construction.pug', { constructions, companies })
+    response.status(200).render('./construction.pug', { user, canEdit: true, ...buttons, constructions, companies })
+  }
+
+  async handlerViewConstructions (request: IRequest, response: IResponse): Promise<any> {
+    const email = request.user.email
+    const user = await this._userService.getUserService.handler('email', email)
+
+    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const constructionsRaw = await this._constructionService.getConstructionsService.handler() as IConstruction[]
+    const companies = await this._companyService.getCompaniesService.handler() as ICompany[]
+    const constructions = constructionsRaw.map(c => {
+      const company = companies.filter(company => company.id === c.companyId)[0]
+      return {
+        ...c,
+        company: {
+          name: company?.nameCompany
+        }
+      }
+    })
+    response.status(200).render('./construction.pug', { user, anEdit: false, ...buttons, constructions, companies })
   }
 
   async getConstruction (req: IRequest, res: IResponse): Promise<IResponse> {
@@ -82,6 +109,7 @@ export class ConstructionController implements IController {
 
       return SuccessResponse.handler(res, JSON.stringify(construction))
     } catch (error) {
+      console.error(error)
       return InternalServerErrorResponse.handler(res, error.message)
     }
   }

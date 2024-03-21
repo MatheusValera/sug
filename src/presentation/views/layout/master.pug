@@ -57,7 +57,7 @@ html
           ul.navbar-nav
             li.nav-item.font-weight-semibold.d-none.d-lg-block.ms-0
               h1.welcome-text Olá, 
-                span.text-black.fw-bold ALTERAR NOME
+                span.text-black.fw-bold= user.name
               h3.welcome-sub-text Aqui está sua página principal
           ul.navbar-nav.ms-auto
             li.nav-item.dropdown
@@ -66,277 +66,102 @@ html
                 span.count
               .dropdown-menu.dropdown-menu-right.navbar-dropdown.preview-list.pb-0(aria-labelledby='countDropdown')
                 a.dropdown-item.py-3
-                  p.mb-0.font-weight-medium.float-left You have 7 unread mails 
-                  span.badge.badge-pill.badge-primary.float-right View all
+                  p.mb-0.font-weight-medium.float-left Você tem x mensagens 
                 .dropdown-divider
                 a.dropdown-item.preview-item
                   .preview-thumbnail
                     img.img-sm.rounded-circle(src='images/faces/face10.jpg', alt='image')
                   .preview-item-content.flex-grow.py-2
-                    p.preview-subject.ellipsis.font-weight-medium.text-dark Marian Garner 
-                    p.fw-light.small-text.mb-0 The meeting is cancelled 
-                a.dropdown-item.preview-item
-                  .preview-thumbnail
-                    img.img-sm.rounded-circle(src='images/faces/face12.jpg', alt='image')
-                  .preview-item-content.flex-grow.py-2
-                    p.preview-subject.ellipsis.font-weight-medium.text-dark David Grey 
-                    p.fw-light.small-text.mb-0 The meeting is cancelled 
-                a.dropdown-item.preview-item
-                  .preview-thumbnail
-                    img.img-sm.rounded-circle(src='images/faces/face1.jpg', alt='image')
-                  .preview-item-content.flex-grow.py-2
-                    p.preview-subject.ellipsis.font-weight-medium.text-dark Travis Jenkins 
-                    p.fw-light.small-text.mb-0 The meeting is cancelled 
+                    p.preview-subject.ellipsis.font-weight-medium.text-dark Nome Teste
+                    p.fw-light.small-text.mb-0 Teste de notificação
+
             li.nav-item.dropdown.d-none.d-lg-block.user-dropdown
               a.nav-link(id='UserDropdown', href='#', data-bs-toggle='dropdown', aria-expanded='false')
-                img.img-xs.rounded-circle(src='images/faces/face8.jpg', alt='Profile image')
+                img.img-xs.rounded-circle(src='images/faces/face8.jpg', alt='Imagem de perfil')
               .dropdown-menu.dropdown-menu-right.navbar-dropdown(aria-labelledby='UserDropdown')
                 .dropdown-header.text-center
-                  img.img-md.rounded-circle(src='images/faces/face8.jpg', alt='Profile image')
-                  p.mb-1.mt-3.font-weight-semibold Allen Moreno
-                  p.fw-light.text-muted.mb-0 allenmoreno@gmail.com
+                  img.img-md.rounded-circle(src='images/faces/face8.jpg', alt='Imagem de perfil')
+                  p.mb-1.mt-3.font-weight-semibol= user.name
+                  p.fw-light.text-muted.mb-0= user.email
                 a.dropdown-item
-                  i.dropdown-item-icon.mdi.mdi-account-outline.text-primary.me-2 My Profile 
-                  span.badge.badge-pill.badge-danger 1
-                a.dropdown-item
-                  i.dropdown-item-icon.mdi.mdi-message-text-outline.text-primary.me-2 Messages
-                a.dropdown-item
-                  i.dropdown-item-icon.mdi.mdi-calendar-check-outline.text-primary.me-2 Activity
-                a.dropdown-item
-                  i.dropdown-item-icon.mdi.mdi-help-circle-outline.text-primary.me-2 FAQ
-                a.dropdown-item
-                  i.dropdown-item-icon.mdi.mdi-power.text-primary.me-2 Sign Out
+                  i.dropdown-item-icon.mdi.mdi-power.text-primary.me-2 Sair
           button.navbar-toggler.navbar-toggler-right.d-lg-none.align-self-center(type='button', data-bs-toggle='offcanvas')
 
       .container-fluid.page-body-wrapper.pt-0.proBanner-padding-top
-        // partial:partials/_settings-panel.html
-        .theme-setting-wrapper
-          #settings-trigger
-            i.ti-settings
-          #theme-settings.settings-panel
-            i.settings-close.ti-close
-            p.settings-heading SIDEBAR SKINS
-            #sidebar-light-theme.sidebar-bg-options.selected
-              .img-ss.rounded-circle.bg-light.border.me-3
-              | Light
-            #sidebar-dark-theme.sidebar-bg-options
-              .img-ss.rounded-circle.bg-dark.border.me-3
-              | Dark
-            p.settings-heading.mt-2 HEADER SKINS
-            .color-tiles.mx-0.px-4
-              .tiles.success
-              .tiles.warning
-              .tiles.danger
-              .tiles.info
-              .tiles.dark
-              .tiles.default
-        #right-sidebar.settings-panel
-          i.settings-close.ti-close
-          ul#setting-panel.nav.nav-tabs.border-top(role='tablist')
-            li.nav-item
-              a#todo-tab.nav-link.active(data-bs-toggle='tab' href='#todo-section' role='tab' aria-controls='todo-section' aria-expanded='true') TO DO LIST
-            li.nav-item
-              a#chats-tab.nav-link(data-bs-toggle='tab' href='#chats-section' role='tab' aria-controls='chats-section') CHATS
-          #setting-content.tab-content
-            #todo-section.tab-pane.fade.show.active.scroll-wrapper.ps.ps--active-y(role='tabpanel' aria-labelledby='todo-section')
-              .add-items.d-flex.px-3.mb-0
-                form.form.w-100
-                  .form-group.d-flex
-                    input.form-control.todo-list-input(type='text' placeholder='Add To-do')
-                    button#add-task.add.btn.btn-primary.todo-list-add-btn(type='submit') Add
-              .list-wrapper.px-3
-                ul.d-flex.flex-column-reverse.todo-list
-                  li
-                    .form-check
-                      label.form-check-label
-                        input.checkbox(type='checkbox')
-                        |                       Team review meeting at 3.00 PM
-                        i.input-helper
-                    i.remove.ti-close
-                  li
-                    .form-check
-                      label.form-check-label
-                        input.checkbox(type='checkbox')
-                        |                       Prepare for presentation
-                        i.input-helper
-                    i.remove.ti-close
-                  li
-                    .form-check
-                      label.form-check-label
-                        input.checkbox(type='checkbox')
-                        |                       Resolve all the low priority tickets due today
-                        i.input-helper
-                    i.remove.ti-close
-                  li.completed
-                    .form-check
-                      label.form-check-label
-                        input.checkbox(type='checkbox' checked='')
-                        |                       Schedule meeting for next week
-                        i.input-helper
-                    i.remove.ti-close
-                  li.completed
-                    .form-check
-                      label.form-check-label
-                        input.checkbox(type='checkbox' checked='')
-                        |                       Project review
-                        i.input-helper
-                    i.remove.ti-close
-              h4.px-3.text-muted.mt-5.fw-light.mb-0 Events
-              .events.pt-4.px-3
-                .wrapper.d-flex.mb-2
-                  i.ti-control-record.text-primary.me-2
-                  span Feb 11 2018
-                p.mb-0.font-weight-thin.text-gray Creating component page build a js
-                p.text-gray.mb-0 The total number of sessions
-              .events.pt-4.px-3
-                .wrapper.d-flex.mb-2
-                  i.ti-control-record.text-primary.me-2
-                  span Feb 7 2018
-                p.mb-0.font-weight-thin.text-gray Meeting with Alisa
-                p.text-gray.mb-0 Call Sarah Graves
-              .ps__rail-x(style='left: 0px; bottom: 0px;')
-                .ps__thumb-x(tabindex='0' style='left: 0px; width: 0px;')
-              .ps__rail-y(style='top: 0px; height: 621px; right: 0px;')
-                .ps__thumb-y(tabindex='0' style='top: 0px; height: 497px;')
-            // To do section tab ends
-            #chats-section.tab-pane.fade(role='tabpanel' aria-labelledby='chats-section')
-              .d-flex.align-items-center.justify-content-between.border-bottom
-                p.settings-heading.border-top-0.mb-3.pl-3.pt-0.border-bottom-0.pb-0 Friends
-                small.settings-heading.border-top-0.mb-3.pt-0.border-bottom-0.pb-0.pr-3.fw-normal See All
-              ul.chat-list
-                li.list.active
-                  .profile
-                    img(src='images/faces/face1.jpg' alt='image')
-                    span.online
-                  .info
-                    p Thomas Douglas
-                    p Available
-                  small.text-muted.my-auto 19 min
-                li.list
-                  .profile
-                    img(src='images/faces/face2.jpg' alt='image')
-                    span.offline
-                  .info
-                    .wrapper.d-flex
-                      p Catherine
-                    p Away
-                  .badge.badge-success.badge-pill.my-auto.mx-2 4
-                  small.text-muted.my-auto 23 min
-                li.list
-                  .profile
-                    img(src='images/faces/face3.jpg' alt='image')
-                    span.online
-                  .info
-                    p Daniel Russell
-                    p Available
-                  small.text-muted.my-auto 14 min
-                li.list
-                  .profile
-                    img(src='images/faces/face4.jpg' alt='image')
-                    span.offline
-                  .info
-                    p James Richardson
-                    p Away
-                  small.text-muted.my-auto 2 min
-                li.list
-                  .profile
-                    img(src='images/faces/face5.jpg' alt='image')
-                    span.online
-                  .info
-                    p Madeline Kennedy
-                    p Available
-                  small.text-muted.my-auto 5 min
-                li.list
-                  .profile
-                    img(src='images/faces/face6.jpg' alt='image')
-                    span.online
-                  .info
-                    p Sarah Graves
-                    p Available
-                  small.text-muted.my-auto 47 min
-            // chat tab ends
-        // partial
-        // partial:partials/_sidebar.html
         nav#sidebar.sidebar.sidebar-offcanvas
           ul.nav
             li.nav-item.active
-              a.nav-link(href='index.html')
+              a.nav-link(href='/')
                 i.mdi.mdi-grid-large.menu-icon
-                span.menu-title Dashboard
-            li.nav-item.nav-category UI Elements
+                span.menu-title Página Principal
+            li.nav-item.nav-category Funcionalidades
             li.nav-item
-              a.nav-link(data-bs-toggle='collapse' href='#ui-basic' aria-expanded='false' aria-controls='ui-basic')
-                i.menu-icon.mdi.mdi-floor-plan
-                span.menu-title UI Elements
+              a.nav-link(data-bs-toggle='collapse' href='#alocacao' aria-expanded='false' aria-controls='alocacao')
+                i.menu-icon.mdi.mdi-account-plus
+                span.menu-title Alocações
                 i.menu-arrow
-              #ui-basic.collapse
+              #alocacao.collapse
                 ul.nav.flex-column.sub-menu
-                  li.nav-item
-                    a.nav-link(href='pages/ui-features/buttons.html') Buttons
-                  li.nav-item
-                    a.nav-link(href='pages/ui-features/dropdowns.html') Dropdowns
-                  li.nav-item
-                    a.nav-link(href='pages/ui-features/typography.html') Typography
-            li.nav-item.nav-category Forms and Datas
+                  for a in buttonsAllocation
+                    li.nav-item
+                      a.nav-link(href=a.href)= a.name
             li.nav-item
-              a.nav-link(data-bs-toggle='collapse' href='#form-elements' aria-expanded='false' aria-controls='form-elements')
-                i.menu-icon.mdi.mdi-card-text-outline
-                span.menu-title Form elements
+              a.nav-link(data-bs-toggle='collapse' href='#construcao' aria-expanded='false' aria-controls='construcao')
+                i.menu-icon.mdi.mdi-android-studio
+                span.menu-title Construções
                 i.menu-arrow
-              #form-elements.collapse
+              #construcao.collapse
                 ul.nav.flex-column.sub-menu
-                  li.nav-item
-                    a.nav-link(href='pages/forms/basic_elements.html') Basic Elements
+                  for a in buttonsConstruction
+                    li.nav-item
+                      a.nav-link(href=a.href)= a.name
             li.nav-item
-              a.nav-link(data-bs-toggle='collapse' href='#charts' aria-expanded='false' aria-controls='charts')
-                i.menu-icon.mdi.mdi-chart-line
-                span.menu-title Charts
+              a.nav-link(data-bs-toggle='collapse' href='#relatorio' aria-expanded='false' aria-controls='relatorio')
+                i.menu-icon.mdi.mdi-altimeter
+                span.menu-title Relatórios
                 i.menu-arrow
-              #charts.collapse
+              #relatorio.collapse
                 ul.nav.flex-column.sub-menu
-                  li.nav-item
-                    a.nav-link(href='pages/charts/chartjs.html') ChartJs
+                  for a in buttonsReport
+                    li.nav-item
+                      a.nav-link(href=a.href)= a.name
             li.nav-item
-              a.nav-link(data-bs-toggle='collapse' href='#tables' aria-expanded='false' aria-controls='tables')
-                i.menu-icon.mdi.mdi-table
-                span.menu-title Tables
+              a.nav-link(data-bs-toggle='collapse' href='#agendamento' aria-expanded='false' aria-controls='agendamento')
+                i.menu-icon.mdi.mdi-alarm-plus
+                span.menu-title Agendamentos
                 i.menu-arrow
-              #tables.collapse
+              #agendamento.collapse
                 ul.nav.flex-column.sub-menu
-                  li.nav-item
-                    a.nav-link(href='pages/tables/basic-table.html') Basic table
-            li.nav-item
-              a.nav-link(data-bs-toggle='collapse' href='#icons' aria-expanded='false' aria-controls='icons')
-                i.menu-icon.mdi.mdi-layers-outline
-                span.menu-title Icons
-                i.menu-arrow
-              #icons.collapse
-                ul.nav.flex-column.sub-menu
-                  li.nav-item
-                    a.nav-link(href='pages/icons/mdi.html') Mdi icons
-            li.nav-item.nav-category pages
-            li.nav-item
-              a.nav-link(data-bs-toggle='collapse' href='#auth' aria-expanded='false' aria-controls='auth')
-                i.menu-icon.mdi.mdi-account-circle-outline
-                span.menu-title User Pages
-                i.menu-arrow
-              #auth.collapse
-                ul.nav.flex-column.sub-menu
-                  li.nav-item
-                    a.nav-link(href='pages/samples/login.html')  Login 
-            li.nav-item.nav-category help
-            li.nav-item
-              a.nav-link(href='http://bootstrapdash.com/demo/star-admin2-free/docs/documentation.html')
-                i.menu-icon.mdi.mdi-file-document
-                span.menu-title Documentation
+                  for a in buttonsSchedule
+                    li.nav-item
+                      a.nav-link(href=a.href)= a.name
+            if user.admin === true
+              li.nav-item.nav-category Gerenciamento
+              li.nav-item
+                a.nav-link(data-bs-toggle='collapse' href='#usuario' aria-expanded='false' aria-controls='usuario')
+                  i.menu-icon.mdi.mdi-account-box
+                  span.menu-title Usuários
+                  i.menu-arrow
+                #usuario.collapse
+                  ul.nav.flex-column.sub-menu
+                    for a in buttonsUser
+                      li.nav-item
+                        a.nav-link(href=a.href)= a.name
+              li.nav-item
+                a.nav-link(data-bs-toggle='collapse' href='#companhia' aria-expanded='false' aria-controls='companhia')
+                  i.menu-icon.mdi.mdi-arrange-bring-to-front
+                  span.menu-title Companhias
+                  i.menu-arrow
+                #companhia.collapse
+                  ul.nav.flex-column.sub-menu
+                    for a in buttonsCompany
+                      li.nav-item
+                        a.nav-link(href=a.href)= a.name
+
         // partial
         .main-panel
           .content-wrapper
             block content        
           footer.footer
             .d-sm-flex.justify-content-center.justify-content-sm-between
-              span.text-muted.text-center.text-sm-left.d-block.d-sm-inline-block
-                | Premium 
-                a(href='https://www.bootstrapdash.com/' target='_blank') Bootstrap admin template
-                |  from BootstrapDash.
-              span.float-none.float-sm-right.d-block.mt-1.mt-sm-0.text-center Copyright &copy; 2021. All rights reserved.
+              span.float-none.float-sm-right.d-block.mt-1.mt-sm-0.text-center Copyright &copy; 2024.

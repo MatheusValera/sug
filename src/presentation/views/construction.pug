@@ -1,82 +1,109 @@
 extends ./layout/master
+
 block head
-  title Gerenciar obras
+  title Gerenciar Construções
   link(rel="stylesheet", href="./styles/construction.css")
   script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
   script(src="https://unpkg.com/vanilla-masker@1.1.1/lib/vanilla-masker.js")
 
 block content
-  h1 Gerenciar obras
-  button(onclick='openModal()' class="add") Adicionar
-  main
-    if constructions.length === 0
-      p Não há obras cadastrados.
-    else
-      table
-        thead
-          tr
-            th Id
-            th Nome da obra
-            th Data da criação
-            th Data de atualização
-            th ID da companhia
-            th Nome da companhia
-            th Status
-        tbody
-          each construction in constructions
-            tr
-              td= construction.id
-              td= construction.name
-              td= construction.createdAt.toLocaleString('pt-BR', { timezone: 'UTC' })
-              td= construction.updatedAt ? construction.updatedAt.toLocaleString('pt-BR', { timezone: 'UTC' }): ''
-              td= construction.companyId
-              td= construction.company.name
-              td= construction.status === 'active' ? 'Ativa' : 'Concluída'
-              td
-                button.editBtn(onclick=`openModal(${JSON.stringify(construction)})` data-id=construction.id ) Editar
-                button.deleteBtn(onclick=`openModalDelete(${construction.id})` data-id=construction.id) Excluir
+  .row
+    .col-lg-16.grid-margin.stretch-card
+      .card
+        .card-body
+          h4.card-title Construções
+          p.card-description
+            | Aqui você pode ver as construções
+          if canEdit === true 
+            button.btn.btn-primary.btn-lg.btn-block( onclick="openModal()") Adicionar
+
+          .table-responsive
+            table.table
+              thead
+                tr
+                  th ID
+                  th Nome da obra
+                  th Data da criação
+                  th Data de inicio
+                  th Data prevista para término
+                  th ID da companhia
+                  th Nome da companhia
+                  th Status
+                  if canEdit === true
+                    th Ações
+              tbody
+                each construction in constructions
+                  tr
+                    td= construction.id
+                    td= construction.name
+                    td= construction.createdAt.toLocaleString('pt-BR', { timezone: 'UTC' })
+                    td= construction.startDate ? construction.startDate.toLocaleString('pt-BR', { timezone: 'UTC' }) : ''
+                    td= construction.endDate ? construction.endDate.toLocaleString('pt-BR', { timezone: 'UTC' }) : ''
+                    td= construction.companyId
+                    td= construction.company.name
+                    td
+                      if construction.status === 'active' 
+                        label.badge.badge-danger Ativa
+                      else
+                        label.badge.badge-info Concluída
+                    if canEdit === true
+                      td
+                        button.btn.btn-warning.btn-rounded.btn-fw(onclick=`openModal(${JSON.stringify(construction)})` data-id=construction.id ) Editar
+                        button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" onclick=`openModalDelete({ id: ${construction.id}, name: '${construction.name}'})` data-id=construction.id) Excluir
 
     #editModal.modal
       .modal-content
         span.closeModal &times;
-        h2 Obra
+        h4.card-title Obra
         form(id="editUserForm")
           input(type="hidden", id="id", name="id")
           input(type="hidden", id="createdAt", name="createdAt")
 
-          br
-          label(for="nameConstruction") Nome da obra:
-          input(type="text", id="nameConstruction", name="nameConstruction", required)
+          .form-group
+            label(for="nameConstruction") Nome da obra:
+            input.form-control(type="text", id="nameConstruction", name="nameConstruction", required)
 
-          br
-          label(for="status") Status:
-          select.select(id="statusSelect")
-            option(value=0)
-            option(value='active') Ativa
-            option(value='finished') Concluída
+          .form-group
+            label(for="startDate") Data de inicio:
+            input.form-control(type="Date", id="startDate", placeholer="dd/mm/yyyy" name="startDate", required)
 
-          br
-          label(for="contactResponsiblePerson") Companhia:
-          select.select(id="companySelect")
-            option(value=0)
-            for company in companies
-              option(value=company.id)= company.nameCompany
+          .form-group
+            label(for="endDate") Nome previsto para fim:
+            input.form-control(type="Date", id="endDate", placeholer="dd/mm/yyyy" name="endDate", required)
 
-          br
-          button(onclick='requestModal()') Salvar
-          button(onclick='closeModal()') Cancelar
-          label(id="errorMessage", style="display: none; color: red;")
+          .form-group
+            label(for="status") Status:
+            select.form-control(id="statusSelect")
+              option(value=0)
+              option(value='active') Ativa
+              option(value='finished') Concluída
+
+          .form-group
+            label(for="contactResponsiblePerson") Companhia:
+            select.form-control(id="companySelect")
+              option(value=0)
+              for company in companies
+                option(value=company.id)= company.nameCompany
+
+          .form-group
+            button.btn.btn-primary.me-2(onclick='requestModal()') Salvar
+            button.btn.btn-light(onclick='closeModal()') Cancelar
+            label(id="errorMessage", style="display: none; color: red;")
 
     #deleteModal.modal
       .modal-content
         span.closeModal &times;
-        h4 Confirmar Exclusão
-        h4 Tem certeza de que deseja excluir essa companhia?
-          input(type="text", id="idDelete", name="idDelete", readonly)
+        h4.card-title Confirmar Exclusão
+        h4.card-title Tem certeza de que deseja excluir essa construção?
+          .form-group
+              input.form-control(type="text", id="idDelete", name="idDelete", readonly)
+          .form-group
+              input.form-control(type="text", id="nameDelete", name="nameDelete", readonly)
 
-          br
-          button.deleteBtn(onclick='deleteModalRequest()') Excluir
-          button(onclick='closeModalDelete()') Cancelar
-          label(id="errorMessageDelete", style="display: none; color: red;")
+
+          .form-group
+            button.btn.btn-danger.btn-rounded.btn-fw.deleteBtn(onclick='deleteModalRequest()') Excluir
+            button.btn.btn-light(onclick='closeModalDelete()') Cancelar
+            label(id="errorMessageDelete", style="display: none; color: red;")
 
     script(src="./javascript/construction.js")

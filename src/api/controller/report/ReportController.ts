@@ -8,16 +8,30 @@ import { SuccessResponse } from '../../common/responses/SuccessResponse'
 import { BadRequestResponse } from '../../common/responses/BadRequestResponse'
 import { IReportService } from '../../../service/report/ReportServiceFactory'
 import { InternalServerErrorResponse } from '../../common/responses/InternalServerErrorResponse'
+import { IUserService } from '../../../service/user/UserServiceFactory'
+import { IScheduleService } from '../../../service/schedule/ScheduleServiceFactory'
+import { getUserButtons } from '../../../utils/control-button'
+import { EStatus, ISchedule } from '../../../domain/data/entity/ISchedule'
+import { IUser } from '../../../domain/data/entity/IUser'
+import { IConstructionService } from '../../../service/construction/ConstructionServiceFactory'
+import { IAllocationService } from '../../../service/allocation/AllocationServiceFactory'
+import { IConstruction } from '../../../domain/data/entity/IConstruction'
+import { IAllocation } from '../../../domain/data/entity/IAllocation'
+import { IReport } from '../../../domain/data/entity/IReport'
 
 export class ReportController implements IController {
   public router = express.Router()
 
-  constructor (private readonly _reportService: IReportService) {
+  constructor (private readonly _reportService: IReportService,
+    private readonly _userService: IUserService,
+    private readonly _scheduleService: IScheduleService,
+    private readonly _constructionService: IConstructionService,
+    private readonly _allocationService: IAllocationService) {
     this.setupRoutes()
   }
 
   setupRoutes (): void {
-    this.router.get('/report', requireLogin, isAdmin, this.handler.bind(this))
+    this.router.get('/entregar-relatorio', requireLogin, this.handler.bind(this))
     this.router.post('/report/getReport', requireLogin, this.getReport.bind(this))
     this.router.post('/report/getReports', requireLogin, this.getReports.bind(this))
     this.router.post('/report/saveReport', requireLogin, isAdmin, this.saveReport.bind(this))
@@ -26,8 +40,38 @@ export class ReportController implements IController {
   }
 
   async handler (request: IRequest, response: IResponse): Promise<any> {
-    const reports = await this._reportService.getReportsService.handler()
-    response.status(200).render('./report.pug', { reports })
+    const email = request.user.email
+    const user = await this._userService.getUserService.handler('email', email) as IUser
+
+    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const reportsRaw = await this._reportService.getReportsService.handler() as IReport[]
+
+    const schedules = await this._scheduleService.getSchedulesService.handler() as ISchedule[]
+
+    const users = await this._userService.getUsersService.handler() as IUser[]
+
+    const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
+
+    const allocations = await this._allocationService.getAllocationsService.handler() as IAllocation[]
+
+    const reports = reportsRaw.map(x => {
+      const user = users.filter(u => u.id === x.userId)[0]
+      const construction = constructions.filter(c => c.id === x.constructionId)[0]
+      const schedule = schedules.filter(c => c.id === x.scheduleId)[0]
+      return {
+        user: {
+          name: user.name
+        },
+        construction: {
+          name: construction.name
+        },
+        schedule: {
+          dateSchedule: schedule.dateSchedule
+        }
+      }
+    })
+    const canAddReport = schedules.some(s => s.userId === user.id && s.status === EStatus.active)
+    response.status(200).render('./report.pug', { user, ...buttons, canAddReport, constructions, allocations, reports })
   }
 
   async getReport (req: IRequest, res: IResponse): Promise<IResponse> {

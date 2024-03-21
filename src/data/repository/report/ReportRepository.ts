@@ -31,7 +31,13 @@ export class PrismaReportRepository implements IReportRepository {
   }
 
   async getReports (): Promise<IReport[] | null> {
-    return this._prismaClient.report.findMany({})
+    return this._prismaClient.report.findMany({
+      orderBy: [
+        {
+          id: 'asc'
+        }
+      ]
+    })
   }
 
   async getReportByUserId (userId: number): Promise<IReport[]> {
@@ -48,7 +54,12 @@ export class PrismaReportRepository implements IReportRepository {
 
   async getReportByConstructionId (constructionId: number): Promise<IReport[]> {
     return this._prismaClient.report.findMany({
-      where: { constructionId }
+      where: { constructionId },
+      orderBy: [
+        {
+          id: 'asc'
+        }
+      ]
     })
   }
 

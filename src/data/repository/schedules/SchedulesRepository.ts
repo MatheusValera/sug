@@ -31,7 +31,13 @@ export class PrismaSchedulesRepository implements ISchedulesRepository {
   }
 
   async getSchedules (): Promise<ISchedule[] | null> {
-    return this._prismaClient.schedule.findMany({ })
+    return this._prismaClient.schedule.findMany({
+      orderBy: [
+        {
+          id: 'asc'
+        }
+      ]
+    })
   }
 
   async getScheduleByUserId (userId: number): Promise<ISchedule[]> {

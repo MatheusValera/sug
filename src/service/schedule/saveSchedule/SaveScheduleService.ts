@@ -21,11 +21,13 @@ export class SaveScheduleService implements ISaveScheduleService {
     }
 
     const hasSchedules = await this._scheduleRepository.getScheduleByUserId(schedule.userId)
-    const hasSchedulesInSomeDate = hasSchedules.some(x => x.dateSchedule.getTime() === schedule.dateSchedule.getTime())
+    const hasSchedulesInSomeDate = hasSchedules.some(x => new Date(x.dateSchedule).getTime() === schedule.dateSchedule.getTime())
 
     if (hasSchedulesInSomeDate) {
       return new Error('User has schedule in some date.')
     }
+
+    schedule.createdAt = new Date()
 
     const result = this._scheduleRepository.insertSchedule(schedule)
 

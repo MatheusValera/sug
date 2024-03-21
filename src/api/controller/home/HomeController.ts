@@ -3,11 +3,13 @@ import { IRequest } from '../../common/IRequest'
 import { IResponse } from '../../common/IResponse'
 import { IController } from '../../common/IController'
 import { requireLogin } from '../../middleware/RequireLogin'
+import { IUserService } from '../../../service/user/UserServiceFactory'
+import { getUserButtons } from '../../../utils/control-button'
 
 export class HomeController implements IController {
   public router = express.Router()
 
-  constructor () {
+  constructor (private readonly _userService: IUserService) {
     this.setupRoutes()
   }
 
@@ -16,27 +18,10 @@ export class HomeController implements IController {
   }
 
   async handler (req: IRequest, res: IResponse): Promise<any> {
-    // if (req.user) {
-    //   res.status(200).redirect('/center')
-    //   return
-    // }
-    res.status(200).render('./home.pug', {
-      buttons: [{
-        link: '/usuario',
-        text: 'Gerenciar colaboradores'
-      }, {
-        link: '/construcao',
-        text: 'Gerenciar obras'
-      }, {
-        link: '/alocacao',
-        text: 'Gerenciar alocações'
-      }, {
-        link: '/companhia',
-        text: 'Gerenciar companhias'
-      }, {
-        link: '/agendamento',
-        text: 'Gerenciar agendamento'
-      }]
-    })
+    const email = req.user.email
+    const user = await this._userService.getUserService.handler('email', email)
+
+    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    res.status(200).render('./home.pug', { user, ...buttons })
   }
 }

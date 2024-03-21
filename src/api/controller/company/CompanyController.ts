@@ -8,11 +8,13 @@ import { SuccessResponse } from '../../common/responses/SuccessResponse'
 import { BadRequestResponse } from '../../common/responses/BadRequestResponse'
 import { ICompanyService } from '../../../service/company/CompanyServiceFactory'
 import { InternalServerErrorResponse } from '../../common/responses/InternalServerErrorResponse'
+import { IUserService } from '../../../service/user/UserServiceFactory'
+import { getUserButtons } from '../../../utils/control-button'
 
 export class CompanyController implements IController {
   public router = express.Router()
 
-  constructor (private readonly _companyService: ICompanyService) {
+  constructor (private readonly _companyService: ICompanyService, private readonly _userService: IUserService) {
     this.setupRoutes()
   }
 
@@ -26,8 +28,12 @@ export class CompanyController implements IController {
   }
 
   async handler (request: IRequest, response: IResponse): Promise<any> {
+    const email = request.user.email
+    const user = await this._userService.getUserService.handler('email', email)
+
+    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
     const companies = await this._companyService.getCompaniesService.handler()
-    response.status(200).render('./company.pug', { companies })
+    response.status(200).render('./company.pug', { user, ...buttons, companies })
   }
 
   async getCompany (req: IRequest, res: IResponse): Promise<IResponse> {

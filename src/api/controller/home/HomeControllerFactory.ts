@@ -1,5 +1,7 @@
+import { makeUserService } from '../../../service/user/UserServiceFactory'
 import { HomeController } from './HomeController'
 
 export const makeHomeController = (): HomeController => {
-  return new HomeController()
+  const userService = makeUserService()
+  return new HomeController(userService)
 }

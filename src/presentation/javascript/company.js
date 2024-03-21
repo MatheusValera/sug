@@ -5,6 +5,7 @@ const id = document.getElementById('id')
 const cnpj = document.getElementById('cnpj')
 const contact = document.getElementById('contact')
 const idDelete = document.getElementById('idDelete')
+const nameDelete = document.getElementById('nameDelete')
 const editModal = document.getElementById('editModal')
 const createdAt = document.getElementById('createdAt')
 const nameCompany = document.getElementById('nameCompany')
@@ -73,8 +74,9 @@ function closeModal () {
   editModal.style.display = 'none'
 }
 
-function openModalDelete (id) {
-  idDelete.value = parseInt(id)
+function openModalDelete (obj) {
+  idDelete.value = parseInt(obj.id)
+  nameDelete.value = obj.name
   deleteModal.style.display = 'block'
 }
 
@@ -85,7 +87,7 @@ function closeModalDelete () {
 function deleteModalRequest () {
   let message = ''
   const payload = {
-    id: idDelete.value
+    id: parseInt(idDelete.value)
   }
 
   axios.post('/company/deleteCompany', payload)

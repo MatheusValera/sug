@@ -19,6 +19,13 @@ export class UpdateScheduleService implements IUpdateScheduleService {
       return hasIncorrectValue
     }
 
+    const hasSchedules = await this._scheduleRepository.getScheduleByUserId(schedule.userId)
+    const hasSchedulesInSomeDate = hasSchedules.some(x => new Date(x.dateSchedule).getTime() === schedule.dateSchedule.getTime())
+
+    if (hasSchedulesInSomeDate) {
+      return new Error('User has schedule in some date.')
+    }
+
     const result = this._scheduleRepository.updateSchedule(schedule)
 
     return result

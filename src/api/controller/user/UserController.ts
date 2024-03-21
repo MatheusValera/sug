@@ -8,6 +8,7 @@ import { IUserService } from '../../../service/user/UserServiceFactory'
 import { SuccessResponse } from '../../common/responses/SuccessResponse'
 import { InternalServerErrorResponse } from '../../common/responses/InternalServerErrorResponse'
 import { BadRequestResponse } from '../../common/responses/BadRequestResponse'
+import { getUserButtons } from '../../../utils/control-button'
 
 export class UserController implements IController {
   public router = express.Router()
@@ -17,16 +18,22 @@ export class UserController implements IController {
   }
 
   setupRoutes (): void {
-    this.router.get('/usuario', requireLogin, isAdmin, this.handler.bind(this))
+    this.router.get('/usuarios', requireLogin, isAdmin, this.handler.bind(this))
     this.router.post('/user/getUser', requireLogin, isAdmin, this.getUser.bind(this))
     this.router.post('/user/saveUser', requireLogin, isAdmin, this.saveUser.bind(this))
     this.router.post('/user/updateUser', requireLogin, isAdmin, this.updateUser.bind(this))
     this.router.post('/user/deleteUser', requireLogin, isAdmin, this.deleteUser.bind(this))
   }
 
-  async handler (request: IRequest, response: IResponse): Promise<any> {
+  async handler (req: IRequest, res: IResponse): Promise<any> {
+    const email = req.user.email
+    const user = await this._userService.getUserService.handler('email', email)
+
+    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+
     const users = await this._userService.getUsersService.handler()
-    response.status(200).render('./user.pug', { users })
+
+    res.status(200).render('./user.pug', { user, ...buttons, users })
   }
 
   async getUser (req: IRequest, res: IResponse): Promise<IResponse> {

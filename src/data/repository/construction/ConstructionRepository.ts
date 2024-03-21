@@ -9,6 +9,8 @@ export class PrismaConstructionRepository implements IConstructionRepository {
     const construction: IConstruction = {
       id: object.id,
       createdAt: new Date(object.createdAt),
+      endDate: new Date(object.endDate),
+      startDate: new Date(object.startDate),
       name: object.name,
       companyId: object.companyId,
       status: object.status
@@ -55,7 +57,13 @@ export class PrismaConstructionRepository implements IConstructionRepository {
   }
 
   async getConstructions (): Promise<IConstruction[]> {
-    const register = await this._prismaClient.construction.findMany({})
+    const register = await this._prismaClient.construction.findMany({
+      orderBy: [
+        {
+          id: 'asc'
+        }
+      ]
+    })
     return register.map(c => this.map(c))
   }
 

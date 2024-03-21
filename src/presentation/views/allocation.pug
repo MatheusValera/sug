@@ -1,87 +1,101 @@
 extends ./layout/master
+
 block head
-  title Gerenciar alocações
+  title Gerenciar Alocações
   link(rel="stylesheet", href="./styles/allocation.css")
   script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
   script(src="https://unpkg.com/vanilla-masker@1.1.1/lib/vanilla-masker.js")
 
 block content
-  h1 Gerenciar alocações
-  button(onclick='openModal()' class="addUser") Criar alocação
-  main
-    if allocations.length === 0
-      p Não há alocações cadastrados.
-    else
-      table
-        thead
-          tr
-            th ID
-            th Data da criação
-            th Data de atualização
-            th ID do colaborador
-            th Nome do colaborador
-            th ID da construção
-            th Nome da construção
-            th Status
-        tbody
-          each allocation in allocations
-            tr
-              td= allocation.id
-              td= allocation.createdAt.toLocaleString('pt-BR', { timezone: 'UTC' })
-              td= allocation.updatedAt ? allocation.updatedAt.toLocaleString('pt-BR', { timezone: 'UTC' }): ''
-              td= allocation.userId
-              td= allocation.user.name
-              td= allocation.constructionId
-              td= allocation.construction.name
-              td= allocation.status === 'active' ? 'Ativa' : 'Concluída'
-              td
-                button.editBtn(onclick=`openModal(${JSON.stringify(allocation)})` data-id=allocation.id ) Editar
-                button.deleteBtn(onclick=`openModalDelete(${allocation.id})` data-id=allocation.id) Excluir
+  .row
+    .col-lg-16.grid-margin.stretch-card
+      .card
+        .card-body
+          h4.card-title Alocações
+          p.card-description
+            | Aqui você pode ver as alocações
+          if canEdit === true 
+            button.btn.btn-primary.btn-lg.btn-block( onclick="openModal()") Adicionar
+
+          .table-responsive
+            table.table
+              thead
+                tr
+                  th ID
+                  th Data da criação
+                  th ID do colaborador
+                  th Nome do colaborador
+                  th Cargo do colaborador
+                  th ID da construção
+                  th Nome da construção
+                  th Status
+                  if canEdit === true
+                    th Ações
+              tbody
+                each allocation in allocations
+                  tr
+                    td= allocation.id
+                    td= allocation.createdAt.toLocaleString('pt-BR', { timezone: 'UTC' })
+                    td= allocation.userId
+                    td= allocation.user.name
+                    td= allocation.user.office
+                    td= allocation.constructionId
+                    td= allocation.construction.name
+                    td
+                      if allocation.status === 'active' 
+                        label.badge.badge-danger Ativa
+                      else
+                        label.badge.badge-info Concluída
+                    if canEdit === true
+                      td
+                        button.btn.btn-warning.btn-rounded.btn-fw(onclick=`openModal(${JSON.stringify(allocation)})` data-id=allocation.id ) Editar
+                        button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" onclick=`openModalDelete({ id: ${allocation.id}, name: '${allocation.user.name}'})` data-id=allocation.id) Excluir
 
     #editModal.modal
       .modal-content
-        span.closeModal &times;
-        h2 Obra
+        h4.card-title Alocação
         form(id="editUserForm")
           input(type="hidden", id="id", name="id")
           input(type="hidden", id="createdAt", name="createdAt")
 
-          br
-          label(for="usersSelect") Colaboradores:
-          select.select(id="usersSelect")
-            option(value=0)
-            for user in users
-              option(value=user.id)= user.name
+          .form-group
+            label(for="usersSelect") Colaboradores:
+            select.form-control(id="usersSelect")
+              option(value=0)
+              for user in users
+                option(value=user.id)= user.name
 
-          br
-          label(for="constructionSelect") Construções:
-          select.select(id="constructionSelect")
-            option(value=0)
-            for construction in constructions
-              option(value=construction.id)= construction.name
+          .form-group
+            label(for="constructionSelect") Construções:
+            select.form-control(id="constructionSelect")
+              option(value=0)
+              for construction in constructions
+                option(value=construction.id)= construction.name
               
-          br
-          label(for="status") Status:
-          select.select(id="statusSelect")
-            option(value=0)
-            option(value='active') Ativa
-            option(value='finished') Concluída
+          .form-group
+            label(for="status") Status:
+            select.form-control(id="statusSelect")
+              option(value=0)
+              option(value='active') Ativa
+              option(value='finished') Concluída
 
-          br
-          button(onclick='requestModal()') Salvar
-          button(onclick='closeModal()') Cancelar
-          label(id="errorMessage", style="display: none; color: red;")
+          .form-group
+            button.btn.btn-primary.me-2(onclick='requestModal()') Salvar
+            button.btn.btn-light(onclick='closeModal()') Cancelar
+            label(id="errorMessage", style="display: none; color: red;")
 
     #deleteModal.modal
       .modal-content
-        span.closeModal &times;
-        h4 Confirmar Exclusão
-        h4 Tem certeza de que deseja excluir essa companhia?
-          input(type="text", id="idDelete", name="idDelete", readonly)
+        h4.card-title Confirmar Exclusão
+        h4.card-title Tem certeza de que deseja excluir essa alocação?
+          .form-group
+              input.form-control(type="text", id="idDelete", name="idDelete", readonly)
+          .form-group
+              input.form-control(type="text", id="nameDelete", name="nameDelete", readonly)
 
-          br
-          button.deleteBtn(onclick='deleteModalRequest()') Excluir
-          button(onclick='closeModalDelete()') Cancelar
-          label(id="errorMessageDelete", style="display: none; color: red;")
+          .form-group
+            button.btn.btn-danger.btn-rounded.btn-fw.deleteBtn(onclick='deleteModalRequest()') Excluir
+            button.btn.btn-light(onclick='closeModalDelete()') Cancelar
+            label(id="errorMessageDelete", style="display: none; color: red;")
 
     script(src="./javascript/allocation.js")

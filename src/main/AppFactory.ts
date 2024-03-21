@@ -3,6 +3,7 @@ import { makeCompanyController } from '../api/controller/company/CompanyControll
 import { makeConstructionController } from '../api/controller/construction/ConstructionControllerFactory'
 import { makeHomeController } from '../api/controller/home/HomeControllerFactory'
 import { makeLoginController } from '../api/controller/login/LoginControllerFactory'
+import { makeReportController } from '../api/controller/report/ReportControllerFactory'
 import { makeScheduleController } from '../api/controller/schedule/ScheduleControllerFactory'
 import { makeUserController } from '../api/controller/user/userControllerFactory'
 import { App } from './App'
@@ -15,6 +16,7 @@ export const makeApp = (): App => {
   const constructionController = makeConstructionController()
   const allocationController = makeAllocationController()
   const schedulesController = makeScheduleController()
+  const reportController = makeReportController()
   const app = new App([
     loginController,
     userController,
@@ -22,7 +24,8 @@ export const makeApp = (): App => {
     companyController,
     constructionController,
     allocationController,
-    schedulesController
+    schedulesController,
+    reportController
   ])
 
   return app

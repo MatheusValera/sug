@@ -3,6 +3,7 @@
 
 const id = document.getElementById('id')
 const idDelete = document.getElementById('idDelete')
+const nameDelete = document.getElementById('nameDelete')
 const editModal = document.getElementById('editModal')
 const createdAt = document.getElementById('createdAt')
 const construction = document.getElementById('constructionSelect')
@@ -40,7 +41,10 @@ function requestModal () {
     payload.createdAt = createdAt.value
 
     const a = axios.post('/allocation/updateAllocation', payload)
-      .then(result => (result))
+      .then(result => {
+        if (result?.data?.message) { errorMessage.textContent = result.data.message } else { window.location.reload() }
+        errorMessage.style.display = 'block'
+      })
       .catch(function () {
         window.location.href = '/alocacao'
       })
@@ -48,21 +52,28 @@ function requestModal () {
     console.log(a)
   } else {
     axios.post('/allocation/saveAllocation', payload)
-      .then(result => (result))
+      .then(result => {
+        if (result?.data?.message) {
+          errorMessage.textContent = result.data.message
+          errorMessage.style.display = 'block'
+        } else {
+          // closeModal()
+          // window.location.reload()
+        }
+      })
       .catch(function () {
         window.location.href = '/alocacao'
       })
   }
-
-  closeModal()
 }
 
 function closeModal () {
   editModal.style.display = 'none'
 }
 
-function openModalDelete (id) {
-  idDelete.value = parseInt(id)
+function openModalDelete (obj) {
+  idDelete.value = parseInt(obj.id)
+  nameDelete.value = obj.name
   deleteModal.style.display = 'block'
 }
 
@@ -73,7 +84,7 @@ function closeModalDelete () {
 function deleteModalRequest () {
   let message = ''
   const payload = {
-    id: idDelete.value
+    id: parseInt(idDelete.value)
   }
 
   axios.post('/allocation/deleteAllocation', payload)

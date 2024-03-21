@@ -5,4 +5,6 @@ export interface IConstruction {
   createdAt: Date
   updatedAt?: Date
   status: string
+  endDate: Date
+  startDate: Date
 }

@@ -4,5 +4,6 @@ export interface IRequest extends Request {
   user: {
     admin?: boolean
     email: string
+    category: number
   }
 }

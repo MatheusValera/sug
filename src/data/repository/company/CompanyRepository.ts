@@ -64,7 +64,13 @@ export class PrismaCompanyRepository implements ICompanyRepository {
   }
 
   async getCompanies (): Promise<ICompany[]> {
-    const listCompany = await this._prismaClient.company.findMany()
+    const listCompany = await this._prismaClient.company.findMany({
+      orderBy: [
+        {
+          id: 'asc'
+        }
+      ]
+    })
 
     return listCompany.map(this.map)
   }

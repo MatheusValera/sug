@@ -49,21 +49,37 @@ export class PrismaAllocationRepository implements IAllocationRepository {
   }
 
   async getAllocations (): Promise<IAllocation[] | null> {
-    const result = await this._prismaClient.allocation.findMany({ })
+    const result = await this._prismaClient.allocation.findMany({
+      orderBy: [
+        {
+          id: 'asc'
+        }
+      ]
+    })
 
     return result.map(r => this.map(r))
   }
 
   async getAllocationByUserId (userId: number): Promise<IAllocation[]> {
     const result = await this._prismaClient.allocation.findMany({
-      where: { userId }
+      where: { userId },
+      orderBy: [
+        {
+          id: 'asc'
+        }
+      ]
     })
     return result.map(r => this.map(r))
   }
 
   async getAllocationByConstructionId (constructionId: number): Promise<IAllocation[]> {
     const result = await this._prismaClient.allocation.findMany({
-      where: { constructionId }
+      where: { constructionId },
+      orderBy: [
+        {
+          id: 'asc'
+        }
+      ]
     })
     return result.map(r => this.map(r))
   }

@@ -3,25 +3,34 @@
 
 const id = document.getElementById('id')
 const idDelete = document.getElementById('idDelete')
+const nameDelete = document.getElementById('nameDelete')
 const editModal = document.getElementById('editModal')
 const createdAt = document.getElementById('createdAt')
 const company = document.getElementById('companySelect')
 const status = document.getElementById('statusSelect')
 const nameConstruction = document.getElementById('nameConstruction')
+const startDate = document.getElementById('startDate')
+const endDate = document.getElementById('endDate')
 const deleteModal = document.getElementById('deleteModal')
 const errorMessage = document.getElementById('errorMessage')
 const errorMessageDelete = document.getElementById('errorMessageDelete')
-const nameResponsiblePerson = document.getElementById('nameResponsiblePerson')
-const contactResponsiblePerson = document.getElementById('contactResponsiblePerson')
+
+VMasker(startDate).maskPattern('99/99/9999')
+VMasker(endDate).maskPattern('99/99/9999')
 
 function openModal (construction) {
   if (!construction) {
     nameConstruction.value = ''
+    startDate.value = ''
+    endDate.value = ''
     company.value = 0
     status.value = 0
   } else {
     id.value = construction.id
     createdAt.value = construction.createdAt
+    startDate.value = construction.startDate
+    endDate.value = construction.endDate
+    status.value = construction.status
     nameConstruction.value = construction.name
     company.value = construction.companyId
   }
@@ -34,6 +43,8 @@ function requestModal () {
   const payload = {
     name: nameConstruction.value,
     companyId: parseInt(company.value),
+    startDate: new Date(startDate.value),
+    endDate: new Date(endDate.value),
     status: status.value
   }
   if (id.value) {
@@ -62,8 +73,9 @@ function closeModal () {
   editModal.style.display = 'none'
 }
 
-function openModalDelete (id) {
-  idDelete.value = parseInt(id)
+function openModalDelete (obj) {
+  idDelete.value = parseInt(obj.id)
+  nameDelete.value = obj.name
   deleteModal.style.display = 'block'
 }
 
@@ -74,7 +86,7 @@ function closeModalDelete () {
 function deleteModalRequest () {
   let message = ''
   const payload = {
-    id: idDelete.value
+    id: parseInt(idDelete.value)
   }
 
   axios.post('/construction/deleteConstruction', payload)
