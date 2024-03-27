@@ -29,7 +29,7 @@ export class UserController implements IController {
     const email = req.user.email
     const user = await this._userService.getUserService.handler('email', email)
 
-    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const buttons = await getUserButtons(user)
 
     const users = await this._userService.getUsersService.handler()
 

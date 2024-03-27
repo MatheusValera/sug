@@ -29,7 +29,6 @@ export class ScheduleController implements IController {
 
   setupRoutes (): void {
     this.router.get('/agendamento', requireLogin, isAdmin, this.handler.bind(this))
-    this.router.get('/agendamentos', requireLogin, this.handlerViewSchedules.bind(this))
     this.router.get('/meus-agendamentos', requireLogin, this.handlerViewUserSchedules.bind(this))
     this.router.post('/schedule/getSchedule', requireLogin, this.getSchedule.bind(this))
     this.router.post('/schedule/getSchedules', requireLogin, this.getSchedules.bind(this))
@@ -42,7 +41,7 @@ export class ScheduleController implements IController {
     const email = request.user.email
     const user = await this._usersService.getUserService.handler('email', email)
 
-    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const buttons = await getUserButtons(user)
     const schedulesRaw = await this._scheduleService.getSchedulesService.handler() as ISchedule[]
     const users = await this._usersService.getUsersService.handler() as IUser[]
     const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
@@ -73,7 +72,7 @@ export class ScheduleController implements IController {
     const email = request.user.email
     const user = await this._usersService.getUserService.handler('email', email)
 
-    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const buttons = await getUserButtons(user)
     const schedulesRaw = await this._scheduleService.getSchedulesService.handler() as ISchedule[]
     const users = await this._usersService.getUsersService.handler() as IUser[]
     const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
@@ -104,7 +103,7 @@ export class ScheduleController implements IController {
     const email = request.user.email
     const user = await this._usersService.getUserService.handler('email', email) as IUser
 
-    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const buttons = await getUserButtons(user)
     const schedulesRaw = await this._scheduleService.getSchedulesService.handler() as ISchedule[]
     const users = await this._usersService.getUsersService.handler() as IUser[]
     const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]

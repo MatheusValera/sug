@@ -25,7 +25,6 @@ export class ConstructionController implements IController {
 
   setupRoutes (): void {
     this.router.get('/construcao', requireLogin, this.handler.bind(this))
-    this.router.get('/construcoes', requireLogin, this.handlerViewConstructions.bind(this))
     this.router.post('/construction/getConstruction', requireLogin, isAdmin, this.getConstruction.bind(this))
     this.router.post('/construction/getConstructions', requireLogin, isAdmin, this.getConstructions.bind(this))
     this.router.post('/construction/saveConstruction', requireLogin, isAdmin, this.saveConstruction.bind(this))
@@ -37,7 +36,7 @@ export class ConstructionController implements IController {
     const email = request.user.email
     const user = await this._userService.getUserService.handler('email', email)
 
-    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const buttons = await getUserButtons(user)
     const constructionsRaw = await this._constructionService.getConstructionsService.handler() as IConstruction[]
     const companies = await this._companyService.getCompaniesService.handler() as ICompany[]
     const constructions = constructionsRaw.map(c => {
@@ -56,7 +55,7 @@ export class ConstructionController implements IController {
     const email = request.user.email
     const user = await this._userService.getUserService.handler('email', email)
 
-    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const buttons = await getUserButtons(user)
     const constructionsRaw = await this._constructionService.getConstructionsService.handler() as IConstruction[]
     const companies = await this._companyService.getCompaniesService.handler() as ICompany[]
     const constructions = constructionsRaw.map(c => {

@@ -14,4 +14,5 @@ export interface IUser {
   password: string
   numberHouse: string
   neighborhood: string
+  categoryRules: number
 }

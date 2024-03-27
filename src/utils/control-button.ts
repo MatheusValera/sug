@@ -1,6 +1,6 @@
 const buttonsUserFeature = [
   {
-    category: 3,
+    category: 4,
     href: '/usuarios',
     name: 'Gerenciar usuários',
     adminHasNecessary: true
@@ -15,22 +15,16 @@ const buttonsAllocationFeature = [
     adminHasNecessary: false
   },
   {
-    category: 2,
-    href: '/alocacoes',
-    name: 'Ver alocações',
-    adminHasNecessary: false
-  },
-  {
     category: 3,
     href: '/alocacao',
     name: 'Gerenciar alocações',
-    adminHasNecessary: true
+    adminHasNecessary: false
   }
 ]
 
 const buttonsCompanyFeature = [
   {
-    category: 3,
+    category: 4,
     href: '/companhia',
     name: 'Gerenciar companhias',
     adminHasNecessary: true
@@ -39,16 +33,10 @@ const buttonsCompanyFeature = [
 
 const buttonsConstructionFeature = [
   {
-    category: 2,
-    href: '/construcoes',
-    name: 'Ver construções',
-    adminHasNecessary: false
-  },
-  {
     category: 3,
     href: '/construcao',
     name: 'Gerenciar construções',
-    adminHasNecessary: true
+    adminHasNecessary: false
   }
 ]
 
@@ -60,16 +48,10 @@ const buttonsScheduleFeature = [
     adminHasNecessary: false
   },
   {
-    category: 2,
-    href: '/agendamentos',
-    name: 'Ver agendamentos',
-    adminHasNecessary: false
-  },
-  {
     category: 3,
     href: '/agendamento',
     name: 'Gerenciar agendamentos',
-    adminHasNecessary: true
+    adminHasNecessary: false
   }
 ]
 
@@ -96,7 +78,13 @@ const buttonsReportFeature = [
     category: 3,
     href: '/relatorio',
     name: 'Gerenciar relatórios',
-    adminHasNecessary: true
+    adminHasNecessary: false
+  },
+  {
+    category: 4,
+    href: '/entregar-relatorio-final',
+    name: 'Entregar relatório final',
+    adminHasNecessary: false
   }
 ]
 

@@ -21,7 +21,7 @@ export class HomeController implements IController {
     const email = req.user.email
     const user = await this._userService.getUserService.handler('email', email)
 
-    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const buttons = await getUserButtons(user)
     res.status(200).render('./home.pug', { user, ...buttons })
   }
 }

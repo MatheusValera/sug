@@ -33,6 +33,7 @@ block content
                   th Número
                   th Bairro
                   th Cargo
+                  th Nível de acesso
                   th Ações
               tbody
                 for userTable in users
@@ -51,6 +52,7 @@ block content
                     td= userTable.numberHouse
                     td= userTable.neighborhood
                     td= userTable.office
+                    td= userTable.categoryRules
                     td
                       button.btn.btn-warning.btn-rounded.btn-fw(class="editBtn" data-id=userTable.id ) Editar
                       button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" class="deleteBtn" data-id=userTable.id) Excluir
@@ -101,6 +103,14 @@ block content
               option(value='Fiscal') Fiscal
               option(value='Laborista') Laborista
               option(value='Topógrafo') Topógrafo
+          .form-group
+            label(for="categoryRulesInput") Nível de acesso:
+            select.form-control(id="categoryRulesInput")
+              option(value=0)
+              option(value=1) Visualizar somente as informações do usuário
+              option(value=2) Visualizar todas as informações das funcionalidades
+              option(value=3) Visualizar, editar e excluir as informações das funcionalidades
+              option(value=4) Visualizar, editar e excluir relatórios finais
           .form-check.form-check-flat.form-check-primary
               label.form-check-label(for="admin") Administrador
                 input.form-check-input(type="checkbox", id="admin", name="admin", checked)

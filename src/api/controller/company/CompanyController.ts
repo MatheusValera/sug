@@ -31,7 +31,7 @@ export class CompanyController implements IController {
     const email = request.user.email
     const user = await this._userService.getUserService.handler('email', email)
 
-    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const buttons = await getUserButtons(user)
     const companies = await this._companyService.getCompaniesService.handler()
     response.status(200).render('./company.pug', { user, ...buttons, companies })
   }

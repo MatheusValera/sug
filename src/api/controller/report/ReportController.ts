@@ -43,7 +43,7 @@ export class ReportController implements IController {
     const email = request.user.email
     const user = await this._userService.getUserService.handler('email', email) as IUser
 
-    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const buttons = await getUserButtons(user)
     const reportsRaw = await this._reportService.getReportsService.handler() as IReport[]
 
     const schedules = await this._scheduleService.getSchedulesService.handler() as ISchedule[]

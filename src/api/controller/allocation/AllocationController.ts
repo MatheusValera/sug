@@ -25,8 +25,7 @@ export class AllocationController implements IController {
   }
 
   setupRoutes (): void {
-    this.router.get('/alocacao', requireLogin, isAdmin, this.handler.bind(this))
-    this.router.get('/alocacoes', requireLogin, this.handlerViewAllocations.bind(this))
+    this.router.get('/alocacao', requireLogin, this.handler.bind(this))
     this.router.get('/minhas-alocacoes', requireLogin, this.handlerViewMyAllocations.bind(this))
     this.router.post('/allocation/getAllocation', requireLogin, this.getAllocation.bind(this))
     this.router.post('/allocation/getAllocations', requireLogin, this.getAllocations.bind(this))
@@ -36,10 +35,16 @@ export class AllocationController implements IController {
   }
 
   async handler (request: IRequest, response: IResponse): Promise<any> {
+    const userCategory = request.user.categoryRules
+
+    if (userCategory <= 3) {
+      response.redirect('/')
+    }
+
     const email = request.user.email
     const user = await this._userService.getUserService.handler('email', email)
 
-    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const buttons = await getUserButtons(user)
     const users = await this._userService.getUsersService.handler() as IUser[]
     const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
 
@@ -70,10 +75,15 @@ export class AllocationController implements IController {
   }
 
   async handlerViewAllocations (request: IRequest, response: IResponse): Promise<any> {
+    const userCategory = request.user.categoryRules
     const email = request.user.email
+
+    if (userCategory <= 2) {
+      response.redirect('/')
+    }
     const user = await this._userService.getUserService.handler('email', email)
 
-    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const buttons = await getUserButtons(user)
     const users = await this._userService.getUsersService.handler() as IUser[]
     const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
 
@@ -107,7 +117,7 @@ export class AllocationController implements IController {
     const email = request.user.email
     const user = await this._userService.getUserService.handler('email', email) as IUser
 
-    const buttons = await getUserButtons({ admin: true, categoryRules: 3 })
+    const buttons = await getUserButtons(user)
     const users = await this._userService.getUsersService.handler() as IUser[]
     const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
 

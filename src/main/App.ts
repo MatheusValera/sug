@@ -81,9 +81,9 @@ export class App {
 
     passport.deserializeUser(async (_id, done) => {
       const userRepository = new PrismaUserRepository(prismaClient.getClient())
-      const { id, email, admin, name } = await userRepository.getUser('id', _id)
+      const { id, email, admin, name, categoryRules } = await userRepository.getUser('id', _id)
       if (id) {
-        done(null, { id, email, admin, name })
+        done(null, { id, email, admin, name, categoryRules })
         return
       }
       done(null, false)

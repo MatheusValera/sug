@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const errorMessage = document.getElementById('errorMessage')
 
   const nameInput = document.getElementById('name')
+  const categoryRulesInput = document.getElementById('selectCategoryRules')
   const emailInput = document.getElementById('email')
   const cpfInput = document.getElementById('cpf')
   const passwordInput = document.getElementById('password')
@@ -44,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
           emailInput.value = data.email
           cpfInput.value = data.cpf
           userIdInput.value = userId
+          categoryRulesInput.value = data.categoryRules
 
           passwordInput.value = data.password
           phoneInput.value = data.phone
@@ -87,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const id = document.getElementById('userId').value
     const createdAt = document.getElementById('createdAt').value
     const name = document.getElementById('name').value
+    const categoryRules = document.getElementById('categoryRulesInput').value
     const email = document.getElementById('email').value
     const password = document.getElementById('password').value
     const cpf = document.getElementById('cpf').value
@@ -115,7 +118,8 @@ document.addEventListener('DOMContentLoaded', function () {
         road,
         office,
         numberHouse,
-        neighborhood
+        neighborhood,
+        categoryRules
       })
         .then(function (response) {
           window.location.reload()
@@ -139,7 +143,8 @@ document.addEventListener('DOMContentLoaded', function () {
         road,
         office,
         numberHouse,
-        neighborhood
+        neighborhood,
+        categoryRules
       })
         .then(function (response) {
           window.location.reload()
@@ -159,6 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
       nameInput.value = ''
       emailInput.value = ''
       cpfInput.value = ''
+      categoryRulesInput.value = 0
 
       passwordInput.value = ''
       phoneInput.value = ''
