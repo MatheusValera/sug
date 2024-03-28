@@ -24,6 +24,7 @@ export class SaveReportService implements ISaveReportService {
     const schedule = (await this._scheduleService.getScheduleService.handler(report.scheduleId, EOptions.BY_SCHEDULE))[0] as ISchedule
 
     report.constructionId = schedule.constructionId
+    report.createdAt = new Date()
 
     const hasIncorrectValue = await this._validator.validate(report)
 

@@ -40,7 +40,6 @@ block content
                     td= report.schedule.dateSchedule.toLocaleString('pt-BR', { timezone: 'UTC' })
                     if canEdit === true
                       td
-                        button.btn.btn-warning.btn-rounded.btn-fw(onclick=`openModal(${JSON.stringify(report)})` data-id=report.id ) Editar
                         button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" onclick=`openModalDelete({ id: ${report.id}, name: '${report.construction.name}'})` data-id=report.id) Excluir
 
     #editModal.modal

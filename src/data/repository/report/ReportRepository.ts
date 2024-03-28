@@ -5,6 +5,19 @@ import { IReportRepository } from '../../../domain/data/repository/report/IRepor
 export class PrismaReportRepository implements IReportRepository {
   constructor (readonly _prismaClient: PrismaClient) {}
 
+  private map (object: any): IReport {
+    const report: IReport = {
+      id: object.id,
+      createdAt: new Date(object.createdAt),
+      description: object.description,
+      constructionId: object.constructionId,
+      scheduleId: object.scheduleId,
+      userId: object.userId
+    }
+
+    return report
+  }
+
   async insertReport (reportData: Omit<IReport, 'id' | 'createdAt'>): Promise<IReport> {
     const report = await this._prismaClient.report.create({
       data: reportData
@@ -25,35 +38,41 @@ export class PrismaReportRepository implements IReportRepository {
   }
 
   async getReport (reportId: number): Promise<IReport | null> {
-    return this._prismaClient.report.findUnique({
+    const r = this._prismaClient.report.findUnique({
       where: { id: reportId }
     })
+
+    return this.map(r)
   }
 
   async getReports (): Promise<IReport[] | null> {
-    return this._prismaClient.report.findMany({
+    const r = await this._prismaClient.report.findMany({
       orderBy: [
         {
           id: 'asc'
         }
       ]
     })
+
+    return r.map(report => this.map(report))
   }
 
   async getReportByUserId (userId: number): Promise<IReport[]> {
-    return this._prismaClient.report.findMany({
+    const r = await this._prismaClient.report.findMany({
       where: { userId }
     })
+    return r.map(report => this.map(report))
   }
 
   async getReportBySchedulesId (scheduleId: number): Promise<IReport[]> {
-    return this._prismaClient.report.findMany({
+    const r = await this._prismaClient.report.findMany({
       where: { scheduleId }
     })
+    return r.map(report => this.map(report))
   }
 
   async getReportByConstructionId (constructionId: number): Promise<IReport[]> {
-    return this._prismaClient.report.findMany({
+    const r = await this._prismaClient.report.findMany({
       where: { constructionId },
       orderBy: [
         {
@@ -61,6 +80,7 @@ export class PrismaReportRepository implements IReportRepository {
         }
       ]
     })
+    return r.map(report => this.map(report))
   }
 
   async deleteReport (reportId: number): Promise<IReport> {

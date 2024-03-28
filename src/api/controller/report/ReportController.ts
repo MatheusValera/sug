@@ -60,6 +60,7 @@ export class ReportController implements IController {
       const construction = constructions.filter(c => c.id === x.constructionId)[0]
       const schedule = schedules.filter(c => c.id === x.scheduleId)[0]
       return {
+        ...x,
         user: {
           name: user.name
         },
