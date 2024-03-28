@@ -17,7 +17,7 @@ export class GetAllocationService implements IGetAllocationService {
     }
 
     if (option === EOptions.BY_ALLOCATION) {
-      allocation = await this._allocationRepository.getAllocation(id)
+      allocation = [await this._allocationRepository.getAllocation(id)]
     }
 
     if (option === EOptions.BY_CONSTRUCTION) {

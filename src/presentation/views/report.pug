@@ -2,7 +2,7 @@ extends ./layout/master
 
 block head
   title Relatórios
-  link(rel="stylesheet", href="./styles/schedule.css")
+  link(rel="stylesheet", href="./styles/report.css")
   script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
   script(src="https://unpkg.com/vanilla-masker@1.1.1/lib/vanilla-masker.js")
 
@@ -16,9 +16,7 @@ block content
             | Aqui você pode ver os relatórios
           if canAddReport === false
             | Você não possui agendamentos para adicionar relatório
-          if canEdit === true && canAddReport === true
-            button.btn.btn-primary.btn-lg.btn-block( onclick="openModal()") Adicionar
-
+            
           .table-responsive
             table.table
               thead
@@ -51,29 +49,22 @@ block content
         form(id="editUserForm")
           input(type="hidden", id="id", name="id")
           input(type="hidden", id="createdAt", name="createdAt")
+          input(type="hidden", id="constructionId", name="constructionId")
+
 
           .form-group
-            label(for="constructionSelect") Usuario:
-            select.form-control(id="constructionSelect")
+            label(for="userId") Usuario:
+            select.form-control(id="userId")
               option(value=user.id)= user.name
 
           .form-group
-            label(for="allocationSelect") Agendamento:
+            label(for="allocationSelect") Data do agendamento - Construção:
             select.form-control(id="allocationSelect")
               option(value=0)
-                for schedule in schedules
-                  option(value=schedule.id)= schedule.createdAt
-          
-          .form-group
-            label(for="constructionSelect") Construção:
-            select.form-control(id="constructionSelect")
-              option(value=0)
-                for construction in constructions
-                  option(value=construction.id)= construction.name
 
           .form-group
-            label(for="report") Descrição:
-            input.form-control(type="text", id="report", name="report", required)
+            label(for="description") Descrição:
+            input.form-control(type="text", id="description", name="description", required)
 
           .form-group
             button.btn.btn-primary.me-2n(onclick='requestModal()') Salvar
@@ -93,4 +84,4 @@ block content
             button.btn.btn-light(onclick='closeModalDelete()') Cancelar
             label(id="errorMessageDelete", style="display: none; color: red;")
 
-    script(src="./javascript/schedule.js")
+    script(src="./javascript/report.js")

@@ -49,7 +49,7 @@ block content
                       if schedule.status === 'active' 
                         label.badge.badge-danger Ativa
                       else
-                        label.badge.badge-info Concluída
+                        label.badge.badge-info Finalizada
                     if canEdit === true
                       td
                         button.btn.btn-warning.btn-rounded.btn-fw(onclick=`openModal(${JSON.stringify(schedule)})` data-id=schedule.id ) Editar
@@ -82,9 +82,7 @@ block content
           .form-group
             label(for="status") Status:
             select.form-control(id="statusSelect")
-              option(value=0)
               option(value='active') Ativa
-              option(value='finished') Concluída
 
           .form-group
             button.btn.btn-primary.me-2n(onclick='requestModal()') Salvar

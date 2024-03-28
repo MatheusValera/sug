@@ -60,6 +60,11 @@ html
                 span.text-black.fw-bold= user.name
               h3.welcome-sub-text Aqui está sua página principal
           ul.navbar-nav.ms-auto
+            li.nav-item
+              form.search-form(action='search()')
+                i.icon-search
+                input.form-control(type='search' placeholder='Pesquise aqui' title='Pesquise aqui' id="search")
+
             li.nav-item.dropdown
               a.nav-link.count-indicator(id='countDropdown', href='#', data-bs-toggle='dropdown', aria-expanded='false')
                 i.icon-bell

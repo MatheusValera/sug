@@ -14,6 +14,7 @@ import { IUser } from '../../../domain/data/entity/IUser'
 import { IAllocation } from '../../../domain/data/entity/IAllocation'
 import { IConstruction } from '../../../domain/data/entity/IConstruction'
 import { getUserButtons } from '../../../utils/control-button'
+import { EStatus } from '../../../domain/data/entity/ISchedule'
 
 export class AllocationController implements IController {
   public router = express.Router()
@@ -48,6 +49,8 @@ export class AllocationController implements IController {
     const users = await this._userService.getUsersService.handler() as IUser[]
     const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
 
+    const constructionsToSelect = constructions.filter(x => x.status === EStatus.active)
+
     const allocationsRaw = await this._allocationService.getAllocationsService.handler() as IAllocation[]
     const allocations = allocationsRaw.map(a => {
       const user = users.filter(u => u.id === a.userId)[0]
@@ -69,7 +72,7 @@ export class AllocationController implements IController {
       ...buttons,
       allocations,
       users,
-      constructions,
+      constructions: constructionsToSelect,
       canEdit: true
     })
   }

@@ -1,188 +1,146 @@
 /* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 
-document.addEventListener('DOMContentLoaded', function () {
-  const editUserForm = document.getElementById('editUserForm')
-  const editButtons = document.querySelectorAll('.editBtn')
-  const addUser = document.querySelectorAll('.addUser')
-  const deleteButtons = document.querySelectorAll('.deleteBtn')
-  const editModal = document.getElementById('editModal')
-  const closeModal = document.querySelector('.closeModal')
-  const errorMessage = document.getElementById('errorMessage')
+const id = document.getElementById('id')
+const createdAt = document.getElementById('createdAt')
+const user = document.getElementById('userId')
+const construction = document.getElementById('constructionId')
+const allocation = document.getElementById('allocationSelect')
+const description = document.getElementById('description')
+const idDelete = document.getElementById('idDelete')
+const nameDelete = document.getElementById('nameDelete')
+const editModal = document.getElementById('editModal')
+const deleteModal = document.getElementById('deleteModal')
+const errorMessage = document.getElementById('errorMessage')
+const errorMessageDelete = document.getElementById('errorMessageDelete')
 
-  const nameInput = document.getElementById('name')
-  const emailInput = document.getElementById('email')
-  const cpfInput = document.getElementById('cpf')
-  const passwordInput = document.getElementById('password')
-  const phoneInput = document.getElementById('phone')
-  const zipCodeInput = document.getElementById('zipCode')
-  const cityInput = document.getElementById('city')
-  const roadInput = document.getElementById('road')
-  const officeInput = document.getElementById('officeSelect')
-  const numberHouseInput = document.getElementById('numberHouse')
-  const neighborhoodInput = document.getElementById('neighborhood')
-  const createdAtInput = document.getElementById('createdAt')
-  const userIdInput = document.getElementById('userId')
-  const adminInput = document.getElementById('admin')
+async function completeAllocation () {
+  try {
+    const response = await axios.post('/construction/getConstructions', {})
+    const constructions = JSON.parse(response.data)
 
-  VMasker(zipCodeInput).maskPattern('99999-999')
-  VMasker(phoneInput).maskPattern('(99) 99999-9999')
-  VMasker(cpfInput).maskPattern('999.999.999-99')
-  VMasker(numberHouseInput).maskPattern('99999')
+    const response2 = await axios.post('/allocation/getAllocations', {})
+    const allocations = JSON.parse(response2.data)
 
-  zipCodeInput.addEventListener('blur', completeInformationAddress)
-
-  editButtons.forEach(button => {
-    button.addEventListener('click', function () {
-      const userId = parseInt(button.dataset.id)
-      // eslint-disable-next-line no-undef
-      axios.post('/user/getUser', { key: 'id', value: userId })
-        .then(function (response) {
-          const data = JSON.parse(response.data)
-
-          console.log(data)
-          nameInput.value = data.name
-          emailInput.value = data.email
-          cpfInput.value = data.cpf
-          userIdInput.value = userId
-
-          passwordInput.value = data.password
-          phoneInput.value = data.phone
-          zipCodeInput.value = data.zipCode
-          cityInput.value = data.city
-          roadInput.value = data.road
-          officeInput.value = data.office
-          numberHouseInput.value = data.numberHouse
-          neighborhoodInput.value = data.neighborhood
-          createdAtInput.value = new Date(data.createdAt)
-          adminInput.checked = data.admin
-        })
-        .catch(function (error) {
-          console.error(error)
-        })
-      editModal.style.display = 'block'
-    })
-  })
-
-  // Fechar o modal ao clicar no botão de fechar
-  closeModal.addEventListener('click', function () {
-    editModal.style.display = 'none'
-  })
-
-  deleteButtons.forEach(button => {
-    button.addEventListener('click', function () {
-      const userId = button.dataset.id
-      // eslint-disable-next-line no-undef
-      axios.post('/user/deleteUser', { id: userId })
-        .then(function (response) {
-          window.location.reload()
-        })
-        .catch(function (error) {
-          console.error(error)
-        })
-    })
-  })
-
-  editUserForm.addEventListener('submit', function (event) {
-    event.preventDefault()
-    const id = document.getElementById('userId').value
-    const createdAt = document.getElementById('createdAt').value
-    const name = document.getElementById('name').value
-    const email = document.getElementById('email').value
-    const password = document.getElementById('password').value
-    const cpf = document.getElementById('cpf').value
-    const phone = document.getElementById('phone').value
-    const zipCode = document.getElementById('zipCode').value
-    const city = document.getElementById('city').value
-    const road = document.getElementById('road').value
-    const office = document.getElementById('officeSelect').value
-    const numberHouse = document.getElementById('numberHouse').value
-    const neighborhood = document.getElementById('neighborhood').value
-    const admin = document.getElementById('admin').checked
-
-    if (id) {
-      // eslint-disable-next-line no-undef
-      axios.post('/user/updateUser', {
-        id,
-        createdAt,
-        name,
-        email,
-        admin,
-        password,
-        cpf,
-        phone,
-        zipCode,
-        city,
-        road,
-        office,
-        numberHouse,
-        neighborhood
-      })
-        .then(function (response) {
-          window.location.reload()
-        })
-        .catch(function (error) {
-          console.error(error)
-          errorMessage.textContent = error.message
-          errorMessage.style.display = 'block'
-        })
-    } else {
-      // eslint-disable-next-line no-undef
-      axios.post('/user/saveUser', {
-        name,
-        email,
-        admin,
-        password,
-        cpf,
-        phone,
-        zipCode,
-        city,
-        road,
-        office,
-        numberHouse,
-        neighborhood
-      })
-        .then(function (response) {
-          window.location.reload()
-        })
-        .catch(function (error) {
-          console.error(error)
-          errorMessage.textContent = error.message
-          errorMessage.style.display = 'block'
-        })
+    if (!Array.isArray(constructions)) {
+      console.error('Dados recebidos não são uma array', constructions)
+      return
     }
-  })
 
-  addUser.forEach(button => {
-    button.addEventListener('click', function () {
-      // eslint-disable-next-line no-undef
+    const auxA = allocations.filter(x => x.id === parseInt(allocation.value))[0]
 
-      nameInput.value = ''
-      emailInput.value = ''
-      cpfInput.value = ''
+    const constructionsToUser = constructions.filter(x => x?.id === auxA.constructionId)[0]
 
-      passwordInput.value = ''
-      phoneInput.value = ''
-      zipCodeInput.value = ''
-      cityInput.value = ''
-      roadInput.value = ''
-      officeInput.value = ''
-      numberHouseInput.value = ''
-      neighborhoodInput.value = ''
-      adminInput.checked = false
-
-      editModal.style.display = 'block'
-    })
-  })
-
-  async function completeInformationAddress () {
-    const zipCode = zipCodeInput.value
-    try {
-      const result = await axios.get(`https://viacep.com.br/ws/${zipCode}/json/`)
-      if (result.data) {
-        cityInput.value = result.data.localidade
-        roadInput.value = result.data.logradouro
-        neighborhoodInput.value = result.data.bairro
-      }
-    } catch (e) {}
+    construction.value = constructionsToUser.id
+  } catch (error) {
   }
-})
+}
+
+async function completeSelect () {
+  allocation.innerHTML = ''
+  try {
+    const response = await axios.post('/allocation/getAllocations', {})
+    const allocations = JSON.parse(response.data)
+
+    if (!Array.isArray(allocations)) {
+      console.error('Dados recebidos não são uma array', allocations)
+      return
+    }
+    const res = await axios.post('/construction/getConstructions', {})
+    const constructions = JSON.parse(res.data)
+
+    const allocationToUser = allocations
+      .filter(x => x?.userId === parseInt(user.value))
+      .map(a => ({ ...a, nameConstruction: constructions.filter(c => c?.id === a.constructionId)[0]?.name }))
+
+    allocationToUser.forEach(c => {
+      const option = document.createElement('option')
+      option.text = `${c.createdAt.split('T')[0]} - ${c.nameConstruction}`
+      option.value = c.id
+      allocation.appendChild(option)
+    })
+  } catch (error) {
+    console.error('Erro ao completar alocação:', error)
+  }
+}
+
+function openModal (schedule) {
+  allocation.innerHTML = ''
+  if (!schedule) {
+    construction.value = 0
+    allocation.value = 0
+    description.value = ''
+    status.value = 0
+    completeSelect()
+  } else {
+    id.value = schedule.id
+    createdAt.value = schedule.createdAt
+    user.value = schedule.userId
+    construction.value = schedule.constructionId
+    allocation.value = schedule.allocationId
+    description.value = schedule.description
+  }
+  editModal.style.display = 'block'
+}
+
+function requestModal () {
+  const message = ''
+
+  const payload = {
+    userId: parseInt(user.value),
+    constructionId: parseInt(construction.value),
+    allocationId: parseInt(allocation.value),
+    dateSchedule: new Date(dateSchedule.value),
+    status: status.value
+  }
+  payload.dateSchedule.setHours(payload.dateSchedule.getHours() + 3)
+  if (id.value) {
+    payload.id = parseInt(id.value)
+    payload.createdAt = createdAt.value
+
+    const a = axios.post('/schedule/updateSchedule', payload)
+      .then(result => (result))
+      .catch(function () {
+        window.location.href = '/agendamento'
+      })
+  } else {
+    axios.post('/schedule/saveSchedule', payload)
+      .then(result => (result))
+      .catch(function () {
+        window.location.href = '/agendamento'
+      })
+  }
+
+  closeModal()
+}
+
+function closeModal () {
+  editModal.style.display = 'none'
+}
+
+function openModalDelete (obj) {
+  idDelete.value = parseInt(obj.id)
+  nameDelete.value = obj.name
+  deleteModal.style.display = 'block'
+}
+
+function closeModalDelete () {
+  deleteModal.style.display = 'none'
+}
+
+function deleteModalRequest () {
+  let message = ''
+  const payload = {
+    id: idDelete.value
+  }
+
+  axios.post('/schedule/deleteSchedule', payload)
+    .then(() => {
+      window.location.href = '/agendamento'
+    })
+    .catch(error => {
+      message = error.message
+    })
+
+  errorMessageDelete.value = message
+}

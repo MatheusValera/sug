@@ -26,7 +26,7 @@ export class GetScheduleService implements IGetScheduleService {
     }
 
     if (option === EOptions.BY_SCHEDULE) {
-      schedule = await this._scheduleRepository.getSchedule(id)
+      schedule = [await this._scheduleRepository.getSchedule(id)]
     }
 
     return schedule

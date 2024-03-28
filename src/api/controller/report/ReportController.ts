@@ -31,10 +31,11 @@ export class ReportController implements IController {
   }
 
   setupRoutes (): void {
-    this.router.get('/entregar-relatorio', requireLogin, this.handler.bind(this))
+    this.router.get('/relatorio', requireLogin, this.handler.bind(this))
+    this.router.get('/entregar-relatorio', requireLogin, this.sendMyReport.bind(this))
     this.router.post('/report/getReport', requireLogin, this.getReport.bind(this))
     this.router.post('/report/getReports', requireLogin, this.getReports.bind(this))
-    this.router.post('/report/saveReport', requireLogin, isAdmin, this.saveReport.bind(this))
+    this.router.post('/report/saveReport', requireLogin, this.saveReport.bind(this))
     this.router.post('/report/updateReport', requireLogin, isAdmin, this.updateReport.bind(this))
     this.router.post('/report/deleteReport', requireLogin, isAdmin, this.deleteReport.bind(this))
   }
@@ -71,7 +72,32 @@ export class ReportController implements IController {
       }
     })
     const canAddReport = schedules.some(s => s.userId === user.id && s.status === EStatus.active)
-    response.status(200).render('./report.pug', { user, ...buttons, canAddReport, constructions, allocations, reports })
+    response.status(200).render('./report.pug', { user, ...buttons, canAddReport, constructions, allocations, reports, canEdit: true })
+  }
+
+  async sendMyReport (request: IRequest, response: IResponse): Promise<any> {
+    const email = request.user.email
+    const user = await this._userService.getUserService.handler('email', email) as IUser
+
+    const buttons = await getUserButtons(user)
+
+    const schedulesRaw = await this._scheduleService.getSchedulesService.handler() as ISchedule[]
+
+    const schedulesActive = schedulesRaw.filter(x => x.userId === user.id && x.status === EStatus.active)
+
+    const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
+
+    const schedules = schedulesActive.map(s => {
+      const construction = constructions.filter(c => c.id === s.constructionId)[0]
+
+      return {
+        ...s,
+        nameButton: `${s.dateSchedule.toISOString().split('T')[0]} - ${construction.name}`
+      }
+    })
+
+    const canAddReport = schedules.some(s => s.userId === user.id && s.status === EStatus.active)
+    response.status(200).render('./my-report.pug', { user, ...buttons, canAddReport, constructions, schedules })
   }
 
   async getReport (req: IRequest, res: IResponse): Promise<IResponse> {
