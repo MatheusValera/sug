@@ -4,7 +4,7 @@
 const id = document.getElementById('id')
 const createdAt = document.getElementById('createdAt')
 const user = document.getElementById('usersSelect')
-const construction = document.getElementById('constructionSelect')
+const construction = document.getElementById('constructionId')
 const allocation = document.getElementById('allocationSelect')
 const allocationCreatedAt = document.getElementById('allocationCreatedAt')
 const dateSchedule = document.getElementById('dateSchedule')
@@ -18,7 +18,7 @@ const errorMessageDelete = document.getElementById('errorMessageDelete')
 
 VMasker(dateSchedule).maskPattern('99/99/9999')
 
-async function completeConstruction () {
+async function completeAllocation () {
   try {
     const response = await axios.post('/construction/getConstructions', {})
     const constructions = JSON.parse(response.data)
@@ -33,21 +33,15 @@ async function completeConstruction () {
 
     const auxA = allocations.filter(x => x.id === parseInt(allocation.value))[0]
 
-    const constructionsToUser = constructions.filter(x => x?.id === auxA.constructionId)
+    const constructionsToUser = constructions.filter(x => x?.id === auxA.constructionId)[0]
 
-    console.log(constructions, auxA.constructionId)
-
-    constructionsToUser.forEach(c => {
-      const option = document.createElement('option')
-      option.text = c.name
-      option.value = c.id
-      construction.appendChild(option)
-    })
+    construction.value = constructionsToUser.id
   } catch (error) {
   }
 }
 
-async function completeAllocation () {
+async function completeSelect () {
+  allocation.innerHTML = ''
   try {
     const response = await axios.post('/allocation/getAllocations', {})
     const allocations = JSON.parse(response.data)
@@ -56,25 +50,26 @@ async function completeAllocation () {
       console.error('Dados recebidos não são uma array', allocations)
       return
     }
-    const allocationToUser = allocations.filter(x => x?.userId === parseInt(user.value))
+    const res = await axios.post('/construction/getConstructions', {})
+    const constructions = JSON.parse(res.data)
+
+    const allocationToUser = allocations
+      .filter(x => x?.userId === parseInt(user.value))
+      .map(a => ({ ...a, nameConstruction: constructions.filter(c => c?.id === a.constructionId)[0]?.name }))
 
     allocationToUser.forEach(c => {
       const option = document.createElement('option')
-      option.text = c.createdAt.split('T')[0]
+      option.text = `${c.createdAt.split('T')[0]} - ${c.nameConstruction}`
       option.value = c.id
       allocation.appendChild(option)
     })
-
-    if (!allocationToUser.length) {
-      errorMessage.textContent = 'Usuário não alocado para nenhuma alocação.'
-      errorMessage.style.display = 'block'
-    }
   } catch (error) {
     console.error('Erro ao completar alocação:', error)
   }
 }
 
 function openModal (schedule) {
+  allocation.innerHTML = ''
   if (!schedule) {
     user.value = 0
     construction.value = 0

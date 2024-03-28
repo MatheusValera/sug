@@ -27,9 +27,9 @@ function openModal (construction) {
     status.value = 0
   } else {
     id.value = construction.id
-    createdAt.value = construction.createdAt
-    startDate.value = construction.startDate
-    endDate.value = construction.endDate
+    createdAt.value = construction.createdAt.split('T')[0]
+    startDate.value = construction.startDate.split('T')[0]
+    endDate.value = construction.endDate.split('T')[0]
     status.value = construction.status
     nameConstruction.value = construction.name
     company.value = construction.companyId
@@ -47,9 +47,9 @@ function requestModal () {
     endDate: new Date(endDate.value),
     status: status.value
   }
+  console.log(payload.startDate)
   if (id.value) {
     payload.id = parseInt(id.value)
-    payload.createdAt = createdAt.value
 
     const a = axios.post('/construction/updateConstruction', payload)
       .then(result => (result))

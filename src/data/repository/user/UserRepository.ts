@@ -46,6 +46,7 @@ export class PrismaUserRepository implements IUserRepository {
       password: userToUpdate.password,
       numberHouse: userToUpdate.numberHouse,
       neighborhood: userToUpdate.neighborhood,
+      categoryRules: userToUpdate.categoryRules,
       updatedAt: new Date()
     }
 

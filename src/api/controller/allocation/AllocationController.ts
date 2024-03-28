@@ -35,11 +35,11 @@ export class AllocationController implements IController {
   }
 
   async handler (request: IRequest, response: IResponse): Promise<any> {
-    const userCategory = request.user.categoryRules
+    // const userRaw = request.user
 
-    if (userCategory <= 3) {
-      response.redirect('/')
-    }
+    // if (userRaw.admin || userRaw.categoryRules <= 3) {
+    //   response.redirect('/')
+    // }
 
     const email = request.user.email
     const user = await this._userService.getUserService.handler('email', email)
@@ -71,45 +71,6 @@ export class AllocationController implements IController {
       users,
       constructions,
       canEdit: true
-    })
-  }
-
-  async handlerViewAllocations (request: IRequest, response: IResponse): Promise<any> {
-    const userCategory = request.user.categoryRules
-    const email = request.user.email
-
-    if (userCategory <= 2) {
-      response.redirect('/')
-    }
-    const user = await this._userService.getUserService.handler('email', email)
-
-    const buttons = await getUserButtons(user)
-    const users = await this._userService.getUsersService.handler() as IUser[]
-    const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
-
-    const allocationsRaw = await this._allocationService.getAllocationsService.handler() as IAllocation[]
-    const allocations = allocationsRaw.map(a => {
-      const user = users.filter(u => u.id === a.userId)[0]
-      const construction = constructions.filter(c => c.id === a.constructionId)[0]
-
-      return {
-        ...a,
-        user: {
-          name: user.name,
-          office: user.office
-        },
-        construction: {
-          name: construction.name
-        }
-      }
-    })
-    response.status(200).render('./allocation.pug', {
-      user,
-      ...buttons,
-      allocations,
-      users,
-      constructions,
-      canEdit: false
     })
   }
 

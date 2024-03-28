@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const errorMessage = document.getElementById('errorMessage')
 
   const nameInput = document.getElementById('name')
-  const categoryRulesInput = document.getElementById('selectCategoryRules')
+  const categoryRulesInput = document.getElementById('categoryRulesInput')
   const emailInput = document.getElementById('email')
   const cpfInput = document.getElementById('cpf')
   const passwordInput = document.getElementById('password')
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const id = document.getElementById('userId').value
     const createdAt = document.getElementById('createdAt').value
     const name = document.getElementById('name').value
-    const categoryRules = document.getElementById('categoryRulesInput').value
+    const categoryRules = parseInt(document.getElementById('categoryRulesInput').value)
     const email = document.getElementById('email').value
     const password = document.getElementById('password').value
     const cpf = document.getElementById('cpf').value

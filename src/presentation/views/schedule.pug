@@ -60,23 +60,20 @@ block content
         h4.card-title Agendamento
         form(id="editUserForm")
           input(type="hidden", id="id", name="id")
+          input(type="hidden", id="constructionId", name="constructionSelect")
           input(type="hidden", id="createdAt", name="createdAt")
 
           .form-group
             label(for="usersSelect") Colaborador:
-            select.form-control(onclick="completeAllocation()" id="usersSelect")
+            select.form-control(onclick="completeSelect()" id="usersSelect")
               option(value=0)
               for user in users
                 option(value=user.id)= user.name
 
           .form-group
-            label(for="allocationSelect") Alocações do Colaborador:
-            select.form-control(onclick="completeConstruction()" id="allocationSelect")
+            label(for="allocationSelect") Data da Alocação - Construção:
+            select.form-control(onclick="completeAllocation()" id="allocationSelect")
               option(value=0)
-          
-          .form-group
-            label(for="constructionSelect") Construções:
-            select.form-control(id="constructionSelect")
 
           .form-group
             label(for="dateSchedule") Data do agendamento:
@@ -97,9 +94,9 @@ block content
     #deleteModal.modal
       .modal-content
         h4.card-title Confirmar Exclusão
-        h4.card-title Tem certeza de que deseja excluir esse agendamento?
           .form-group
-              input.form-control(type="text", id="idDelete", name="idDelete", readonly)
+              label() Tem certeza de que deseja excluir esse agendamento?
+              input.form-control(id="idDelete", name="idDelete", readonly, type="hidden")
           .form-group
               input.form-control(type="text", id="nameDelete", name="nameDelete", readonly)
           .form-group
