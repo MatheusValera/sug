@@ -69,12 +69,6 @@ const buttonsReportFeature = [
     adminHasNecessary: false
   },
   {
-    category: 2,
-    href: '/relatorios',
-    name: 'Ver relatórios',
-    adminHasNecessary: false
-  },
-  {
     category: 3,
     href: '/relatorio',
     name: 'Gerenciar relatórios',
