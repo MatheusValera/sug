@@ -149,3 +149,27 @@ function deleteModalRequest () {
 
   errorMessageDelete.value = message
 }
+
+// eslint-disable-next-line no-unused-vars
+function filter () {
+  const input = document.getElementById('search').value
+
+  const table = document.getElementById('table')
+  const trs = table.getElementsByTagName('tr')
+
+  for (const tr of trs) {
+    const td1 = tr.getElementsByTagName('td')[3]
+    const td2 = tr.getElementsByTagName('td')[5]
+
+    const value1 = td1?.textContent || td1?.innerText
+    const value2 = td2?.textContent || td2?.innerText
+    if (value1) {
+      if (value1.toLowerCase().indexOf(input.toLowerCase()) > -1 ||
+      value2.toLowerCase().indexOf(input.toLowerCase()) > -1) {
+        tr.style.display = ''
+      } else {
+        tr.style.display = 'none'
+      }
+    }
+  }
+}

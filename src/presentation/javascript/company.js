@@ -100,3 +100,24 @@ function deleteModalRequest () {
 
   errorMessageDelete.value = message
 }
+
+// eslint-disable-next-line no-unused-vars
+function filter () {
+  const input = document.getElementById('search').value
+
+  const table = document.getElementById('table')
+  const trs = table.getElementsByTagName('tr')
+
+  for (const tr of trs) {
+    const td = tr.getElementsByTagName('td')[4]
+
+    const value = td?.textContent || td?.innerText
+    if (value) {
+      if (value.toLowerCase().indexOf(input.toLowerCase()) > -1) {
+        tr.style.display = ''
+      } else {
+        tr.style.display = 'none'
+      }
+    }
+  }
+}
