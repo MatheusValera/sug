@@ -8,6 +8,7 @@ import { ISaveCompanyService } from '../../domain/service/company/saveCompany/IS
 import { IGetCompaniesService } from '../../domain/service/company/getCompanies/IGetCompaniesService'
 import { IDeleteCompanyService } from '../../domain/service/company/deleteCompany/IDeleteCompanyService'
 import { IUpdateCompanyService } from '../../domain/service/company/updateCompany/IUpdateCompanyService'
+import { makeCompanyValidation } from './CompanyValidation'
 
 export interface ICompanyService {
   getCompanyService: IGetCompanyService
@@ -18,9 +19,10 @@ export interface ICompanyService {
 }
 
 export const makeCompanyService = (): ICompanyService => {
+  const validator = makeCompanyValidation()
   const getCompanyService = makeGetCompanyService().getCompanyService
-  const saveCompanyService = makeSaveCompanyService().saveCompanyService
-  const updateCompanyService = makeUpdateCompanyService().updateCompanyService
+  const saveCompanyService = makeSaveCompanyService(validator).saveCompanyService
+  const updateCompanyService = makeUpdateCompanyService(validator).updateCompanyService
   const deleteCompanyService = makeDeleteCompanyService().deleteCompanyService
   const getCompaniesService = makeGetCompaniesService().getCompaniesService
 

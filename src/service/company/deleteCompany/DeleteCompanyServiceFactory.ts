@@ -2,7 +2,7 @@ import { prismaClient } from '../../../infra/prisma/PrismaClient'
 import { DeleteCompanyService } from './DeleteCompanyService'
 import { PrismaCompanyRepository } from '../../../data/repository/company/CompanyRepository'
 import { IDeleteCompanyService } from '../../../domain/service/company/deleteCompany/IDeleteCompanyService'
-import { makeConstructionService } from '../../construction/ConstructionServiceFactory'
+import { PrismaConstructionRepository } from '../../../data/repository/construction/ConstructionRepository'
 
 interface FactoryTypes {
   deleteCompanyService: IDeleteCompanyService
@@ -10,8 +10,8 @@ interface FactoryTypes {
 
 export const makeDeleteCompanyService = (): FactoryTypes => {
   const companyRepository = new PrismaCompanyRepository(prismaClient.getClient())
-  const constructionService = makeConstructionService()
-  const deleteCompanyService = new DeleteCompanyService(companyRepository, constructionService)
+  const constructionRepository = new PrismaConstructionRepository(prismaClient.getClient())
+  const deleteCompanyService = new DeleteCompanyService(companyRepository, constructionRepository)
 
   return { deleteCompanyService }
 }

@@ -16,7 +16,7 @@ export const makeSaveAllocationService = (validator: Validation): FactoryTypes =
   const userRepo = makePrismaUserRepository()
   const constructionService = new PrismaConstructionRepository(prismaClient.getClient())
 
-  saveAllocationService = new SaveAllocationService(repository, validator, userRepo, constructionService)
+  saveAllocationService = new SaveAllocationService(validator, userRepo, repository, constructionService)
 
   return { saveAllocationService }
 }

@@ -1,22 +1,21 @@
-import { makeReportValidation } from '../ReportValidation'
 import { prismaClient } from '../../../infra/prisma/PrismaClient'
 import { PrismaReportRepository } from '../../../data/repository/report/ReportRepository'
 import { ISaveReportService } from '../../../domain/service/report/saveReport/ISaveReportService'
 import { SaveReportService } from './SaveReportService'
-import { makeScheduleService } from '../../schedule/ScheduleServiceFactory'
-import { makeAllocationService } from '../../allocation/AllocationServiceFactory'
+import { PrismaSchedulesRepository } from '../../../data/repository/schedules/SchedulesRepository'
+import { PrismaAllocationRepository } from '../../../data/repository/allocation/AllocationRepository'
+import { Validation } from '../../../domain/utils/validator'
 
 interface FactoryTypes {
   saveReportService: ISaveReportService
 }
 
-export const makeSaveReportService = (): FactoryTypes => {
-  const validator = makeReportValidation()
+export const makeSaveReportService = (validator: Validation): FactoryTypes => {
   const repository = new PrismaReportRepository(prismaClient.getClient())
-  const scheduleService = makeScheduleService()
-  const allocationService = makeAllocationService()
+  const scheduleRepository = new PrismaSchedulesRepository(prismaClient.getClient())
+  const allocationRepository = new PrismaAllocationRepository(prismaClient.getClient())
 
-  const saveReportService = new SaveReportService(repository, validator, scheduleService, allocationService)
+  const saveReportService = new SaveReportService(repository, validator, scheduleRepository, allocationRepository)
 
   return { saveReportService }
 }

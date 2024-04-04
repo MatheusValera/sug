@@ -8,6 +8,7 @@ import { IDeleteScheduleService } from '../../domain/service/schedule/deleteSche
 import { IUpdateScheduleService } from '../../domain/service/schedule/updateSchedule/IUpdateScheduleService'
 import { makeSaveScheduleService } from './saveSchedule/SaveScheduleServiceFactory'
 import { makeUpdateScheduleService } from './updateSchedule/UpdateScheduleServiceFactory'
+import { makeScheduleValidation } from './ScheduleValidation'
 
 export interface IScheduleService {
   getScheduleService: IGetScheduleService
@@ -18,9 +19,10 @@ export interface IScheduleService {
 }
 
 export const makeScheduleService = (): IScheduleService => {
+  const validator = makeScheduleValidation()
   const getScheduleService = makeGetScheduleService().getScheduleService
-  const saveScheduleService = makeSaveScheduleService().saveScheduleService
-  const updateScheduleService = makeUpdateScheduleService().updateScheduleService
+  const saveScheduleService = makeSaveScheduleService(validator).saveScheduleService
+  const updateScheduleService = makeUpdateScheduleService(validator).updateScheduleService
   const deleteScheduleService = makeDeleteScheduleService().deleteScheduleService
   const getSchedulesService = makeGetSchedulesService().getSchedulesService
 

@@ -8,6 +8,7 @@ import { IDeleteReportService } from '../../domain/service/report/deleteReport/I
 import { IUpdateReportService } from '../../domain/service/report/updateReport/IUpdateReportService'
 import { makeSaveReportService } from './saveCompany/SaveReportServiceFactory'
 import { makeUpdateReportService } from './ReportCompany/UpdateReportServiceFactory'
+import { makeReportValidation } from './ReportValidation'
 
 export interface IReportService {
   getReportService: IGetReportService
@@ -18,8 +19,9 @@ export interface IReportService {
 }
 
 export const makeReportService = (): IReportService => {
+  const validator = makeReportValidation()
   const getReportService = makeGetReportService().getReportService
-  const saveReportService = makeSaveReportService().saveReportService
+  const saveReportService = makeSaveReportService(validator).saveReportService
   const updateReportService = makeUpdateReportService().updateReportService
   const deleteReportService = makeDeleteReportService().deleteReportService
   const getReportsService = makeGetReportsService().getReportsService

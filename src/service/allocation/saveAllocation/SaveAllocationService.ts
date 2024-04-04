@@ -9,10 +9,10 @@ import { EmailService } from '../../../utils/sendEmail'
 
 export class SaveAllocationService implements ISaveAllocationService {
   constructor (
-    private readonly _allocationRepository: IAllocationRepository,
     private readonly _validator: Validation,
-    private readonly _userService: IUserRepository,
-    private readonly _constructionService: IConstructionRepository) {}
+    private readonly _userRepository: IUserRepository,
+    private readonly _allocationRepository: IAllocationRepository,
+    private readonly _constructionRepository: IConstructionRepository) {}
 
   async handler (allocation: Omit<IAllocation, 'id'>): Promise<IAllocation|Error> {
     // @ts-expect-error
@@ -37,8 +37,8 @@ export class SaveAllocationService implements ISaveAllocationService {
     const result = await this._allocationRepository.insertAllocation(allocation)
 
     if (result) {
-      const user = await this._userService.getUser('id', allocation.userId)
-      const construction = await this._constructionService.getConstruction('id', allocation.constructionId)
+      const user = await this._userRepository.getUser('id', allocation.userId)
+      const construction = await this._constructionRepository.getConstruction('id', allocation.constructionId)
 
       await EmailService.sendEmail(
         user.email,

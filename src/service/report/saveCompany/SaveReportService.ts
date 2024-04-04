@@ -2,18 +2,16 @@ import { IReport } from '../../../domain/data/entity/IReport'
 import { Validation } from '../../../domain/utils/validator'
 import { ISaveReportService } from '../../../domain/service/report/saveReport/ISaveReportService'
 import { IReportRepository } from '../../../domain/data/repository/report/IReportRepository'
-import { IScheduleService } from '../../schedule/ScheduleServiceFactory'
-import { EOptions } from '../../../domain/service/allocation/getAllocation/IGetAllocationService'
-import { EStatus, ISchedule } from '../../../domain/data/entity/ISchedule'
-import { IAllocationService } from '../../allocation/AllocationServiceFactory'
-import { IAllocation } from '../../../domain/data/entity/IAllocation'
+import { EStatus } from '../../../domain/data/entity/ISchedule'
+import { ISchedulesRepository } from '../../../domain/data/repository/schedule/IScheduleRepository'
+import { IAllocationRepository } from '../../../domain/data/repository/allocation/IAllocationRepository'
 
 export class SaveReportService implements ISaveReportService {
   constructor (
     private readonly _reportRepository: IReportRepository,
     private readonly _validator: Validation,
-    private readonly _scheduleService: IScheduleService,
-    private readonly _allocationService: IAllocationService) {}
+    private readonly _scheduleRepository: ISchedulesRepository,
+    private readonly _allocationRepository: IAllocationRepository) {}
 
   async handler (report: Omit<IReport, 'id'>): Promise<IReport|Error> {
     // @ts-expect-error
@@ -21,7 +19,7 @@ export class SaveReportService implements ISaveReportService {
       return new Error('A report who already has an ID cannot be saved.')
     }
 
-    const schedule = (await this._scheduleService.getScheduleService.handler(report.scheduleId, EOptions.BY_SCHEDULE))[0] as ISchedule
+    const schedule = await this._scheduleRepository.getSchedule(report.scheduleId)
 
     report.constructionId = schedule.constructionId
     report.createdAt = new Date()
@@ -40,13 +38,13 @@ export class SaveReportService implements ISaveReportService {
 
     schedule.status = EStatus.inactive
 
-    await this._scheduleService.updateScheduleService.handler(schedule)
+    await this._scheduleRepository.updateSchedule(schedule)
 
-    const allocation = (await this._allocationService.getAllocationService.handler(schedule.allocationId, EOptions.BY_ALLOCATION))[0] as IAllocation
+    const allocation = await this._allocationRepository.getAllocation(schedule.allocationId)
 
     allocation.status = EStatus.inactive
 
-    await this._allocationService.updateAllocationService.handler(allocation)
+    await this._allocationRepository.updateAllocation(allocation)
 
     return result
   }

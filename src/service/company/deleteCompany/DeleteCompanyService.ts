@@ -1,19 +1,18 @@
 import { ICompany } from '../../../domain/data/entity/ICompany'
-import { IConstruction } from '../../../domain/data/entity/IConstruction'
 import { ICompanyRepository } from '../../../domain/data/repository/company/ICompany'
+import { IConstructionRepository } from '../../../domain/data/repository/construction/IConstructionRepository'
 import { IDeleteCompanyService } from '../../../domain/service/company/deleteCompany/IDeleteCompanyService'
-import { IConstructionService } from '../../construction/ConstructionServiceFactory'
 
 export class DeleteCompanyService implements IDeleteCompanyService {
   constructor (private readonly _companyRepository: ICompanyRepository,
-    private readonly _constructionRepository: IConstructionService) {}
+    private readonly _constructionRepository: IConstructionRepository) {}
 
   async handler (id: number): Promise<ICompany|Error> {
     if (!id) {
       throw new Error('No id provided')
     }
 
-    const constructions = await this._constructionRepository.getConstructionsService.handler() as IConstruction[]
+    const constructions = await this._constructionRepository.getConstructions()
 
     const hasConstructionsActive = constructions.some(c => c.companyId === id && c.status === 'active')
 

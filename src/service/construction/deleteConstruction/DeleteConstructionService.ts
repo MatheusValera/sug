@@ -1,21 +1,19 @@
-import { IAllocation } from '../../../domain/data/entity/IAllocation'
 import { IConstruction } from '../../../domain/data/entity/IConstruction'
 import { EStatus } from '../../../domain/data/entity/ISchedule'
+import { IAllocationRepository } from '../../../domain/data/repository/allocation/IAllocationRepository'
 import { IConstructionRepository } from '../../../domain/data/repository/construction/IConstructionRepository'
-import { EOptions } from '../../../domain/service/allocation/getAllocation/IGetAllocationService'
 import { IDeleteConstructionService } from '../../../domain/service/construction/deleteConstruction/IDeleteConstructionService'
-import { IAllocationService } from '../../allocation/AllocationServiceFactory'
 
 export class DeleteConstructionService implements IDeleteConstructionService {
   constructor (private readonly _constructionRepository: IConstructionRepository,
-    private readonly _allocationService: IAllocationService) {}
+    private readonly _allocationRepository: IAllocationRepository) {}
 
   async handler (id: number): Promise<IConstruction|Error> {
     if (!id) {
       throw new Error('No id provided')
     }
 
-    const allocationsToConstruction = await this._allocationService.getAllocationService.handler(id, EOptions.BY_CONSTRUCTION) as IAllocation[]
+    const allocationsToConstruction = await this._allocationRepository.getAllocations()
 
     const hasAllocationActive = allocationsToConstruction.some(a => a.status === EStatus.active)
 
