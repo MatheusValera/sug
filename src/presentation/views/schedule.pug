@@ -37,14 +37,14 @@ block content
                 each schedule in schedules
                   tr
                     td= schedule.id
-                    td= schedule.createdAt.toLocaleString('pt-BR', { timezone: 'UTC' })
+                    td= schedule.createdAt.toLocaleString('pt-Br').split(',')[0]
                     td= schedule.userId
                     td= schedule.user.name
                     td= schedule.constructionId
                     td= schedule.construction.name
                     td= schedule.allocationId
-                    td= schedule.allocation.createdAt.toLocaleString('pt-BR', { timezone: 'UTC' })
-                    td= schedule.dateSchedule.toLocaleString('pt-BR', { timezone: 'UTC' })
+                    td= schedule.allocation.createdAt.toLocaleString('pt-Br').split(',')[0]
+                    td= schedule.dateSchedule.toLocaleString('pt-Br').split(',')[0]
                     td
                       if schedule.status === 'active' 
                         label.badge.badge-danger Ativa

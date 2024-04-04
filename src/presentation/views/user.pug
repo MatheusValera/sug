@@ -43,7 +43,7 @@ block content
                     td= userTable.cpf
                     td= userTable.email
                     td= userTable.name
-                    td= userTable.createdAt.toLocaleString('pt-BR', { timezone: 'UTC' })
+                    td= userTable.createdAt.toLocaleString('pt-Br').split(',')[0]
                     td
                       label.badge.badge-danger= userTable.admin
                     td= userTable.phone

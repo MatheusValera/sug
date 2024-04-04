@@ -32,7 +32,7 @@ block content
                 for company in companies
                   tr
                     td= company.id
-                    td= company.createdAt.toLocaleString('pt-BR', { timezone: 'UTC' })
+                    td= company.createdAt.toLocaleString('pt-Br').split(',')[0]
                     td= company.cnpj
                     td= company.contact
                     td= company.nameCompany

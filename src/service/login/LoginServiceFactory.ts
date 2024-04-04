@@ -1,8 +1,7 @@
 import { LoginService } from './LoginService'
-import { prismaClient } from '../../infra/prisma/PrismaClient'
 import { ILoginService } from '../../domain/service/login/ILoginService'
 import { EncryptAdapter } from '../../infra/cryptography/EncryptAdapter'
-import { PrismaUserRepository } from '../../data/repository/user/UserRepository'
+import { makePrismaUserRepository } from '../../data/repository/user/UserRepositoryFactory'
 
 interface FactoryTypes {
   loginService: ILoginService
@@ -12,7 +11,7 @@ export const makeLoginService = (): FactoryTypes => {
   const _salt = parseInt(process.env.SALT)
   const encryptAdapter = new EncryptAdapter(_salt)
 
-  const userRepository = new PrismaUserRepository(prismaClient.getClient())
+  const userRepository = makePrismaUserRepository()
 
   const loginService = new LoginService(encryptAdapter, userRepository)
 

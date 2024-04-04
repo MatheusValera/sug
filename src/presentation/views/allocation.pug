@@ -35,7 +35,7 @@ block content
                 each allocation in allocations
                   tr
                     td= allocation.id
-                    td= allocation.createdAt.toLocaleString('pt-BR', { timezone: 'UTC' })
+                    td= allocation.createdAt.toLocaleString('pt-Br').split(',')[0]
                     td= allocation.userId
                     td= allocation.user.name
                     td= allocation.user.office

@@ -8,7 +8,8 @@ import { IDeleteUserService } from '../../domain/service/user/deleteUser/IDelete
 import { IUpdateUserService } from '../../domain/service/user/updateUser/IUpdateUserService'
 import { IGetUsersService } from '../../domain/service/user/getUsers/IGetUsersService'
 import { makeGetUsersService } from './getUsers/GetUserServiceFactory'
-
+import { makeUserValidation } from './UserValidation'
+let userService = null
 export interface IUserService {
   getUserService: IGetUserService
   getUsersService: IGetUsersService
@@ -18,17 +19,22 @@ export interface IUserService {
 }
 
 export const makeUserService = (): IUserService => {
-  const getUserService = makeGetUserService().getUserService
-  const saveUserService = makeSaveUserService().saveUserService
-  const updateUserService = makeUpdateUserService().updateUserService
-  const deleteUserService = makeDeleteUserService().deleteService
-  const getUsersService = makeGetUsersService().getUsersService
+  if (!userService) {
+    const validator = makeUserValidation()
+    const getUserService = makeGetUserService().getUserService
+    const saveUserService = makeSaveUserService(validator).saveUserService
+    const updateUserService = makeUpdateUserService(validator).updateUserService
+    const deleteUserService = makeDeleteUserService().deleteService
+    const getUsersService = makeGetUsersService().getUsersService
 
-  return {
-    getUserService,
-    saveUserService,
-    updateUserService,
-    deleteUserService,
-    getUsersService
+    userService = {
+      getUserService,
+      saveUserService,
+      updateUserService,
+      deleteUserService,
+      getUsersService
+    }
   }
+
+  return userService
 }

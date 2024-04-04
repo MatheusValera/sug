@@ -1,18 +1,16 @@
-import { prismaClient } from '../../../infra/prisma/PrismaClient'
-import { makeAllocationValidation } from '../AllocationValidation'
 import { UpdateAllocationService } from './UpdateAllocationService'
-import { PrismaAllocationRepository } from '../../../data/repository/allocation/AllocationRepository'
 import { IUpdateAllocationService } from '../../../domain/service/allocation/updateAllocation/IUpdateAllocationService'
-
+import { makePrismaAllocation } from '../../../data/repository/allocation/AllocationRepositoryFactory'
+import { Validation } from '../../../domain/utils/validator'
+let updateAllocationService = null
 interface FactoryTypes {
   updateAllocationService: IUpdateAllocationService
 }
 
-export const makeUpdateAllocationService = (): FactoryTypes => {
-  const validator = makeAllocationValidation()
-  const repository = new PrismaAllocationRepository(prismaClient.getClient())
+export const makeUpdateAllocationService = (validator: Validation): FactoryTypes => {
+  const repository = makePrismaAllocation()
 
-  const updateAllocationService = new UpdateAllocationService(repository, validator)
+  updateAllocationService = new UpdateAllocationService(repository, validator)
 
   return { updateAllocationService }
 }

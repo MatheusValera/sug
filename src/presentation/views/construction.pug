@@ -36,9 +36,9 @@ block content
                   tr
                     td= construction.id
                     td= construction.name
-                    td= construction.createdAt.toLocaleString('pt-BR', { timezone: 'UTC' })
-                    td= construction.startDate ? construction.startDate.toLocaleString('pt-BR', { timezone: 'UTC' }) : ''
-                    td= construction.endDate ? construction.endDate.toLocaleString('pt-BR', { timezone: 'UTC' }) : ''
+                    td= construction.createdAt.toLocaleString('pt-Br').split(',')[0]
+                    td= construction.startDate ? construction.startDate.toLocaleString('pt-Br').split(',')[0] : ''
+                    td= construction.endDate ? construction.endDate.toLocaleString('pt-Br').split(',')[0] : ''
                     td= construction.companyId
                     td= construction.company.name
                     td

@@ -31,11 +31,11 @@ block content
                 each report in reports
                   tr
                     td= report.id
-                    td= report.createdAt.toLocaleString('pt-BR', { timezone: 'UTC' })
+                    td= report.createdAt.toLocaleString('pt-Br').split(',')[0]
                     td= report.description
                     td= report.user.name
                     td= report.construction.name
-                    td= report.schedule.dateSchedule.toLocaleString('pt-BR', { timezone: 'UTC' })
+                    td= report.schedule.dateSchedule.toLocaleString('pt-Br').split(',')[0]
                     if canEdit === true
                       td
                         button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" onclick=`openModalDelete({ id: ${report.id}, name: '${report.construction.name}'})` data-id=report.id) Excluir

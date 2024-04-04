@@ -8,6 +8,8 @@ import { IGetConstructionsService } from '../../domain/service/construction/getC
 import { ISaveConstructionService } from '../../domain/service/construction/saveConstruction/ISaveConstructionService'
 import { IDeleteConstructionService } from '../../domain/service/construction/deleteConstruction/IDeleteConstructionService'
 import { IUpdateConstructionService } from '../../domain/service/construction/updateConstruction/IUpdateConstructionService'
+import { makeConstructionValidation } from './ConstructionValidation'
+let constructionService = null
 
 export interface IConstructionService {
   getConstructionService: IGetConstructionService
@@ -18,17 +20,22 @@ export interface IConstructionService {
 }
 
 export const makeConstructionService = (): IConstructionService => {
-  const getConstructionService = makeGetConstructionService().getConstructionService
-  const saveConstructionService = makeSaveConstructionService().saveConstructionService
-  const updateConstructionService = makeUpdateConstructionService().updateConstructionService
-  const deleteConstructionService = makeDeleteConstructionService().deleteConstructionService
-  const getConstructionsService = makeGetConstructionsService().getConstructionsService
+  if (!constructionService) {
+    const validator = makeConstructionValidation()
+    const getConstructionService = makeGetConstructionService().getConstructionService
+    const saveConstructionService = makeSaveConstructionService(validator).saveConstructionService
+    const updateConstructionService = makeUpdateConstructionService(validator).updateConstructionService
+    const deleteConstructionService = makeDeleteConstructionService().deleteConstructionService
+    const getConstructionsService = makeGetConstructionsService().getConstructionsService
 
-  return {
-    getConstructionService,
-    saveConstructionService,
-    updateConstructionService,
-    deleteConstructionService,
-    getConstructionsService
+    constructionService = {
+      getConstructionService,
+      saveConstructionService,
+      updateConstructionService,
+      deleteConstructionService,
+      getConstructionsService
+    }
   }
+
+  return constructionService
 }

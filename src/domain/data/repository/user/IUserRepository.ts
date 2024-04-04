@@ -7,5 +7,5 @@ export interface IUserRepository {
   deleteUser (id: number): Promise<IUser>
   updateUser (userToUpdate: IUser): Promise<IUser>
   insertUser (data: Omit<IUser, 'id'>): Promise<IUser>
-  getUser (key: string, value: string): Promise<IUser>
+  getUser (key: string, value: any): Promise<IUser>
 }

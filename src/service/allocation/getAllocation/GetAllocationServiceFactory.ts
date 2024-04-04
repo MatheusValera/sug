@@ -1,6 +1,5 @@
-import { PrismaAllocationRepository } from '../../../data/repository/allocation/AllocationRepository'
+import { makePrismaAllocation } from '../../../data/repository/allocation/AllocationRepositoryFactory'
 import { IGetAllocationService } from '../../../domain/service/allocation/getAllocation/IGetAllocationService'
-import { prismaClient } from '../../../infra/prisma/PrismaClient'
 import { GetAllocationService } from './GetAllocationService'
 
 interface FactoryTypes {
@@ -8,7 +7,7 @@ interface FactoryTypes {
 }
 
 export const makeGetAllocationService = (): FactoryTypes => {
-  const allocationRepository = new PrismaAllocationRepository(prismaClient.getClient())
+  const allocationRepository = makePrismaAllocation()
 
   const getAllocationService = new GetAllocationService(allocationRepository)
 

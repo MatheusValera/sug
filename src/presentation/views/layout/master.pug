@@ -47,15 +47,17 @@ html
                 span.text-black.fw-bold= user.name
               h3.welcome-sub-text Aqui está sua página principal
           ul.navbar-nav.ms-auto
-            li.nav-item.d-none.d-lg-block
-              .input-group.date.datepicker.navbar-date-picker(id="datepicker-popup")
-                span.input-group-addon.input-group-prepend.border-right
-                  span.icon-calendar.input-group-text.calendar-icon
-                input.form-control(type='text')
-            li.nav-item
-              form.search-form()
-                i.icon-search
-                input.form-control(onkeyup='filter()' type='search' placeholder='Pesquise aqui' title='Pesquise aqui' id="search")
+            if hasFilterDate
+              li.nav-item.d-none.d-lg-block
+                .input-group.date.datepicker.navbar-date-picker(id="datepicker-popup")
+                  span.input-group-addon.input-group-prepend.border-right
+                    span.icon-calendar.input-group-text.calendar-icon
+                  input.form-control(type='text')
+            if hasFilterText
+              li.nav-item
+                form.search-form()
+                  i.icon-search
+                  input.form-control(onkeyup='filter()' type='search' placeholder='Pesquise aqui' title='Pesquise aqui' id="search")
             li.nav-item.dropdown
               a.nav-link.count-indicator(id='countDropdown', href='#', data-bs-toggle='dropdown', aria-expanded='false')
                 i.icon-bell
@@ -79,8 +81,6 @@ html
                   img.img-md.rounded-circle(src='images/faces/face8.jpg', alt='Imagem de perfil')
                   p.mb-1.mt-3.font-weight-semibol= user.name
                   p.fw-light.text-muted.mb-0= user.email
-                a.dropdown-item
-                  i.dropdown-item-icon.mdi.mdi-power.text-primary.me-2 Sair
           button.navbar-toggler.navbar-toggler-right.d-lg-none.align-self-center(type='button', data-bs-toggle='offcanvas')
             span.mdi.mdi-menu
 
@@ -108,7 +108,7 @@ html
                 span.menu-title Construções
                 i.menu-arrow
               #construcao.collapse
-                ul.nav.flex-column.sub-menu
+                ul.nav.flex-column.sub-menu 
                   for a in buttonsConstruction
                     li.nav-item
                       a.nav-link(href=a.href)= a.name

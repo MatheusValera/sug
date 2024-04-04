@@ -1,6 +1,5 @@
-import { PrismaAllocationRepository } from '../../../data/repository/allocation/AllocationRepository'
+import { makePrismaAllocation } from '../../../data/repository/allocation/AllocationRepositoryFactory'
 import { IDeleteAllocationService } from '../../../domain/service/allocation/deleteAllocation/IDeleteAllocationService'
-import { prismaClient } from '../../../infra/prisma/PrismaClient'
 import { DeleteAllocationService } from './DeleteAllocationService'
 
 interface FactoryTypes {
@@ -8,7 +7,7 @@ interface FactoryTypes {
 }
 
 export const makeDeleteAllocationService = (): FactoryTypes => {
-  const allocationRepository = new PrismaAllocationRepository(prismaClient.getClient())
+  const allocationRepository = makePrismaAllocation()
 
   const deleteAllocationService = new DeleteAllocationService(allocationRepository)
 
