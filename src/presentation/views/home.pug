@@ -40,46 +40,47 @@ block content
                                     p= info.dateSchedule.toLocaleString('pt-Br').split(',')[0]
                                   td
                                     .badge.badge-opacity-warning Em progresso
-              .col-lg-8.d-flex.flex-column
-                .row.flex-grow
-                  .col-12.grid-margin.stretch-card
-                    .card.card-rounded
-                      .card-body
-                        .d-sm-flex.justify-content-between.align-items-start
-                          div
-                            h4.card-title.card-title-dash Construções
-                            p.card-subtitle.card-subtitle-dash= `Tem ${constructionsIncomplete} construções em andamento.`
-                        .table-responsive.mt-1
-                          table.table.select-table
-                            thead
-                              tr
-                                th Construção
-                                th Alocações
-                                th Conclusões de relatório
-                                th Status
-                            tbody
-                              for construction of constructions
+              if user.office === 'Engenheiro'
+                .col-lg-8.d-flex.flex-column
+                  .row.flex-grow
+                    .col-12.grid-margin.stretch-card
+                      .card.card-rounded
+                        .card-body
+                          .d-sm-flex.justify-content-between.align-items-start
+                            div
+                              h4.card-title.card-title-dash Construções
+                              p.card-subtitle.card-subtitle-dash= `Tem ${constructionsIncomplete} construções em andamento.`
+                          .table-responsive.mt-1
+                            table.table.select-table
+                              thead
                                 tr
-                                  td
-                                    .d-flex
-                                      img(src='https://img.freepik.com/fotos-gratis/silhueta-de-construcao_1127-3246.jpg?w=1380&t=st=1712231694~exp=1712232294~hmac=53dfe570015dcdaedbe5b82d56a18d0ee8bcdd5a1e1edc91bc5ea0117571b087' alt='')
+                                  th Construção
+                                  th Alocações
+                                  th Conclusões de relatório
+                                  th Status
+                              tbody
+                                for construction of constructions
+                                  tr
+                                    td
+                                      .d-flex
+                                        img(src='https://img.freepik.com/fotos-gratis/silhueta-de-construcao_1127-3246.jpg?w=1380&t=st=1712231694~exp=1712232294~hmac=53dfe570015dcdaedbe5b82d56a18d0ee8bcdd5a1e1edc91bc5ea0117571b087' alt='')
+                                        div
+                                          h6= construction.name
+                                          p= construction.startDate.toLocaleString('pt-Br').split(',')[0]
+                                    td
+                                      h6 Alocações ativas
+                                      p= construction.allocationActiveCount
+                                    td
                                       div
-                                        h6= construction.name
-                                        p= construction.startDate.toLocaleString('pt-Br').split(',')[0]
-                                  td
-                                    h6 Alocações ativas
-                                    p= construction.allocationActiveCount
-                                  td
-                                    div
-                                      .d-flex.justify-content-between.align-items-center.mb-1.max-width-progress-wrap
-                                        p.text-success= construction.allocationCount !== 0 ? (construction.allocationActiveCount / construction.allocationCount * 100).toFixed(2)  : '0'
-                                        p= `${construction.allocationActiveCount}/${construction.allocationCount}`
-                                      .progress.progress-md
-                                        .progress-bar.bg-success(role='progressbar' style='width: 85%' aria-valuenow='25' aria-valuemin='0' aria-valuemax='100')
-                                  td
-                                    if construction.status === 'active'
-                                      .badge.badge-opacity-warning Em progresso
-                                    else if construction.status === 'finished'
-                                      .badge.badge-opacity-success Concluída
-                                    else if construction.status === 'suspended'
-                                      .badge.badge-opacity-danger Suspenso
+                                        .d-flex.justify-content-between.align-items-center.mb-1.max-width-progress-wrap
+                                          p.text-success= construction.allocationCount !== 0 ? (construction.allocationActiveCount / construction.allocationCount * 100).toFixed(2)  : '0'
+                                          p= `${construction.allocationActiveCount}/${construction.allocationCount}`
+                                        .progress.progress-md
+                                          .progress-bar.bg-success(role='progressbar' style='width: 85%' aria-valuenow='25' aria-valuemin='0' aria-valuemax='100')
+                                    td
+                                      if construction.status === 'active'
+                                        .badge.badge-opacity-warning Em progresso
+                                      else if construction.status === 'finished'
+                                        .badge.badge-opacity-success Concluída
+                                      else if construction.status === 'suspended'
+                                        .badge.badge-opacity-danger Suspenso
