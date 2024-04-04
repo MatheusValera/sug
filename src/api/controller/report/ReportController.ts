@@ -74,7 +74,17 @@ export class ReportController implements IController {
       }
     })
     const canAddReport = schedules.some(s => s.userId === user.id && s.status === EStatus.active)
-    response.status(200).render('./report.pug', { user, ...buttons, canAddReport, constructions, allocations, reports, canEdit: true })
+    response.status(200).render('./report.pug', {
+      user,
+      ...buttons,
+      canAddReport,
+      constructions,
+      allocations,
+      reports,
+      canEdit: true,
+      hasFilterDate: false,
+      hasFilterText: true
+    })
   }
 
   async viewMyReports (request: IRequest, response: IResponse): Promise<any> {
@@ -173,7 +183,11 @@ export class ReportController implements IController {
         return BadRequestResponse.handler(res, 'No data provided.')
       }
 
-      const report = await this._reportService.saveReportService.handler(reportRaw)
+      let report = await this._reportService.saveReportService.handler(reportRaw)
+
+      if (report instanceof Error) {
+        report = { message: report.message } as any
+      }
 
       return SuccessResponse.handler(res, JSON.stringify(report))
     } catch (error) {

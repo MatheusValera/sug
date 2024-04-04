@@ -65,7 +65,17 @@ export class ScheduleController implements IController {
         }
       }
     })
-    response.status(200).render('./schedule.pug', { user, canEdit: true, ...buttons, schedules, users, constructions, allocations })
+    response.status(200).render('./schedule.pug', {
+      user,
+      canEdit: true,
+      ...buttons,
+      schedules,
+      users,
+      constructions,
+      allocations,
+      hasFilterDate: true,
+      hasFilterText: true
+    })
   }
 
   async handlerViewSchedules (request: IRequest, response: IResponse): Promise<any> {
@@ -96,7 +106,17 @@ export class ScheduleController implements IController {
         }
       }
     })
-    response.status(200).render('./schedule.pug', { user, canEdit: false, ...buttons, schedules, users, constructions, allocations })
+    response.status(200).render('./schedule.pug', {
+      user,
+      canEdit: false,
+      ...buttons,
+      schedules,
+      users,
+      constructions,
+      allocations,
+      hasFilterDate: true,
+      hasFilterText: true
+    })
   }
 
   async handlerViewUserSchedules (request: IRequest, response: IResponse): Promise<any> {
@@ -127,7 +147,17 @@ export class ScheduleController implements IController {
         }
       }
     })
-    response.status(200).render('./schedule.pug', { user, canEdit: false, ...buttons, schedules, users, constructions, allocations })
+    response.status(200).render('./schedule.pug', {
+      user,
+      canEdit: false,
+      ...buttons,
+      schedules,
+      users,
+      constructions,
+      allocations,
+      hasFilterDate: true,
+      hasFilterText: true
+    })
   }
 
   async getSchedule (req: IRequest, res: IResponse): Promise<IResponse> {

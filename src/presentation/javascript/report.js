@@ -84,7 +84,7 @@ function openModal (schedule) {
 }
 
 function requestModal () {
-  const message = ''
+  let message = 'Sua operação foi concluída com sucesso'
 
   const payload = {
     userId: parseInt(user.value),
@@ -101,17 +101,19 @@ function requestModal () {
     const a = axios.post('/schedule/updateSchedule', payload)
       .then(result => (result))
       .catch(function () {
-        window.location.href = '/agendamento'
+        if (result.message) {
+          message = result.message
+        }
+        messageToModal.innerHTML = message
+        informationModal.style.display = 'block'
       })
   } else {
     axios.post('/schedule/saveSchedule', payload)
       .then(result => (result))
       .catch(function () {
-        window.location.href = '/agendamento'
+        message = result.message
       })
   }
-
-  closeModal()
 }
 
 function closeModal () {

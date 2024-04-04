@@ -52,7 +52,7 @@ html
                 .input-group.date.datepicker.navbar-date-picker(id="datepicker-popup")
                   span.input-group-addon.input-group-prepend.border-right
                     span.icon-calendar.input-group-text.calendar-icon
-                  input.form-control(type='text')
+                  input.form-control(onchange="filterDate()" type='text' id="searchDate")
             if hasFilterText
               li.nav-item
                 form.search-form()
@@ -75,10 +75,10 @@ html
 
             li.nav-item.dropdown.d-none.d-lg-block.user-dropdown
               a.nav-link(id='UserDropdown', href='#', data-bs-toggle='dropdown', aria-expanded='false')
-                img.img-xs.rounded-circle(src='images/faces/face8.jpg', alt='Imagem de perfil')
+                img.img-xs.rounded-circle(src='https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?w=826&t=st=1712232624~exp=1712233224~hmac=437a0204a02ca48e9c5b5d354bb3dffd681405da23d9d31d29783eb75219a09f', alt='Imagem de perfil')
               .dropdown-menu.dropdown-menu-right.navbar-dropdown(aria-labelledby='UserDropdown')
                 .dropdown-header.text-center
-                  img.img-md.rounded-circle(src='images/faces/face8.jpg', alt='Imagem de perfil')
+                  img.img-md.rounded-circle(style="height: 40px; width: 41px" src='https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?w=826&t=st=1712232624~exp=1712233224~hmac=437a0204a02ca48e9c5b5d354bb3dffd681405da23d9d31d29783eb75219a09f', alt='Imagem de perfil')
                   p.mb-1.mt-3.font-weight-semibol= user.name
                   p.fw-light.text-muted.mb-0= user.email
           button.navbar-toggler.navbar-toggler-right.d-lg-none.align-self-center(type='button', data-bs-toggle='offcanvas')

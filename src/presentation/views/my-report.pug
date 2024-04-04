@@ -38,5 +38,12 @@ block content
                 i.input-helper
             button.btn.btn-primary.me-2(type="button" onclick="saveReport()") Enviar
             label(id="errorMessage", style="display: none; color: red;")
+        
+    #informationModal.modal
+      .modal-content
+        h4.card-title Informação:
+          label(id="message", style="display: none; color: red;")
+          label(id="messageP", style="display: none; color: green;")
+        button.btn.btn-light(onclick="reload()") Fechar
   
   script(src="./javascript/my-report.js")

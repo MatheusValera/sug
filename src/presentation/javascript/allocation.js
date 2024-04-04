@@ -12,6 +12,9 @@ const status = document.getElementById('statusSelect')
 const deleteModal = document.getElementById('deleteModal')
 const errorMessage = document.getElementById('errorMessage')
 const errorMessageDelete = document.getElementById('errorMessageDelete')
+const informationModal = document.getElementById('informationModal')
+const messageToModal = document.getElementById('message')
+const messageToModalP = document.getElementById('messageP')
 
 function openModal (allocation) {
   if (!allocation) {
@@ -53,16 +56,21 @@ function requestModal () {
   } else {
     axios.post('/allocation/saveAllocation', payload)
       .then(result => {
-        if (result?.data?.message) {
-          errorMessage.textContent = result.data.message
-          errorMessage.style.display = 'block'
-        } else {
-          // closeModal()
-          // window.location.reload()
+        const r = JSON.parse(result.data)
+        closeModal()
+        let message = 'Operação realizada com sucesso!'
+        if (r.message) {
+          message = r.message
         }
+        messageToModalP.textContent = message
+        messageToModalP.style.display = 'block'
+        informationModal.style.display = 'block'
       })
-      .catch(function () {
-        window.location.href = '/alocacao'
+      .catch(function (e) {
+        console.log(messageToModal)
+        messageToModal.textContent = 'Erro interno, tentar novamente.'
+        messageToModal.style.display = 'block'
+        informationModal.style.display = 'block'
       })
   }
 }
@@ -81,21 +89,21 @@ function closeModalDelete () {
   deleteModal.style.display = 'none'
 }
 
-function deleteModalRequest () {
+async function deleteModalRequest () {
   let message = ''
   const payload = {
     id: parseInt(idDelete.value)
   }
 
-  axios.post('/allocation/deleteAllocation', payload)
+  await axios.post('/allocation/deleteAllocation', payload)
     .then(() => {
       window.location.href = '/alocacao'
     })
     .catch(error => {
       message = error.message
+      errorMessageDelete.textContent = 'Você não pode excluir essa alocação!'
+      errorMessageDelete.style.display = 'block'
     })
-
-  errorMessageDelete.value = message
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -119,4 +127,8 @@ function filter () {
       }
     }
   }
+}
+
+function reload () {
+  window.location.href = '/alocacao'
 }

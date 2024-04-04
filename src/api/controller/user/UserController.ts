@@ -33,7 +33,13 @@ export class UserController implements IController {
 
     const users = await this._userService.getUsersService.handler()
 
-    res.status(200).render('./user.pug', { user, ...buttons, users })
+    res.status(200).render('./user.pug', {
+      user,
+      ...buttons,
+      users,
+      hasFilterDate: false,
+      hasFilterText: true
+    })
   }
 
   async getUser (req: IRequest, res: IResponse): Promise<IResponse> {

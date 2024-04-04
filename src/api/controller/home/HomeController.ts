@@ -5,11 +5,22 @@ import { IController } from '../../common/IController'
 import { requireLogin } from '../../middleware/RequireLogin'
 import { IUserService } from '../../../service/user/UserServiceFactory'
 import { getUserButtons } from '../../../utils/control-button'
+import { IScheduleService } from '../../../service/schedule/ScheduleServiceFactory'
+import { EOptions } from '../../../domain/service/allocation/getAllocation/IGetAllocationService'
+import { IUser } from '../../../domain/data/entity/IUser'
+import { EStatus, ISchedule } from '../../../domain/data/entity/ISchedule'
+import { IAllocationService } from '../../../service/allocation/AllocationServiceFactory'
+import { IConstructionService } from '../../../service/construction/ConstructionServiceFactory'
+import { IAllocation } from '../../../domain/data/entity/IAllocation'
+import { IConstruction } from '../../../domain/data/entity/IConstruction'
 
 export class HomeController implements IController {
   public router = express.Router()
 
-  constructor (private readonly _userService: IUserService) {
+  constructor (private readonly _userService: IUserService,
+    private readonly _scheduleService: IScheduleService,
+    private readonly _allocationService: IAllocationService,
+    private readonly _constructionService: IConstructionService) {
     this.setupRoutes()
   }
 
@@ -19,9 +30,32 @@ export class HomeController implements IController {
 
   async handler (req: IRequest, res: IResponse): Promise<any> {
     const email = req.user.email
-    const user = await this._userService.getUserService.handler('email', email)
+    const user = await this._userService.getUserService.handler('email', email) as IUser
+    const schedulesRaw = await this._scheduleService.getScheduleService.handler(user.id, EOptions.BY_USER) as ISchedule[]
+    const allocationsRaw = await this._allocationService.getAllocationsService.handler() as IAllocation[]
+    const constructionsRaw = await this._constructionService.getConstructionsService.handler() as IConstruction[]
+    const constructionsIncomplete = constructionsRaw.filter(x => x.status === EStatus.active).length
+
+    const schedules = schedulesRaw.filter(x => x.status === EStatus.active).map(x => {
+      const c = constructionsRaw.filter(y => y.id === x.constructionId)[0]
+      return {
+        ...x,
+        nameConstruction: c.name,
+        infoConstruction: c.startDate
+      }
+    })
+
+    const constructions = constructionsRaw.map(y => {
+      const allocationCount = allocationsRaw.filter(x => x.constructionId === y.id).length
+      const allocationActiveCount = allocationsRaw.filter(x => x.constructionId === y.id && x.status === EStatus.active).length
+      return {
+        ...y,
+        allocationCount,
+        allocationActiveCount
+      }
+    })
 
     const buttons = await getUserButtons(user)
-    res.status(200).render('./home.pug', { user, ...buttons })
+    res.status(200).render('./home.pug', { user, ...buttons, schedules, constructionsIncomplete, constructions })
   }
 }

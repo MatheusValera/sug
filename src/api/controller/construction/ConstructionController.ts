@@ -48,7 +48,15 @@ export class ConstructionController implements IController {
         }
       }
     })
-    response.status(200).render('./construction.pug', { user, canEdit: true, ...buttons, constructions, companies })
+    response.status(200).render('./construction.pug', {
+      user,
+      canEdit: true,
+      ...buttons,
+      constructions,
+      companies,
+      hasFilterDate: false,
+      hasFilterText: true
+    })
   }
 
   async handlerViewConstructions (request: IRequest, response: IResponse): Promise<any> {
@@ -67,7 +75,15 @@ export class ConstructionController implements IController {
         }
       }
     })
-    response.status(200).render('./construction.pug', { user, anEdit: false, ...buttons, constructions, companies })
+    response.status(200).render('./construction.pug', {
+      user,
+      anEdit: false,
+      ...buttons,
+      constructions,
+      companies,
+      hasFilterDate: false,
+      hasFilterText: true
+    })
   }
 
   async getConstruction (req: IRequest, res: IResponse): Promise<IResponse> {

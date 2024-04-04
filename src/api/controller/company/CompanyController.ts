@@ -33,7 +33,13 @@ export class CompanyController implements IController {
 
     const buttons = await getUserButtons(user)
     const companies = await this._companyService.getCompaniesService.handler()
-    response.status(200).render('./company.pug', { user, ...buttons, companies })
+    response.status(200).render('./company.pug', {
+      user,
+      ...buttons,
+      companies,
+      hasFilterDate: false,
+      hasFilterText: true
+    })
   }
 
   async getCompany (req: IRequest, res: IResponse): Promise<IResponse> {

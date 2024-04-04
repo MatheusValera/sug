@@ -78,7 +78,7 @@ block content
               option(value='active') Ativa
 
           .form-group
-            button.btn.btn-primary.me-2(onclick='requestModal()') Salvar
+            button.btn.btn-primary.me-2(type="button" onclick='requestModal()') Salvar
             button.btn.btn-light(onclick='closeModal()') Cancelar
             label(id="errorMessage", style="display: none; color: red;")
 
@@ -95,5 +95,12 @@ block content
             button.btn.btn-danger.btn-rounded.btn-fw.deleteBtn(onclick='deleteModalRequest()') Excluir
             button.btn.btn-light(onclick='closeModalDelete()') Cancelar
             label(id="errorMessageDelete", style="display: none; color: red;")
+
+    #informationModal.modal
+      .modal-content
+        h4.card-title Informação:
+          label(id="message", style="display: none; color: red;")
+          label(id="messageP", style="display: none; color: green;")
+        button.btn.btn-light(onclick="reload()") Fechar
 
     script(src="./javascript/allocation.js")

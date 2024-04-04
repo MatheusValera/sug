@@ -73,7 +73,9 @@ export class AllocationController implements IController {
       allocations,
       users,
       constructions: constructionsToSelect,
-      canEdit: true
+      canEdit: true,
+      hasFilterDate: false,
+      hasFilterText: true
     })
   }
 
@@ -107,7 +109,9 @@ export class AllocationController implements IController {
       allocations,
       users,
       constructions,
-      canEdit: false
+      canEdit: false,
+      hasFilterDate: false,
+      hasFilterText: true
     })
   }
 

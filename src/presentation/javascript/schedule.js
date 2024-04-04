@@ -145,6 +145,8 @@ function deleteModalRequest () {
     })
     .catch(error => {
       message = error.message
+      errorMessageDelete.textContent = 'Você não pode excluir esse agendamento!'
+      errorMessageDelete.style.display = 'block'
     })
 
   errorMessageDelete.value = message
@@ -166,6 +168,27 @@ function filter () {
     if (value1) {
       if (value1.toLowerCase().indexOf(input.toLowerCase()) > -1 ||
       value2.toLowerCase().indexOf(input.toLowerCase()) > -1) {
+        tr.style.display = ''
+      } else {
+        tr.style.display = 'none'
+      }
+    }
+  }
+}
+
+// eslint-disable-next-line no-unused-vars
+function filterDate () {
+  const input = new Date(document.getElementById('searchDate').value).toLocaleString('pt-Br').split(',')[0]
+
+  const table = document.getElementById('table')
+  const trs = table.getElementsByTagName('tr')
+
+  for (const tr of trs) {
+    const td1 = tr.getElementsByTagName('td')[8]
+
+    const value1 = td1?.textContent || td1?.innerText
+    if (value1) {
+      if (value1.toLowerCase().indexOf(input.toLowerCase()) > -1) {
         tr.style.display = ''
       } else {
         tr.style.display = 'none'
