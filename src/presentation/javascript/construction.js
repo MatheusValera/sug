@@ -44,11 +44,24 @@ function openModal (construction) {
 function requestModal () {
   const message = ''
 
+  const startDateValidate = new Date(startDate.value)
+  const endDateValidate = new Date(endDate.value)
+
+  if (startDateValidate.toLocaleString('pt-Br').split(',')[0] < new Date().toLocaleString('pt-Br').split(',')[0] ||
+  startDateValidate > endDateValidate ||
+  endDateValidate.toLocaleString('pt-Br').split(',')[0] < new Date().toLocaleString('pt-Br').split(',')[0]
+  ) {
+    errorMessage.textContent = 'Datas da construção inválida.'
+    errorMessage.style.display = 'block'
+    console.log(validateDate)
+    return
+  }
+
   const payload = {
     name: nameConstruction.value,
     companyId: parseInt(company.value),
-    startDate: new Date(startDate.value),
-    endDate: new Date(endDate.value),
+    startDate: startDateValidate,
+    endDate: endDateValidate,
     status: status.value
   }
   closeModal()

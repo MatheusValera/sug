@@ -9,9 +9,9 @@ import { EmailService } from '../../../utils/sendEmail'
 export class UpdateScheduleService implements IUpdateScheduleService {
   constructor (
     private readonly _scheduleRepository: ISchedulesRepository,
+    private readonly _validator: Validation,
     private readonly _userService: IUserRepository,
-    private readonly _constructionRepository: IConstructionRepository,
-    private readonly _validator: Validation) {}
+    private readonly _constructionRepository: IConstructionRepository) {}
 
   async handler (schedule: ISchedule): Promise<ISchedule|Error> {
     if (!schedule.id) {

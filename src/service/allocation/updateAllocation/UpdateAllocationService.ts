@@ -9,9 +9,9 @@ import { EmailService } from '../../../utils/sendEmail'
 
 export class UpdateAllocationService implements IUpdateAllocationService {
   constructor (
+    private readonly _allocationRepository: IAllocationRepository,
     private readonly _validator: Validation,
     private readonly _userRepository: IUserRepository,
-    private readonly _allocationRepository: IAllocationRepository,
     private readonly _constructionRepository: IConstructionRepository) {}
 
   async handler (allocation: IAllocation): Promise<IAllocation|Error> {

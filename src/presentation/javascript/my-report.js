@@ -44,5 +44,5 @@ async function saveReport () {
 }
 
 function reload () {
-  window.location.href = '/entregar-relatorio'
+  window.location.href = '/meus-relatorios'
 }
