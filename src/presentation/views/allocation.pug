@@ -70,7 +70,8 @@ block content
             select.form-control(id="constructionSelect")
               option(value=0)
               for construction in constructions
-                option(value=construction.id)= construction.name
+                if construction.status === 'active'
+                  option(value=construction.id)= construction.name
               
           .form-group
             label(for="status") Status:
