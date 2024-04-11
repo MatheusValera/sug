@@ -48,9 +48,9 @@ function requestModal () {
   const startDateValidate = new Date(startDate.value)
   const endDateValidate = new Date(endDate.value)
 
-  if (startDateValidate.toLocaleString('pt-Br').split(',')[0] <= date.toLocaleString('pt-Br').split(',')[0] ||
+  if (startDateValidate <= date ||
   startDateValidate > endDateValidate ||
-  endDateValidate.toLocaleString('pt-Br').split(',')[0] <= date.toLocaleString('pt-Br').split(',')[0]
+  endDateValidate <= date
   ) {
     errorMessage.textContent = 'Datas da construção inválida.'
     errorMessage.style.display = 'block'
