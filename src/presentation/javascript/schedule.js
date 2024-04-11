@@ -23,6 +23,7 @@ const messageToModalP = document.getElementById('messageP')
 VMasker(dateSchedule).maskPattern('99/99/9999')
 
 async function completeAllocation () {
+  allocation.innerHTML = ''
   try {
     const response = await axios.post('/construction/getConstructions', {})
     const constructions = JSON.parse(response.data)
@@ -96,7 +97,7 @@ function requestModal () {
   const message = ''
   const validateDate = new Date(dateSchedule.value)
 
-  if (validateDate.toLocaleString('pt-Br').split(',')[0] < new Date().toLocaleString('pt-Br').split(',')[0]) {
+  if (validateDate.toLocaleString('pt-Br').split(',')[0] <= new Date().toLocaleString('pt-Br').split(',')[0]) {
     errorMessage.textContent = 'Não é possivel marcar agendamento no passado.'
     errorMessage.style.display = 'block'
     console.log(validateDate)
