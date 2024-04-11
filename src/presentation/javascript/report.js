@@ -136,7 +136,7 @@ function deleteModalRequest () {
     id: idDelete.value
   }
 
-  axios.post('/schedule/deleteSchedule', payload)
+  axios.post('/report/deleteReport', payload)
     .then(() => {
       window.location.href = '/agendamento'
     })
