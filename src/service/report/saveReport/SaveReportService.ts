@@ -4,14 +4,17 @@ import { ISaveReportService } from '../../../domain/service/report/saveReport/IS
 import { IReportRepository } from '../../../domain/data/repository/report/IReportRepository'
 import { EStatus } from '../../../domain/data/entity/ISchedule'
 import { ISchedulesRepository } from '../../../domain/data/repository/schedule/IScheduleRepository'
-import { IAllocationRepository } from '../../../domain/data/repository/allocation/IAllocationRepository'
+import { IUserRepository } from '../../../domain/data/repository/user/IUserRepository'
+import { IConstructionRepository } from '../../../domain/data/repository/construction/IConstructionRepository'
+import { EmailService } from '../../../utils/sendEmail'
 
 export class SaveReportService implements ISaveReportService {
   constructor (
     private readonly _reportRepository: IReportRepository,
     private readonly _validator: Validation,
     private readonly _scheduleRepository: ISchedulesRepository,
-    private readonly _allocationRepository: IAllocationRepository) {}
+    private readonly _userRepository: IUserRepository,
+    private readonly _constructionRepository: IConstructionRepository) {}
 
   async handler (report: Omit<IReport, 'id'>): Promise<IReport|Error> {
     // @ts-expect-error
@@ -39,6 +42,23 @@ export class SaveReportService implements ISaveReportService {
     schedule.status = EStatus.inactive
 
     await this._scheduleRepository.updateSchedule(schedule)
+
+    if (result) {
+      const user = await this._userRepository.getUser('id', result.userId)
+      const construction = await this._constructionRepository.getConstruction('id', result.constructionId)
+
+      const message = `${result.createdAt?.toLocaleString('pt-Br').split(',')[0]}. E aqui está um comprovante dela: ${result.description}`
+
+      await EmailService.sendEmail(
+        user.email,
+        user.name,
+        construction.name,
+        'uma entrega de relatório',
+        message,
+        'Você entregou um Relatório!',
+        'Venha ver...'
+      )
+    }
 
     return result
   }

@@ -1,11 +1,16 @@
 import { Validation } from '../../../domain/utils/validator'
-import { ISchedule } from '../../../domain/data/entity/ISchedule'
+import { EStatus, ISchedule } from '../../../domain/data/entity/ISchedule'
 import { IUpdateScheduleService } from '../../../domain/service/schedule/updateSchedule/IUpdateScheduleService'
 import { ISchedulesRepository } from '../../../domain/data/repository/schedule/IScheduleRepository'
+import { IUserRepository } from '../../../domain/data/repository/user/IUserRepository'
+import { IConstructionRepository } from '../../../domain/data/repository/construction/IConstructionRepository'
+import { EmailService } from '../../../utils/sendEmail'
 
 export class UpdateScheduleService implements IUpdateScheduleService {
   constructor (
     private readonly _scheduleRepository: ISchedulesRepository,
+    private readonly _userService: IUserRepository,
+    private readonly _constructionRepository: IConstructionRepository,
     private readonly _validator: Validation) {}
 
   async handler (schedule: ISchedule): Promise<ISchedule|Error> {
@@ -26,7 +31,26 @@ export class UpdateScheduleService implements IUpdateScheduleService {
       return new Error('User has schedule in some date.')
     }
 
-    const result = this._scheduleRepository.updateSchedule(schedule)
+    const result = await this._scheduleRepository.updateSchedule(schedule)
+
+    if (result) {
+      const user = await this._userService.getUser('id', schedule.userId)
+      const construction = await this._constructionRepository.getConstruction('id', schedule.constructionId)
+
+      const message = result.status === EStatus.inactive
+        ? `${new Date(result.dateSchedule).toLocaleString('pt-Br').split(',')[0]}. E essa atualização é devido a conclusão dela.`
+        : new Date(result.dateSchedule).toLocaleString('pt-Br').split(',')[0]
+
+      await EmailService.sendEmail(
+        user.email,
+        user.name,
+        construction.name,
+        'uma atualização no seu agendamento',
+        message,
+        'Você teve uma atualização no seu agendamento',
+        'Venha ver...'
+      )
+    }
 
     return result
   }
