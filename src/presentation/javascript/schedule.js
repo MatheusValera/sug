@@ -98,7 +98,7 @@ function requestModal () {
   date.setDate(date.getDate() - 1)
   const validateDate = new Date(dateSchedule.value)
 
-  if (validateDate.toLocaleString('pt-Br').split(',')[0] <= date.toLocaleString('pt-Br').split(',')[0]) {
+  if (validateDate <= date) {
     errorMessage.textContent = 'Não é possivel marcar agendamento no passado.'
     errorMessage.style.display = 'block'
     console.log(validateDate)
