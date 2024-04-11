@@ -6,8 +6,8 @@ import { ISaveReportService } from '../../domain/service/report/saveReport/ISave
 import { IGetReportsService } from '../../domain/service/report/getReports/IGetReportsService'
 import { IDeleteReportService } from '../../domain/service/report/deleteReport/IDeleteReportService'
 import { IUpdateReportService } from '../../domain/service/report/updateReport/IUpdateReportService'
-import { makeSaveReportService } from './saveCompany/SaveReportServiceFactory'
-import { makeUpdateReportService } from './ReportCompany/UpdateReportServiceFactory'
+import { makeSaveReportService } from './saveReport/SaveReportServiceFactory'
+import { makeUpdateReportService } from './ReportReport/UpdateReportServiceFactory'
 import { makeReportValidation } from './ReportValidation'
 
 export interface IReportService {
