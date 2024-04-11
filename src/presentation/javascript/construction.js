@@ -43,13 +43,14 @@ function openModal (construction) {
 
 function requestModal () {
   const message = ''
-
+  const date = new Date()
+  date.setDate(date.getDate() - 1)
   const startDateValidate = new Date(startDate.value)
   const endDateValidate = new Date(endDate.value)
 
-  if (startDateValidate.toLocaleString('pt-Br').split(',')[0] <= new Date().toLocaleString('pt-Br').split(',')[0] ||
+  if (startDateValidate.toLocaleString('pt-Br').split(',')[0] <= date.toLocaleString('pt-Br').split(',')[0] ||
   startDateValidate > endDateValidate ||
-  endDateValidate.toLocaleString('pt-Br').split(',')[0] <= new Date().toLocaleString('pt-Br').split(',')[0]
+  endDateValidate.toLocaleString('pt-Br').split(',')[0] <= date.toLocaleString('pt-Br').split(',')[0]
   ) {
     errorMessage.textContent = 'Datas da construção inválida.'
     errorMessage.style.display = 'block'
