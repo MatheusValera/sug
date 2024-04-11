@@ -16,6 +16,10 @@ const deleteModal = document.getElementById('deleteModal')
 const errorMessage = document.getElementById('errorMessage')
 const errorMessageDelete = document.getElementById('errorMessageDelete')
 
+const informationModal = document.getElementById('informationModal')
+const messageToModal = document.getElementById('message')
+const messageToModalP = document.getElementById('messageP')
+
 VMasker(dateSchedule).maskPattern('99/99/9999')
 
 async function completeAllocation () {
@@ -90,6 +94,14 @@ function openModal (schedule) {
 
 function requestModal () {
   const message = ''
+  const validateDate = new Date(dateSchedule.value)
+
+  if (validateDate.toLocaleString('pt-Br').split(',')[0] < new Date().toLocaleString('pt-Br').split(',')[0]) {
+    errorMessage.textContent = 'Não é possivel marcar agendamento no passado.'
+    errorMessage.style.display = 'block'
+    console.log(validateDate)
+    return
+  }
 
   const payload = {
     userId: parseInt(user.value),
@@ -104,19 +116,45 @@ function requestModal () {
     payload.createdAt = createdAt.value
 
     const a = axios.post('/schedule/updateSchedule', payload)
-      .then(result => (result))
-      .catch(function () {
-        window.location.href = '/agendamento'
+      .then(result => {
+        let message = 'Operação realizada com sucesso!'
+        if (result.message) {
+          message = result.message
+        }
+        messageToModalP.textContent = message
+        messageToModalP.style.display = 'block'
+        informationModal.style.display = 'block'
+      })
+      .catch(function (error) {
+        console.log(error)
+        messageToModal.textContent = error.response?.data.message
+        messageToModal.style.display = 'block'
+        informationModal.style.display = 'block'
       })
   } else {
     axios.post('/schedule/saveSchedule', payload)
-      .then(result => (result))
-      .catch(function () {
-        window.location.href = '/agendamento'
+      .then(result => {
+        let message = 'Operação realizada com sucesso!'
+        if (result.message) {
+          message = result.message
+        }
+        messageToModalP.textContent = message
+        messageToModalP.style.display = 'block'
+        informationModal.style.display = 'block'
+      })
+      .catch(function (error) {
+        console.log(error)
+        messageToModal.textContent = error.response?.data.message
+        messageToModal.style.display = 'block'
+        informationModal.style.display = 'block'
       })
   }
 
   closeModal()
+}
+
+function reload () {
+  window.location.href = '/agendamento'
 }
 
 function closeModal () {

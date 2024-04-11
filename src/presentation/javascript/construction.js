@@ -15,6 +15,10 @@ const deleteModal = document.getElementById('deleteModal')
 const errorMessage = document.getElementById('errorMessage')
 const errorMessageDelete = document.getElementById('errorMessageDelete')
 
+const informationModal = document.getElementById('informationModal')
+const messageToModal = document.getElementById('message')
+const messageToModalP = document.getElementById('messageP')
+
 VMasker(startDate).maskPattern('99/99/9999')
 VMasker(endDate).maskPattern('99/99/9999')
 
@@ -47,26 +51,51 @@ function requestModal () {
     endDate: new Date(endDate.value),
     status: status.value
   }
+  closeModal()
   console.log(payload.startDate)
   if (id.value) {
     payload.id = parseInt(id.value)
 
     const a = axios.post('/construction/updateConstruction', payload)
-      .then(result => (result))
+      .then(result => {
+        let message = 'Operação realizada com sucesso!'
+        if (result.message) {
+          message = result.message
+        }
+        messageToModalP.textContent = message
+        messageToModalP.style.display = 'block'
+        informationModal.style.display = 'block'
+      })
       .catch(function () {
-        window.location.href = '/construcao'
+        console.log(error)
+        messageToModal.textContent = 'Erro interno, tentar novamente.'
+        messageToModal.style.display = 'block'
+        informationModal.style.display = 'block'
       })
 
     console.log(a)
   } else {
     axios.post('/construction/saveConstruction', payload)
-      .then(result => (result))
+      .then(result => {
+        let message = 'Operação realizada com sucesso!'
+        if (result.message) {
+          message = result.message
+        }
+        messageToModalP.textContent = message
+        messageToModalP.style.display = 'block'
+        informationModal.style.display = 'block'
+      })
       .catch(function () {
-        window.location.href = '/construcao'
+        console.log(error)
+        messageToModal.textContent = 'Erro interno, tentar novamente.'
+        messageToModal.style.display = 'block'
+        informationModal.style.display = 'block'
       })
   }
+}
 
-  closeModal()
+function reload () {
+  window.location.href = '/construcao'
 }
 
 function closeModal () {

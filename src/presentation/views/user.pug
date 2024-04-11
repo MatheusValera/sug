@@ -118,3 +118,10 @@ block content
           .form-group
             input.btn.btn-primary.me-2(type="submit", value="Salvar")
             label(id="errorMessage", style="display: none; color: red;")
+
+    #informationModal.modal
+      .modal-content
+        h4.card-title Informação:
+          label(id="message", style="display: none; color: red;")
+          label(id="messageP", style="display: none; color: green;")
+        button.btn.btn-light(onclick="reload()") Fechar

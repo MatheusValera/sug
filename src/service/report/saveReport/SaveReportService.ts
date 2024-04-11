@@ -40,12 +40,6 @@ export class SaveReportService implements ISaveReportService {
 
     await this._scheduleRepository.updateSchedule(schedule)
 
-    const allocation = await this._allocationRepository.getAllocation(schedule.allocationId)
-
-    allocation.status = EStatus.inactive
-
-    await this._allocationRepository.updateAllocation(allocation)
-
     return result
   }
 }

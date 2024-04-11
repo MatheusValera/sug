@@ -15,6 +15,10 @@ const errorMessageDelete = document.getElementById('errorMessageDelete')
 const nameResponsiblePerson = document.getElementById('nameResponsiblePerson')
 const contactResponsiblePerson = document.getElementById('contactResponsiblePerson')
 
+const informationModal = document.getElementById('informationModal')
+const messageToModal = document.getElementById('message')
+const messageToModalP = document.getElementById('messageP')
+
 VMasker(contact).maskPattern('(99) 99999-9999')
 VMasker(cnpj).maskPattern('99.999.999/9999-99')
 VMasker(contactResponsiblePerson).maskPattern('(99) 99999-9999')
@@ -48,26 +52,51 @@ function requestModal () {
     nameResponsiblePerson: nameResponsiblePerson.value,
     contactResponsiblePerson: contactResponsiblePerson.value
   }
+  closeModal()
   if (id.value) {
     payload.id = id.value
     payload.createdAt = createdAt.value
 
     const a = axios.post('/company/updateCompany', payload)
-      .then(result => (result))
-      .catch(function () {
-        window.location.href = '/companhia'
+      .then(result => {
+        let message = 'Operação realizada com sucesso!'
+        if (result.message) {
+          message = result.message
+        }
+        messageToModalP.textContent = message
+        messageToModalP.style.display = 'block'
+        informationModal.style.display = 'block'
+      })
+      .catch(function (error) {
+        console.log(error)
+        messageToModal.textContent = 'Erro interno, tentar novamente.'
+        messageToModal.style.display = 'block'
+        informationModal.style.display = 'block'
       })
 
     console.log(a)
   } else {
     axios.post('/company/saveCompany', payload)
-      .then(result => (result))
-      .catch(function () {
-        window.location.href = '/companhia'
+      .then(result => {
+        let message = 'Operação realizada com sucesso!'
+        if (result.message) {
+          message = result.message
+        }
+        messageToModalP.textContent = message
+        messageToModalP.style.display = 'block'
+        informationModal.style.display = 'block'
+      })
+      .catch(function (error) {
+        console.log(error)
+        messageToModal.textContent = 'Erro interno, tentar novamente.'
+        messageToModal.style.display = 'block'
+        informationModal.style.display = 'block'
       })
   }
+}
 
-  closeModal()
+function reload () {
+  window.location.href = '/companhia'
 }
 
 function closeModal () {

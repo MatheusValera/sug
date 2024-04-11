@@ -13,7 +13,7 @@ export class PrismaUserRepository implements IUserRepository {
     const user = await this._prismaClient.user.findUnique({ where: { cpf: data.cpf } })
 
     if (user) {
-      throw new Error('[ENTITY- USER]: Usuário já cadastrado')
+      throw new Error('Usuário já cadastrado')
     }
 
     data.createdAt = new Date()

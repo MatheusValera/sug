@@ -1,5 +1,5 @@
 import { Validation } from '../../../domain/utils/validator'
-import { ISchedule } from '../../../domain/data/entity/ISchedule'
+import { EStatus, ISchedule } from '../../../domain/data/entity/ISchedule'
 import { ISchedulesRepository } from '../../../domain/data/repository/schedule/IScheduleRepository'
 import { ISaveScheduleService } from '../../../domain/service/schedule/saveSchedule/ISaveScheduleService'
 import { EmailService } from '../../../utils/sendEmail'
@@ -26,10 +26,13 @@ export class SaveScheduleService implements ISaveScheduleService {
     }
 
     const hasSchedules = await this._scheduleRepository.getScheduleByUserId(schedule.userId)
-    const hasSchedulesInSomeDate = hasSchedules.some(x => new Date(x.dateSchedule).getTime() === new Date(schedule.dateSchedule).getTime())
+    const hasSchedulesInSomeDate = hasSchedules.some(x =>
+      new Date(x.dateSchedule).toLocaleString('pt-Br').split(',')[0] === new Date(schedule.dateSchedule).toLocaleString('pt-Br').split(',')[0] &&
+      x.status === EStatus.active
+    )
 
     if (hasSchedulesInSomeDate) {
-      return new Error('User has schedule in some date.')
+      throw new Error('Usuário já existe um agendamento nessa data ativa.')
     }
 
     schedule.createdAt = new Date()

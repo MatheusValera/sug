@@ -304,7 +304,7 @@ describe('PrismaUserRepository', () => {
     // @ts-expect-error
     prismaMock.user.findUnique.mockResolvedValue({})
 
-    await expect(sut.insertUser(userCpf)).rejects.toThrowError('[ENTITY- USER]: Usuário já cadastrado')
+    await expect(sut.insertUser(userCpf)).rejects.toThrowError('Usuário já cadastrado')
   })
 
   it('should throw error when update user has registered', async () => {

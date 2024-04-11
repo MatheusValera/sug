@@ -26,6 +26,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const userIdInput = document.getElementById('userId')
   const adminInput = document.getElementById('admin')
 
+  const informationModal = document.getElementById('informationModal')
+  const messageToModal = document.getElementById('message')
+  const messageToModalP = document.getElementById('messageP')
+
   VMasker(zipCodeInput).maskPattern('99999-999')
   VMasker(phoneInput).maskPattern('(99) 99999-9999')
   VMasker(cpfInput).maskPattern('999.999.999-99')
@@ -104,6 +108,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const admin = document.getElementById('admin').checked
 
     if (id) {
+      editModal.style.display = 'none'
+
       // eslint-disable-next-line no-undef
       axios.post('/user/updateUser', {
         id,
@@ -123,14 +129,22 @@ document.addEventListener('DOMContentLoaded', function () {
         categoryRules
       })
         .then(function (response) {
-          window.location.reload()
+          let message = 'Operação realizada com sucesso!'
+          if (response.message) {
+            message = result.message
+          }
+          messageToModalP.textContent = message
+          messageToModalP.style.display = 'block'
+          informationModal.style.display = 'block'
         })
         .catch(function (error) {
-          console.error(error)
-          errorMessage.textContent = error.message
-          errorMessage.style.display = 'block'
+          console.log(error)
+          messageToModal.textContent = 'Erro interno, tentar novamente.'
+          messageToModal.style.display = 'block'
+          informationModal.style.display = 'block'
         })
     } else {
+      editModal.style.display = 'none'
       // eslint-disable-next-line no-undef
       axios.post('/user/saveUser', {
         name,
@@ -147,13 +161,20 @@ document.addEventListener('DOMContentLoaded', function () {
         neighborhood,
         categoryRules
       })
-        .then(function (response) {
-          window.location.reload()
+        .then(function (result) {
+          let message = 'Operação realizada com sucesso!'
+          if (result.message) {
+            message = result.message
+          }
+          messageToModalP.textContent = message
+          messageToModalP.style.display = 'block'
+          informationModal.style.display = 'block'
         })
         .catch(function (error) {
-          console.error(error)
-          errorMessage.textContent = error.message
-          errorMessage.style.display = 'block'
+          console.log(error)
+          messageToModal.textContent = error?.response?.data?.message
+          messageToModal.style.display = 'block'
+          informationModal.style.display = 'block'
         })
     }
   })
@@ -161,7 +182,6 @@ document.addEventListener('DOMContentLoaded', function () {
   addUser.forEach(button => {
     button.addEventListener('click', function () {
       // eslint-disable-next-line no-undef
-      console.log('a')
       nameInput.value = ''
       emailInput.value = ''
       cpfInput.value = ''
@@ -213,4 +233,8 @@ function filter () {
       }
     }
   }
+}
+
+function reload () {
+  window.location.href = '/usuarios'
 }
