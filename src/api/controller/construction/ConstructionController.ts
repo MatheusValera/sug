@@ -55,7 +55,8 @@ export class ConstructionController implements IController {
       constructions,
       companies,
       hasFilterDate: false,
-      hasFilterText: true
+      hasFilterText: true,
+      searchBy: 'nome da obra ou da companhia'
     })
   }
 
@@ -82,7 +83,8 @@ export class ConstructionController implements IController {
       constructions,
       companies,
       hasFilterDate: false,
-      hasFilterText: true
+      hasFilterText: true,
+      searchBy: 'nome da obra ou da companhia'
     })
   }
 

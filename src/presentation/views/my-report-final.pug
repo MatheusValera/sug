@@ -12,7 +12,7 @@ block content
       .card
         .card-body
           h4.card-title Entregar relatório
-          if !schedules.length
+          if !allocation.length
             p.card-description
               | Você não possui nenhum relatórios pendentes
           else
@@ -25,12 +25,27 @@ block content
                   .col-sm-9
                     input.form-control(type='text' id="userName" value=user.name readonly)
                 .form-group.row
-                  label.col-sm-3.col-form-label(for='userName') Data do agendamento - Construção:
+                  label.col-sm-3.col-form-label(for='userName') Construção:
                   .col-sm-9
-                      select.form-control(id="schedule")
+                      select.form-control(id="schedule" onclick="completeReports()")
                         option(value=0)
-                        for s in schedules
+                        for s in allocation
                           option(value=s.id)= s.nameButton
+                .form-group.row
+                  label.col-sm-3.col-form-label(for='userName') Relatórios dessa construção
+                  .col-sm-9
+                    .form-control(style="height: auto;")
+                      .table-responsive
+                        table.table(id="tableReports")
+                          thead
+                            tr
+                              th Data da criação
+                              th Conteúdo
+                              th Nome do colaborador
+                              th Cargo do colaborador
+                              th Validação
+                          tbody
+                          
                 .form-group.row
                   label.col-sm-3.col-form-label(for='description') Descrição - (Min: 50 carac.):
                   .col-sm-9
@@ -38,7 +53,7 @@ block content
                 .form-check.form-check-flat.form-check-primary
                   label.form-check-label
                     input.form-check-input(id="confirm" type='checkbox')
-                    | Confirma a conclusão do agendamento?
+                    | Confirma a conclusão da obra?
                     i.input-helper
                 button.btn.btn-primary.me-2(type="button" onclick="saveReport()") Enviar
                 label(id="errorMessage", style="display: none; color: red;")
@@ -50,4 +65,4 @@ block content
           label(id="messageP", style="display: none; color: green;")
         button.btn.btn-light(onclick="reload()") Fechar
   
-  script(src="./javascript/my-report.js")
+  script(src="./javascript/my-report-final.js")

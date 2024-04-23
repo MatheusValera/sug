@@ -74,7 +74,8 @@ export class ScheduleController implements IController {
       constructions,
       allocations,
       hasFilterDate: true,
-      hasFilterText: true
+      hasFilterText: true,
+      searchBy: 'nome do colaborador ou construção'
     })
   }
 
@@ -115,7 +116,8 @@ export class ScheduleController implements IController {
       constructions,
       allocations,
       hasFilterDate: true,
-      hasFilterText: true
+      hasFilterText: true,
+      searchBy: 'nome do colaborador ou construção'
     })
   }
 
@@ -155,8 +157,7 @@ export class ScheduleController implements IController {
       users,
       constructions,
       allocations,
-      hasFilterDate: true,
-      hasFilterText: true
+      hasFilterDate: true
     })
   }
 

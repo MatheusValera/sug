@@ -38,7 +38,8 @@ export class UserController implements IController {
       ...buttons,
       users,
       hasFilterDate: false,
-      hasFilterText: true
+      hasFilterText: true,
+      searchBy: 'nome do colaborador'
     })
   }
 

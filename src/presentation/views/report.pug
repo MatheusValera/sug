@@ -16,13 +16,14 @@ block content
             | Aqui você pode ver os relatórios
             
           .table-responsive
-            table.table
+            table.table(id='table')
               thead
                 tr
                   th ID
                   th Data da criação
                   th Conteúdo
                   th Nome do colaborador
+                  th Cargo do colaborador
                   th Nome da construção
                   th Data do agendamento
                   if canEdit === true
@@ -34,6 +35,7 @@ block content
                     td= report.createdAt.toLocaleString('pt-Br').split(',')[0]
                     td= report.description
                     td= report.user.name
+                    td= report.user.office
                     td= report.construction.name
                     td= report.schedule.dateSchedule.toLocaleString('pt-Br').split(',')[0]
                     if canEdit === true

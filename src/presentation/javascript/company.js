@@ -125,9 +125,9 @@ function deleteModalRequest () {
     })
     .catch(error => {
       message = error.message
+      errorMessageDelete.textContent = 'Você não pode excluir essa alocação!'
+      errorMessageDelete.style.display = 'block'
     })
-
-  errorMessageDelete.value = message
 }
 
 // eslint-disable-next-line no-unused-vars

@@ -33,6 +33,7 @@ export class ReportController implements IController {
   setupRoutes (): void {
     this.router.get('/relatorio', requireLogin, this.handler.bind(this))
     this.router.get('/entregar-relatorio', requireLogin, this.sendMyReport.bind(this))
+    this.router.get('/entregar-relatorio-final', requireLogin, this.sendMyReportFinal.bind(this))
     this.router.get('/meus-relatorios', requireLogin, this.viewMyReports.bind(this))
     this.router.post('/report/getReport', requireLogin, this.getReport.bind(this))
     this.router.post('/report/getReports', requireLogin, this.getReports.bind(this))
@@ -63,7 +64,8 @@ export class ReportController implements IController {
       return {
         ...x,
         user: {
-          name: user.name
+          name: user.name,
+          office: user.office
         },
         construction: {
           name: construction.name
@@ -82,8 +84,9 @@ export class ReportController implements IController {
       allocations,
       reports,
       canEdit: true,
-      hasFilterDate: false,
-      hasFilterText: true
+      hasFilterDate: true,
+      hasFilterText: true,
+      searchBy: 'nome do colaborador ou cargo'
     })
   }
 
@@ -109,7 +112,8 @@ export class ReportController implements IController {
       return {
         ...x,
         user: {
-          name: user.name
+          name: user.name,
+          office: user.office
         },
         construction: {
           name: construction.name
@@ -120,7 +124,18 @@ export class ReportController implements IController {
       }
     })
     const canAddReport = schedules.some(s => s.userId === user.id && s.status === EStatus.active)
-    response.status(200).render('./report.pug', { user, ...buttons, canAddReport, constructions, allocations, reports, canEdit: false })
+    response.status(200).render('./report.pug', {
+      user,
+      ...buttons,
+      canAddReport,
+      constructions,
+      allocations,
+      reports,
+      canEdit: false,
+      hasFilterText: true,
+      searchBy: 'nome do colaborador ou cargo',
+      hasFilterDate: true
+    })
   }
 
   async sendMyReport (request: IRequest, response: IResponse): Promise<any> {
@@ -146,6 +161,31 @@ export class ReportController implements IController {
 
     const canAddReport = schedules.some(s => s.userId === user.id && s.status === EStatus.active)
     response.status(200).render('./my-report.pug', { user, ...buttons, canAddReport, constructions, schedules })
+  }
+
+  async sendMyReportFinal (request: IRequest, response: IResponse): Promise<any> {
+    const email = request.user.email
+    const user = await this._userService.getUserService.handler('email', email) as IUser
+
+    const buttons = await getUserButtons(user)
+
+    const allocationRaw = await this._allocationService.getAllocationsService.handler() as ISchedule[]
+
+    const allocationActive = allocationRaw.filter(x => x.userId === user.id && x.status === EStatus.active)
+
+    const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
+
+    const allocation = allocationActive.map(s => {
+      const construction = constructions.filter(c => c.id === s.constructionId)[0]
+
+      return {
+        ...s,
+        nameButton: construction.name
+      }
+    })
+
+    const canAddReport = allocation.some(s => s.userId === user.id && s.status === EStatus.active)
+    response.status(200).render('./my-report-final.pug', { user, ...buttons, canAddReport, constructions, allocation })
   }
 
   async getReport (req: IRequest, res: IResponse): Promise<IResponse> {

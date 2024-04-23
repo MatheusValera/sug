@@ -19,6 +19,8 @@ export class UpdateConstructionService implements IUpdateConstructionService {
       return hasIncorrectValue
     }
 
+    construction.updatedAt = new Date()
+
     const result = this._constructionRepository.updateConstruction(construction)
 
     return result

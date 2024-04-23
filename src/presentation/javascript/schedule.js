@@ -219,7 +219,7 @@ function filter () {
 // eslint-disable-next-line no-unused-vars
 function filterDate () {
   const input = new Date(document.getElementById('searchDate').value).toLocaleString('pt-Br').split(',')[0]
-
+  console.log(input === 'Invalid Date')
   const table = document.getElementById('table')
   const trs = table.getElementsByTagName('tr')
 
@@ -228,7 +228,7 @@ function filterDate () {
 
     const value1 = td1?.textContent || td1?.innerText
     if (value1) {
-      if (value1.toLowerCase().indexOf(input.toLowerCase()) > -1) {
+      if (value1.indexOf(input) > -1 || input === 'Invalid Date') {
         tr.style.display = ''
       } else {
         tr.style.display = 'none'

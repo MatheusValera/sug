@@ -17,7 +17,7 @@ export class DeleteCompanyService implements IDeleteCompanyService {
     const hasConstructionsActive = constructions.some(c => c.companyId === id && c.status === 'active')
 
     if (hasConstructionsActive) {
-      return new Error('Possui construção ativa para essa companhia.')
+      throw new Error('Possui construção ativa para essa companhia.')
     }
 
     const companyDeleted = await this._companyRepository.deleteCompany(id)

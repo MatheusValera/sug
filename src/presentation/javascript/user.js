@@ -8,7 +8,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const deleteButtons = document.querySelectorAll('.deleteBtn')
   const editModal = document.getElementById('editModal')
   const closeModal = document.querySelector('.closeModal')
+
+  const deleteModal = document.getElementById('deleteModal')
   const errorMessage = document.getElementById('errorMessage')
+  const errorMessageDelete = document.getElementById('errorMessageDelete')
 
   const nameInput = document.getElementById('name')
   const categoryRulesInput = document.getElementById('categoryRulesInput')
@@ -237,4 +240,33 @@ function filter () {
 
 function reload () {
   window.location.href = '/usuarios'
+}
+
+function openModalDelete (obj) {
+  idDelete.value = parseInt(obj.id)
+  nameDelete.value = obj.name
+  deleteModal.style.display = 'block'
+}
+
+function deleteModalRequest () {
+  let message = ''
+  const payload = {
+    id: idDelete.value
+  }
+
+  axios.post('/user/deleteUser', payload)
+    .then(() => {
+      window.location.href = '/usuarios'
+    })
+    .catch(error => {
+      message = error.message
+      errorMessageDelete.textContent = 'Você não pode excluir esse usuário!'
+      errorMessageDelete.style.display = 'block'
+    })
+
+  errorMessageDelete.value = message
+}
+
+function closeModalDelete () {
+  deleteModal.style.display = 'none'
 }

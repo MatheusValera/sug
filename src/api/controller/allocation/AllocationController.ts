@@ -75,7 +75,8 @@ export class AllocationController implements IController {
       constructions: constructionsToSelect,
       canEdit: true,
       hasFilterDate: false,
-      hasFilterText: true
+      hasFilterText: true,
+      searchBy: 'colaborador ou construção'
     })
   }
 
@@ -111,7 +112,8 @@ export class AllocationController implements IController {
       constructions,
       canEdit: false,
       hasFilterDate: false,
-      hasFilterText: true
+      hasFilterText: true,
+      searchBy: 'colaborador ou construção'
     })
   }
 

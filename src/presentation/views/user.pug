@@ -56,7 +56,7 @@ block content
                     td= userTable.categoryRules
                     td
                       button.btn.btn-warning.btn-rounded.btn-fw(class="editBtn" data-id=userTable.id ) Editar
-                      button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" class="deleteBtn" data-id=userTable.id) Excluir
+                      button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" onclick=`openModalDelete({ id: ${userTable.id}, name: '${userTable.name}'})` data-id=userTable.id) Excluir
 
     // Modal para edição de usuário
     #editModal.modal
@@ -125,3 +125,16 @@ block content
           label(id="message", style="display: none; color: red;")
           label(id="messageP", style="display: none; color: green;")
         button.btn.btn-light(onclick="reload()") Fechar
+
+    #deleteModal.modal
+      .modal-content
+        h4.card-title Confirmar Exclusão
+          .form-group
+              label() Tem certeza de que deseja excluir esse agendamento?
+              input.form-control(id="idDelete", name="idDelete", readonly, type="hidden")
+          .form-group
+              input.form-control(type="text", id="nameDelete", name="nameDelete", readonly)
+          .form-group
+            button.btn.btn-danger.btn-rounded.btn-fw.deleteBtn(onclick='deleteModalRequest()') Excluir
+            button.btn.btn-light(onclick='closeModalDelete()') Cancelar
+            label(id="errorMessageDelete", style="display: none; color: red;")

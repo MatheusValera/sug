@@ -18,7 +18,7 @@ export class SaveUserService implements ISaveUserService {
     }
 
     if (!isValidCPF(user.cpf)) {
-      return new Error('CPF provido é inválido.')
+      throw new Error('CPF provido é inválido.')
     }
 
     const hasIncorrectValue = await this._validator.validate(user)

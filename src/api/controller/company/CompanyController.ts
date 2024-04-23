@@ -38,7 +38,8 @@ export class CompanyController implements IController {
       ...buttons,
       companies,
       hasFilterDate: false,
-      hasFilterText: true
+      hasFilterText: true,
+      searchBy: 'nome da companhia'
     })
   }
 

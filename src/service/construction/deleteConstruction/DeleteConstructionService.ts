@@ -18,7 +18,7 @@ export class DeleteConstructionService implements IDeleteConstructionService {
     const hasAllocationActive = allocationsToConstruction.some(a => a.status === EStatus.active)
 
     if (hasAllocationActive) {
-      return new Error('Construção possui alocações ativas')
+      throw new Error('Construção possui alocações ativas')
     }
 
     const constructionDeleted = await this._constructionRepository.deleteConstruction(id)

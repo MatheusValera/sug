@@ -24,8 +24,9 @@ block content
                   th ID
                   th Nome da obra
                   th Data da criação
+                  th Data de modificação
                   th Data de inicio
-                  th Data prevista para término
+                  th Data para término
                   th ID da companhia
                   th Nome da companhia
                   th Status
@@ -37,6 +38,7 @@ block content
                     td= construction.id
                     td= construction.name
                     td= construction.createdAt.toLocaleString('pt-Br').split(',')[0]
+                    td= construction.updatedAt ? construction.updatedAt.toLocaleString('pt-Br').split(',')[0] : ''
                     td= construction.startDate ? construction.startDate.toLocaleString('pt-Br').split(',')[0] : ''
                     td= construction.endDate ? construction.endDate.toLocaleString('pt-Br').split(',')[0] : ''
                     td= construction.companyId

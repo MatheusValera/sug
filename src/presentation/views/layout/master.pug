@@ -54,10 +54,12 @@ html
                     span.icon-calendar.input-group-text.calendar-icon
                   input.form-control(onchange="filterDate()" type='text' id="searchDate")
             if hasFilterText
+              li.nav-item=`Pesquise por ${searchBy}`
+            if hasFilterText
               li.nav-item
                 form.search-form()
                   i.icon-search
-                  input.form-control(onkeyup='filter()' type='search' placeholder='Pesquise aqui' title='Pesquise aqui' id="search")
+                  input.form-control(onkeyup='filter()' type='search' placeholder='Valor...' title='Valor...' id="search")
             li.nav-item.dropdown
               a.nav-link.count-indicator(id='countDropdown', href='#', data-bs-toggle='dropdown', aria-expanded='false')
                 i.icon-bell

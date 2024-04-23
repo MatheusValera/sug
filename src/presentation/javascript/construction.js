@@ -48,16 +48,6 @@ function requestModal () {
   const startDateValidate = new Date(startDate.value)
   const endDateValidate = new Date(endDate.value)
 
-  if (startDateValidate <= date ||
-  startDateValidate > endDateValidate ||
-  endDateValidate <= date
-  ) {
-    errorMessage.textContent = 'Datas da construção inválida.'
-    errorMessage.style.display = 'block'
-    console.log(validateDate)
-    return
-  }
-
   const payload = {
     name: nameConstruction.value,
     companyId: parseInt(company.value),
@@ -65,11 +55,10 @@ function requestModal () {
     endDate: endDateValidate,
     status: status.value
   }
-  closeModal()
   console.log(payload.startDate)
   if (id.value) {
     payload.id = parseInt(id.value)
-
+    closeModal()
     const a = axios.post('/construction/updateConstruction', payload)
       .then(result => {
         let message = 'Operação realizada com sucesso!'
@@ -89,6 +78,16 @@ function requestModal () {
 
     console.log(a)
   } else {
+    if (startDateValidate <= date ||
+      startDateValidate > endDateValidate ||
+      endDateValidate <= date
+    ) {
+      errorMessage.textContent = 'Datas da construção inválida.'
+      errorMessage.style.display = 'block'
+      console.log(validateDate)
+      return
+    }
+    closeModal()
     axios.post('/construction/saveConstruction', payload)
       .then(result => {
         let message = 'Operação realizada com sucesso!'
@@ -133,14 +132,15 @@ function deleteModalRequest () {
   }
 
   axios.post('/construction/deleteConstruction', payload)
-    .then(() => {
-      window.location.href = '/construcao'
+    .then((r) => {
+      console.log(r)
+      // window.location.href = '/construcao'
     })
     .catch(error => {
       message = error.message
+      errorMessageDelete.textContent = 'Você não pode excluir essa alocação!'
+      errorMessageDelete.style.display = 'block'
     })
-
-  errorMessageDelete.value = message
 }
 
 // eslint-disable-next-line no-unused-vars
