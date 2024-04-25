@@ -9,11 +9,14 @@ import { SuccessResponse } from '../../common/responses/SuccessResponse'
 import { InternalServerErrorResponse } from '../../common/responses/InternalServerErrorResponse'
 import { BadRequestResponse } from '../../common/responses/BadRequestResponse'
 import { getUserButtons } from '../../../utils/control-button'
+import { IUser } from '../../../domain/data/entity/IUser'
+import { GetNotificationService } from '../../../service/notification/getNotifications/GetReportsService'
 
 export class UserController implements IController {
   public router = express.Router()
 
-  constructor (private readonly _userService: IUserService) {
+  constructor (private readonly _userService: IUserService,
+    private readonly _notifications: GetNotificationService) {
     this.setupRoutes()
   }
 
@@ -27,8 +30,8 @@ export class UserController implements IController {
 
   async handler (req: IRequest, res: IResponse): Promise<any> {
     const email = req.user.email
-    const user = await this._userService.getUserService.handler('email', email)
-
+    const user = await this._userService.getUserService.handler('email', email) as IUser
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
     const buttons = await getUserButtons(user)
 
     const users = await this._userService.getUsersService.handler()
@@ -39,7 +42,8 @@ export class UserController implements IController {
       users,
       hasFilterDate: false,
       hasFilterText: true,
-      searchBy: 'nome do colaborador'
+      searchBy: 'nome do colaborador',
+      notificationsPopUp
     })
   }
 

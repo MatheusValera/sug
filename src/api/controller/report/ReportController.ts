@@ -18,6 +18,7 @@ import { IAllocationService } from '../../../service/allocation/AllocationServic
 import { IConstruction } from '../../../domain/data/entity/IConstruction'
 import { IAllocation } from '../../../domain/data/entity/IAllocation'
 import { IReport } from '../../../domain/data/entity/IReport'
+import { GetNotificationService } from '../../../service/notification/getNotifications/GetReportsService'
 
 export class ReportController implements IController {
   public router = express.Router()
@@ -26,7 +27,8 @@ export class ReportController implements IController {
     private readonly _userService: IUserService,
     private readonly _scheduleService: IScheduleService,
     private readonly _constructionService: IConstructionService,
-    private readonly _allocationService: IAllocationService) {
+    private readonly _allocationService: IAllocationService,
+    private readonly _notifications: GetNotificationService) {
     this.setupRoutes()
   }
 
@@ -46,7 +48,7 @@ export class ReportController implements IController {
   async handler (request: IRequest, response: IResponse): Promise<any> {
     const email = request.user.email
     const user = await this._userService.getUserService.handler('email', email) as IUser
-
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
     const buttons = await getUserButtons(user)
     const reportsRaw = await this._reportService.getReportsService.handler() as IReport[]
 
@@ -87,14 +89,15 @@ export class ReportController implements IController {
       canEdit: true,
       hasFilterDate: true,
       hasFilterText: true,
-      searchBy: 'nome do colaborador ou cargo'
+      searchBy: 'nome do colaborador ou cargo',
+      notificationsPopUp
     })
   }
 
   async viewMyReports (request: IRequest, response: IResponse): Promise<any> {
     const email = request.user.email
     const user = await this._userService.getUserService.handler('email', email) as IUser
-
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
     const buttons = await getUserButtons(user)
     const reportsRaw = await this._reportService.getReportsService.handler() as IReport[]
 
@@ -135,14 +138,15 @@ export class ReportController implements IController {
       canEdit: false,
       hasFilterText: true,
       searchBy: 'nome do colaborador ou cargo',
-      hasFilterDate: true
+      hasFilterDate: true,
+      notificationsPopUp
     })
   }
 
   async sendMyReport (request: IRequest, response: IResponse): Promise<any> {
     const email = request.user.email
     const user = await this._userService.getUserService.handler('email', email) as IUser
-
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
     const buttons = await getUserButtons(user)
 
     const schedulesRaw = await this._scheduleService.getSchedulesService.handler() as ISchedule[]
@@ -161,13 +165,13 @@ export class ReportController implements IController {
     }).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
 
     const canAddReport = schedules.some(s => s.userId === user.id && s.status === EStatus.active)
-    response.status(200).render('./my-report.pug', { user, ...buttons, canAddReport, constructions, schedules })
+    response.status(200).render('./my-report.pug', { user, ...buttons, canAddReport, constructions, schedules, notificationsPopUp })
   }
 
   async sendMyReportFinal (request: IRequest, response: IResponse): Promise<any> {
     const email = request.user.email
     const user = await this._userService.getUserService.handler('email', email) as IUser
-
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
     const buttons = await getUserButtons(user)
 
     const allocationRaw = await this._allocationService.getAllocationsService.handler() as ISchedule[]
@@ -187,7 +191,7 @@ export class ReportController implements IController {
     }).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
 
     const canAddReport = allocation.some(s => s.userId === user.id && s.status === EStatus.active)
-    response.status(200).render('./my-report-final.pug', { user, ...buttons, canAddReport, constructions, allocation })
+    response.status(200).render('./my-report-final.pug', { user, ...buttons, canAddReport, constructions, allocation, notificationsPopUp })
   }
 
   async getReport (req: IRequest, res: IResponse): Promise<IResponse> {

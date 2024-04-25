@@ -13,13 +13,16 @@ import { ICompany } from '../../../domain/data/entity/ICompany'
 import { IConstruction } from '../../../domain/data/entity/IConstruction'
 import { IUserService } from '../../../service/user/UserServiceFactory'
 import { getUserButtons } from '../../../utils/control-button'
+import { GetNotificationService } from '../../../service/notification/getNotifications/GetReportsService'
+import { IUser } from '../../../domain/data/entity/IUser'
 
 export class ConstructionController implements IController {
   public router = express.Router()
 
   constructor (private readonly _constructionService: IConstructionService,
     private readonly _companyService: ICompanyService,
-    private readonly _userService: IUserService) {
+    private readonly _userService: IUserService,
+    private readonly _notifications: GetNotificationService) {
     this.setupRoutes()
   }
 
@@ -34,8 +37,8 @@ export class ConstructionController implements IController {
 
   async handler (request: IRequest, response: IResponse): Promise<any> {
     const email = request.user.email
-    const user = await this._userService.getUserService.handler('email', email)
-
+    const user = await this._userService.getUserService.handler('email', email) as IUser
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
     const buttons = await getUserButtons(user)
     const constructionsRaw = await this._constructionService.getConstructionsService.handler() as IConstruction[]
     const companies = await this._companyService.getCompaniesService.handler() as ICompany[]
@@ -56,14 +59,15 @@ export class ConstructionController implements IController {
       companies,
       hasFilterDate: false,
       hasFilterText: true,
-      searchBy: 'nome da obra ou da companhia'
+      searchBy: 'nome da obra ou da companhia',
+      notificationsPopUp
     })
   }
 
   async handlerViewConstructions (request: IRequest, response: IResponse): Promise<any> {
     const email = request.user.email
-    const user = await this._userService.getUserService.handler('email', email)
-
+    const user = await this._userService.getUserService.handler('email', email) as IUser
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
     const buttons = await getUserButtons(user)
     const constructionsRaw = await this._constructionService.getConstructionsService.handler() as IConstruction[]
     const companies = await this._companyService.getCompaniesService.handler() as ICompany[]
@@ -84,7 +88,8 @@ export class ConstructionController implements IController {
       companies,
       hasFilterDate: false,
       hasFilterText: true,
-      searchBy: 'nome da obra ou da companhia'
+      searchBy: 'nome da obra ou da companhia',
+      notificationsPopUp
     })
   }
 

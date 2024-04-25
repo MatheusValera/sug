@@ -66,14 +66,12 @@ html
                 span.count
               .dropdown-menu.dropdown-menu-right.navbar-dropdown.preview-list.pb-0(aria-labelledby='countDropdown')
                 a.dropdown-item.py-3
-                  p.mb-0.font-weight-medium.float-left Você tem x mensagens 
+                  p.mb-0.font-weight-medium.float-left= `Você tem ${notificationsPopUp ? notificationsPopUp.length: 0} mensagens`
                 .dropdown-divider
-                a.dropdown-item.preview-item
-                  .preview-thumbnail
-                    img.img-sm.rounded-circle(src='images/faces/face10.jpg', alt='image')
-                  .preview-item-content.flex-grow.py-2
-                    p.preview-subject.ellipsis.font-weight-medium.text-dark Nome Teste
-                    p.fw-light.small-text.mb-0 Teste de notificação
+                for n in notificationsPopUp
+                  a.dropdown-item.preview-item
+                    .preview-item-content.flex-grow.py-2
+                      p.fw-light.small-text.mb-0= n.description
 
             li.nav-item.dropdown.d-none.d-lg-block.user-dropdown
               a.nav-link(id='UserDropdown', href='#', data-bs-toggle='dropdown', aria-expanded='false')

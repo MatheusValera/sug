@@ -16,6 +16,7 @@ import { ISchedule } from '../../../domain/data/entity/ISchedule'
 import { IConstruction } from '../../../domain/data/entity/IConstruction'
 import { IAllocation } from '../../../domain/data/entity/IAllocation'
 import { getUserButtons } from '../../../utils/control-button'
+import { GetNotificationService } from '../../../service/notification/getNotifications/GetReportsService'
 
 export class ScheduleController implements IController {
   public router = express.Router()
@@ -23,7 +24,8 @@ export class ScheduleController implements IController {
   constructor (private readonly _scheduleService: IScheduleService,
     private readonly _usersService: IUserService,
     private readonly _constructionService: IConstructionService,
-    private readonly _allocationService: IAllocationService) {
+    private readonly _allocationService: IAllocationService,
+    private readonly _notifications: GetNotificationService) {
     this.setupRoutes()
   }
 
@@ -39,8 +41,8 @@ export class ScheduleController implements IController {
 
   async handler (request: IRequest, response: IResponse): Promise<any> {
     const email = request.user.email
-    const user = await this._usersService.getUserService.handler('email', email)
-
+    const user = await this._usersService.getUserService.handler('email', email) as IUser
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
     const buttons = await getUserButtons(user)
     const schedulesRaw = await this._scheduleService.getSchedulesService.handler() as ISchedule[]
     const users = await this._usersService.getUsersService.handler() as IUser[]
@@ -75,14 +77,15 @@ export class ScheduleController implements IController {
       allocations,
       hasFilterDate: true,
       hasFilterText: true,
-      searchBy: 'nome do colaborador ou construção'
+      searchBy: 'nome do colaborador ou construção',
+      notificationsPopUp
     })
   }
 
   async handlerViewSchedules (request: IRequest, response: IResponse): Promise<any> {
     const email = request.user.email
-    const user = await this._usersService.getUserService.handler('email', email)
-
+    const user = await this._usersService.getUserService.handler('email', email) as IUser
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
     const buttons = await getUserButtons(user)
     const schedulesRaw = await this._scheduleService.getSchedulesService.handler() as ISchedule[]
     const users = await this._usersService.getUsersService.handler() as IUser[]
@@ -117,14 +120,15 @@ export class ScheduleController implements IController {
       allocations,
       hasFilterDate: true,
       hasFilterText: true,
-      searchBy: 'nome do colaborador ou construção'
+      searchBy: 'nome do colaborador ou construção',
+      notificationsPopUp
     })
   }
 
   async handlerViewUserSchedules (request: IRequest, response: IResponse): Promise<any> {
     const email = request.user.email
     const user = await this._usersService.getUserService.handler('email', email) as IUser
-
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
     const buttons = await getUserButtons(user)
     const schedulesRaw = await this._scheduleService.getSchedulesService.handler() as ISchedule[]
     const users = await this._usersService.getUsersService.handler() as IUser[]
@@ -157,7 +161,8 @@ export class ScheduleController implements IController {
       users,
       constructions,
       allocations,
-      hasFilterDate: true
+      hasFilterDate: true,
+      notificationsPopUp
     })
   }
 

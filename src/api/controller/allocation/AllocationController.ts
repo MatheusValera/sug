@@ -15,13 +15,15 @@ import { IAllocation } from '../../../domain/data/entity/IAllocation'
 import { IConstruction } from '../../../domain/data/entity/IConstruction'
 import { getUserButtons } from '../../../utils/control-button'
 import { EStatus } from '../../../domain/data/entity/ISchedule'
+import { GetNotificationService } from '../../../service/notification/getNotifications/GetReportsService'
 
 export class AllocationController implements IController {
   public router = express.Router()
 
   constructor (private readonly _allocationService: IAllocationService,
     private readonly _userService: IUserService,
-    private readonly _constructionService: IConstructionService) {
+    private readonly _constructionService: IConstructionService,
+    private readonly _notifications: GetNotificationService) {
     this.setupRoutes()
   }
 
@@ -43,8 +45,8 @@ export class AllocationController implements IController {
     // }
 
     const email = request.user.email
-    const user = await this._userService.getUserService.handler('email', email)
-
+    const user = await this._userService.getUserService.handler('email', email) as IUser
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
     const buttons = await getUserButtons(user)
     const users = await this._userService.getUsersService.handler() as IUser[]
     const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
@@ -76,14 +78,15 @@ export class AllocationController implements IController {
       canEdit: true,
       hasFilterDate: false,
       hasFilterText: true,
-      searchBy: 'colaborador ou construção'
+      searchBy: 'colaborador ou construção',
+      notificationsPopUp
     })
   }
 
   async handlerViewMyAllocations (request: IRequest, response: IResponse): Promise<any> {
     const email = request.user.email
     const user = await this._userService.getUserService.handler('email', email) as IUser
-
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
     const buttons = await getUserButtons(user)
     const users = await this._userService.getUsersService.handler() as IUser[]
     const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
@@ -113,7 +116,8 @@ export class AllocationController implements IController {
       canEdit: false,
       hasFilterDate: false,
       hasFilterText: true,
-      searchBy: 'colaborador ou construção'
+      searchBy: 'colaborador ou construção',
+      notificationsPopUp
     })
   }
 

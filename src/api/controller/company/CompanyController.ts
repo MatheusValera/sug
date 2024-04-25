@@ -10,11 +10,15 @@ import { ICompanyService } from '../../../service/company/CompanyServiceFactory'
 import { InternalServerErrorResponse } from '../../common/responses/InternalServerErrorResponse'
 import { IUserService } from '../../../service/user/UserServiceFactory'
 import { getUserButtons } from '../../../utils/control-button'
+import { GetNotificationService } from '../../../service/notification/getNotifications/GetReportsService'
+import { IUser } from '../../../domain/data/entity/IUser'
 
 export class CompanyController implements IController {
   public router = express.Router()
 
-  constructor (private readonly _companyService: ICompanyService, private readonly _userService: IUserService) {
+  constructor (private readonly _companyService: ICompanyService,
+    private readonly _userService: IUserService,
+    private readonly _notifications: GetNotificationService) {
     this.setupRoutes()
   }
 
@@ -29,8 +33,8 @@ export class CompanyController implements IController {
 
   async handler (request: IRequest, response: IResponse): Promise<any> {
     const email = request.user.email
-    const user = await this._userService.getUserService.handler('email', email)
-
+    const user = await this._userService.getUserService.handler('email', email) as IUser
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
     const buttons = await getUserButtons(user)
     const companies = await this._companyService.getCompaniesService.handler()
     response.status(200).render('./company.pug', {
@@ -39,7 +43,8 @@ export class CompanyController implements IController {
       companies,
       hasFilterDate: false,
       hasFilterText: true,
-      searchBy: 'nome da companhia'
+      searchBy: 'nome da companhia',
+      notificationsPopUp
     })
   }
 

@@ -1,3 +1,4 @@
+import { PrismaNotificationRepository } from '../../../data/repository/notification/NotificationRepository'
 import { IAllocation } from '../../../domain/data/entity/IAllocation'
 import { EStatus } from '../../../domain/data/entity/ISchedule'
 import { IAllocationRepository } from '../../../domain/data/repository/allocation/IAllocationRepository'
@@ -14,7 +15,8 @@ export class SaveAllocationService implements ISaveAllocationService {
     private readonly _userRepository: IUserRepository,
     private readonly _allocationRepository: IAllocationRepository,
     private readonly _constructionRepository: IConstructionRepository,
-    private readonly _scheduleService: IScheduleService) {}
+    private readonly _scheduleService: IScheduleService,
+    private readonly _notificationRepository: PrismaNotificationRepository) {}
 
   async handler (allocation: Omit<IAllocation, 'id'>): Promise<IAllocation|Error> {
     // @ts-expect-error
@@ -85,6 +87,12 @@ export class SaveAllocationService implements ISaveAllocationService {
           })
         }
       }
+
+      await this._notificationRepository.insertNotification({
+        createdAt: new Date(),
+        userId: user.id,
+        description: `Você tem uma alocação para a construção ${construction.name}`
+      })
     }
 
     return result
