@@ -83,7 +83,7 @@ export class SaveReportService implements ISaveReportService {
 
       for (const s of schedules) {
         if (s.status === EStatus.active) {
-          await this._allocationRepository.updateAllocation({ ...s, updatedAt: new Date(), status: EStatus.inactive })
+          await this._scheduleRepository.updateSchedule({ ...s, updatedAt: new Date(), status: EStatus.inactive })
         }
       }
 
