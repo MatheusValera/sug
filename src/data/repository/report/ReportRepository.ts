@@ -12,7 +12,9 @@ export class PrismaReportRepository implements IReportRepository {
       description: object.description,
       constructionId: object.constructionId,
       scheduleId: object.scheduleId,
-      userId: object.userId
+      userId: object.userId,
+      typeReport: object.typeReport,
+      isValided: object.isValided
     }
 
     return report

@@ -5,6 +5,7 @@ const id = document.getElementById('id')
 const createdAt = document.getElementById('createdAt')
 const user = document.getElementById('usersSelect')
 const construction = document.getElementById('constructionId')
+const description = document.getElementById('description')
 const allocation = document.getElementById('allocationSelect')
 const allocationCreatedAt = document.getElementById('allocationCreatedAt')
 const dateSchedule = document.getElementById('dateSchedule')
@@ -80,6 +81,7 @@ function openModal (schedule) {
     allocation.value = 0
     dateSchedule.value = ''
     status.value = 0
+    description.value = ''
   } else {
     id.value = schedule.id
     createdAt.value = schedule.createdAt
@@ -88,6 +90,7 @@ function openModal (schedule) {
     construction.value = schedule.constructionId
     allocation.value = schedule.allocationId
     dateSchedule.value = schedule.dateSchedule.split('T')[0]
+    description.value = schedule.description
   }
   editModal.style.display = 'block'
 }
@@ -110,7 +113,8 @@ function requestModal () {
     constructionId: parseInt(construction.value),
     allocationId: parseInt(allocation.value),
     dateSchedule: new Date(dateSchedule.value),
-    status: status.value
+    status: status.value,
+    description: description.value
   }
   payload.dateSchedule.setHours(payload.dateSchedule.getHours() + 3)
   if (id.value) {

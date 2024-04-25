@@ -40,6 +40,7 @@ export class ReportController implements IController {
     this.router.post('/report/saveReport', requireLogin, this.saveReport.bind(this))
     this.router.post('/report/updateReport', requireLogin, isAdmin, this.updateReport.bind(this))
     this.router.post('/report/deleteReport', requireLogin, isAdmin, this.deleteReport.bind(this))
+    this.router.post('/report/validateReport', requireLogin, isAdmin, this.validateReport.bind(this))
   }
 
   async handler (request: IRequest, response: IResponse): Promise<any> {
@@ -71,7 +72,7 @@ export class ReportController implements IController {
           name: construction.name
         },
         schedule: {
-          dateSchedule: schedule.dateSchedule
+          dateSchedule: schedule?.dateSchedule
         }
       }
     })
@@ -119,7 +120,7 @@ export class ReportController implements IController {
           name: construction.name
         },
         schedule: {
-          dateSchedule: schedule.dateSchedule
+          dateSchedule: schedule?.dateSchedule
         }
       }
     })
@@ -157,7 +158,7 @@ export class ReportController implements IController {
         ...s,
         nameButton: `${s.dateSchedule.toISOString().split('T')[0]} - ${construction.name}`
       }
-    })
+    }).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
 
     const canAddReport = schedules.some(s => s.userId === user.id && s.status === EStatus.active)
     response.status(200).render('./my-report.pug', { user, ...buttons, canAddReport, constructions, schedules })
@@ -180,9 +181,10 @@ export class ReportController implements IController {
 
       return {
         ...s,
+        idConstruction: construction.id,
         nameButton: construction.name
       }
-    })
+    }).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
 
     const canAddReport = allocation.some(s => s.userId === user.id && s.status === EStatus.active)
     response.status(200).render('./my-report-final.pug', { user, ...buttons, canAddReport, constructions, allocation })
@@ -260,6 +262,22 @@ export class ReportController implements IController {
       }
 
       const report = await this._reportService.deleteReportService.handler(id)
+
+      return SuccessResponse.handler(res, JSON.stringify(report))
+    } catch (error) {
+      return InternalServerErrorResponse.handler(res, error.message)
+    }
+  }
+
+  async validateReport (req: IRequest, res: IResponse): Promise<IResponse> {
+    try {
+      const id = parseInt(req.body.id)
+
+      if (!id) {
+        return BadRequestResponse.handler(res, 'No id provided.')
+      }
+
+      const report = await this._reportService.updateReportService.handler({ id: id, isValided: true })
 
       return SuccessResponse.handler(res, JSON.stringify(report))
     } catch (error) {

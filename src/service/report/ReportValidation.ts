@@ -4,7 +4,7 @@ import { RequireFieldValidation } from '../../utils/validator-required-fields/va
 
 export const makeReportValidation = (): Validation => {
   const validations: Validation[] = []
-  for (const field of ['description', 'userId', 'scheduleId', 'constructionId']) {
+  for (const field of ['description', 'userId', 'constructionId']) {
     validations.push(new RequireFieldValidation(field))
   }
   return new ValidationComposite(validations)

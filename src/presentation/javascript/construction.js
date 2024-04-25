@@ -134,7 +134,7 @@ function deleteModalRequest () {
   axios.post('/construction/deleteConstruction', payload)
     .then((r) => {
       console.log(r)
-      // window.location.href = '/construcao'
+      window.location.href = '/construcao'
     })
     .catch(error => {
       message = error.message

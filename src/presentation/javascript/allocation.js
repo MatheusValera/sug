@@ -67,8 +67,9 @@ function requestModal () {
         informationModal.style.display = 'block'
       })
       .catch(function (e) {
+        closeModal()
         console.log(messageToModal)
-        messageToModal.textContent = 'Erro interno, tentar novamente.'
+        messageToModal.textContent = e.response.data.message
         messageToModal.style.display = 'block'
         informationModal.style.display = 'block'
       })

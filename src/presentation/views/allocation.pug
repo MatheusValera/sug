@@ -23,10 +23,8 @@ block content
                 tr
                   th ID
                   th Data da criação
-                  th ID do colaborador
                   th Nome do colaborador
                   th Cargo do colaborador
-                  th ID da construção
                   th Nome da construção
                   th Status
                   if canEdit === true
@@ -36,10 +34,8 @@ block content
                   tr
                     td= allocation.id
                     td= allocation.createdAt.toLocaleString('pt-Br').split(',')[0]
-                    td= allocation.userId
                     td= allocation.user.name
                     td= allocation.user.office
-                    td= allocation.constructionId
                     td= allocation.construction.name
                     td
                       if allocation.status === 'active' 
@@ -48,7 +44,8 @@ block content
                         label.badge.badge-info Concluída
                     if canEdit === true
                       td
-                        button.btn.btn-warning.btn-rounded.btn-fw(onclick=`openModal(${JSON.stringify(allocation)})` data-id=allocation.id ) Editar
+                        if allocation.status == 'active'
+                          button.btn.btn-warning.btn-rounded.btn-fw(onclick=`openModal(${JSON.stringify(allocation)})` data-id=allocation.id ) Editar
                         button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" onclick=`openModalDelete({ id: ${allocation.id}, name: '${allocation.user.name}'})` data-id=allocation.id) Excluir
 
     #editModal.modal
@@ -100,8 +97,8 @@ block content
     #informationModal.modal
       .modal-content
         h4.card-title Informação:
-          label(id="message", style="display: none; color: red;")
-          label(id="messageP", style="display: none; color: green;")
+        label(id="message", style="display: none; color: red;")
+        label(id="messageP", style="display: none; color: green;")
         button.btn.btn-light(onclick="reload()") Fechar
 
     script(src="./javascript/allocation.js")

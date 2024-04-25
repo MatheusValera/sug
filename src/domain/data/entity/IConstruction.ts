@@ -4,6 +4,7 @@ export interface IConstruction {
   companyId: number
   createdAt: Date
   updatedAt?: Date
+  finishedAt?: Date
   status: string
   endDate: Date
   startDate: Date

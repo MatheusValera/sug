@@ -27,6 +27,7 @@ export class LoginController implements IController {
   setupRoutes (): void {
     this.router.get('/login', this.handler.bind(this))
     this.router.post('/login', this.login.bind(this))
+    this.router.get('/logout', this.logout.bind(this))
   }
 
   async handler (req: IRequest, res: IResponse): Promise<IResponse> {
@@ -41,6 +42,14 @@ export class LoginController implements IController {
     return new Promise((resolve) => {
       req.session.regenerate(resolve)
     })
+  }
+
+  async logout (req: any, res: IResponse, next: INext): Promise<void> {
+    req.logout(function (err) {
+      if (err) { return next(err) }
+      res.redirect('/login')
+    })
+    res.clearCookie('fid')
   }
 
   async login (req: IRequest, res: IResponse, next: INext): Promise<IResponse> {

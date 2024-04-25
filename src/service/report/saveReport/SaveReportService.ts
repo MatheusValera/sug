@@ -7,12 +7,14 @@ import { ISchedulesRepository } from '../../../domain/data/repository/schedule/I
 import { IUserRepository } from '../../../domain/data/repository/user/IUserRepository'
 import { IConstructionRepository } from '../../../domain/data/repository/construction/IConstructionRepository'
 import { EmailService } from '../../../utils/sendEmail'
+import { IAllocationRepository } from '../../../domain/data/repository/allocation/IAllocationRepository'
 
 export class SaveReportService implements ISaveReportService {
   constructor (
     private readonly _reportRepository: IReportRepository,
     private readonly _validator: Validation,
     private readonly _scheduleRepository: ISchedulesRepository,
+    private readonly _allocationRepository: IAllocationRepository,
     private readonly _userRepository: IUserRepository,
     private readonly _constructionRepository: IConstructionRepository) {}
 
@@ -24,7 +26,13 @@ export class SaveReportService implements ISaveReportService {
 
     const schedule = await this._scheduleRepository.getSchedule(report.scheduleId)
 
-    report.constructionId = schedule.constructionId
+    if (!schedule) {
+      report.constructionId = report.scheduleId
+      report.scheduleId = null
+    } else {
+      report.constructionId = schedule.constructionId
+    }
+
     report.createdAt = new Date()
 
     const hasIncorrectValue = await this._validator.validate(report)
@@ -39,17 +47,21 @@ export class SaveReportService implements ISaveReportService {
       return result
     }
 
-    schedule.status = EStatus.inactive
+    if (result.typeReport !== 'final') {
+      schedule.status = EStatus.inactive
+      schedule.updatedAt = new Date()
 
-    await this._scheduleRepository.updateSchedule(schedule)
+      await this._scheduleRepository.updateSchedule(schedule)
+    }
+
+    const construction = await this._constructionRepository.getConstruction('id', report.constructionId)
 
     if (result) {
       const user = await this._userRepository.getUser('id', result.userId)
-      const construction = await this._constructionRepository.getConstruction('id', result.constructionId)
 
       const message = `${result.createdAt?.toLocaleString('pt-Br').split(',')[0]}. E aqui está um comprovante dela: ${result.description}`
 
-      await EmailService.sendEmail(
+      void EmailService.sendEmail(
         user.email,
         user.name,
         construction.name,
@@ -58,6 +70,29 @@ export class SaveReportService implements ISaveReportService {
         'Você entregou um Relatório!',
         'Venha ver...'
       )
+    }
+
+    if (result.typeReport === 'final') {
+      const allocations = await this._allocationRepository.getAllocationByConstructionId(result.constructionId)
+
+      for (const allocation of allocations) {
+        await this._allocationRepository.updateAllocation({ ...allocation, updatedAt: new Date(), status: EStatus.inactive })
+      }
+
+      const schedules = await this._scheduleRepository.getScheduleByConstructionId(result.constructionId)
+
+      for (const s of schedules) {
+        if (s.status === EStatus.active) {
+          await this._allocationRepository.updateAllocation({ ...s, updatedAt: new Date(), status: EStatus.inactive })
+        }
+      }
+
+      await this._constructionRepository.updateConstruction({
+        ...construction,
+        updatedAt: new Date(),
+        status: EStatus.finished,
+        finishedAt: new Date()
+      })
     }
 
     return result

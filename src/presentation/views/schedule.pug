@@ -23,11 +23,9 @@ block content
                 tr
                   th ID
                   th Data da criação
-                  th ID do colaborador
                   th Nome do colaborador
-                  th ID da construção
                   th Nome da construção
-                  th ID da alocação
+                  th Observação
                   th Data da alocação
                   th Data do agendamento
                   th Status
@@ -38,11 +36,9 @@ block content
                   tr
                     td= schedule.id
                     td= schedule.createdAt.toLocaleString('pt-Br').split(',')[0]
-                    td= schedule.userId
                     td= schedule.user.name
-                    td= schedule.constructionId
                     td= schedule.construction.name
-                    td= schedule.allocationId
+                    td= schedule.description
                     td= schedule.allocation.createdAt.toLocaleString('pt-Br').split(',')[0]
                     td= schedule.dateSchedule.toLocaleString('pt-Br').split(',')[0]
                     td
@@ -52,7 +48,8 @@ block content
                         label.badge.badge-info Finalizada
                     if canEdit === true
                       td
-                        button.btn.btn-warning.btn-rounded.btn-fw(onclick=`openModal(${JSON.stringify(schedule)})` data-id=schedule.id ) Editar
+                        if schedule.status === 'active' 
+                          button.btn.btn-warning.btn-rounded.btn-fw(onclick=`openModal(${JSON.stringify(schedule)})` data-id=schedule.id ) Editar
                         button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" onclick=`openModalDelete({ id: ${schedule.id}, name: '${schedule.construction.name}'})` data-id=schedule.id) Excluir
 
     #editModal.modal
@@ -83,6 +80,10 @@ block content
             label(for="status") Status:
             select.form-control(id="statusSelect")
               option(value='active') Ativa
+
+          .form-group
+            label(for="description") Observação:
+            input.form-control(style="width: 100%" type="text", id="description", name="description", required)
 
           .form-group
             button.btn.btn-primary.me-2(type="button" onclick='requestModal()') Salvar

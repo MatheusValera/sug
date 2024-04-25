@@ -67,9 +67,9 @@ function requestModal () {
         messageToModalP.style.display = 'block'
         informationModal.style.display = 'block'
       })
-      .catch(function (error) {
-        console.log(error)
-        messageToModal.textContent = 'Erro interno, tentar novamente.'
+      .catch(function (e) {
+        console.log(e)
+        messageToModal.textContent = e.response.data.message
         messageToModal.style.display = 'block'
         informationModal.style.display = 'block'
       })
@@ -86,9 +86,9 @@ function requestModal () {
         messageToModalP.style.display = 'block'
         informationModal.style.display = 'block'
       })
-      .catch(function (error) {
-        console.log(error)
-        messageToModal.textContent = 'Erro interno, tentar novamente.'
+      .catch(function (e) {
+        console.log(e)
+        messageToModal.textContent = e.response.data.message
         messageToModal.style.display = 'block'
         informationModal.style.display = 'block'
       })

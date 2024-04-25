@@ -48,7 +48,7 @@ export class SaveScheduleService implements ISaveScheduleService {
         user.name,
         construction.name,
         'um agendamento',
-        new Date(result.dateSchedule).toLocaleString('pt-Br').split(',')[0],
+        `${new Date(result.dateSchedule).toLocaleString('pt-Br').split(',')[0]}. \nObservação para o agendamento: ${result.description ?? 'Nenhuma'}`,
         'Você tem um novo agendamento!',
         'Venha ver...'
       )

@@ -27,10 +27,28 @@ block content
                 .form-group.row
                   label.col-sm-3.col-form-label(for='userName') Data do agendamento - Construção:
                   .col-sm-9
-                      select.form-control(id="schedule")
+                      select.form-control(id="schedule" onclick="completeReports()")
                         option(value=0)
                         for s in schedules
                           option(value=s.id)= s.nameButton
+                
+                if user.office === 'Engenheiro'
+                  .form-group.row
+                    label.col-sm-3.col-form-label(for='userName') Relatórios dessa construção
+                    .col-sm-9
+                      .form-control(style="height: auto;")
+                        .table-responsive
+                          table.table(id="tableReports")
+                            thead
+                              tr
+                                th ID
+                                th Data da criação
+                                th Conteúdo
+                                th Nome do colaborador
+                                th Cargo do colaborador
+                                th Validação
+                            tbody
+
                 .form-group.row
                   label.col-sm-3.col-form-label(for='description') Descrição - (Min: 50 carac.):
                   .col-sm-9
@@ -46,8 +64,8 @@ block content
     #informationModal.modal
       .modal-content
         h4.card-title Informação:
-          label(id="message", style="display: none; color: red;")
-          label(id="messageP", style="display: none; color: green;")
+        label(id="message", style="display: none; color: red;")
+        label(id="messageP", style="display: none; color: green;")
         button.btn.btn-light(onclick="reload()") Fechar
   
   script(src="./javascript/my-report.js")

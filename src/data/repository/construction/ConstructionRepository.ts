@@ -13,7 +13,8 @@ export class PrismaConstructionRepository implements IConstructionRepository {
       startDate: new Date(object.startDate),
       name: object.name,
       companyId: object.companyId,
-      status: object.status
+      status: object.status,
+      finishedAt: new Date(object.finishedAt)
     }
 
     if (object.updatedAt) {

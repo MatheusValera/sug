@@ -30,7 +30,7 @@ block content
                       select.form-control(id="schedule" onclick="completeReports()")
                         option(value=0)
                         for s in allocation
-                          option(value=s.id)= s.nameButton
+                          option(value=s.idConstruction)= s.nameButton
                 .form-group.row
                   label.col-sm-3.col-form-label(for='userName') Relatórios dessa construção
                   .col-sm-9
@@ -43,7 +43,6 @@ block content
                               th Conteúdo
                               th Nome do colaborador
                               th Cargo do colaborador
-                              th Validação
                           tbody
                           
                 .form-group.row

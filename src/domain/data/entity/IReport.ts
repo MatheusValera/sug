@@ -5,4 +5,6 @@ export interface IReport {
   scheduleId: number
   description: string
   constructionId: number
+  isValided?: boolean
+  typeReport?: string
 }

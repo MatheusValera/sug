@@ -65,7 +65,8 @@ model Construction {
   createdAt                DateTime       @default(now())
   startDate                DateTime       @default(now())
   endDate                DateTime       @default(now())
-  updatedAt                DateTime?       
+  updatedAt                DateTime?    
+  finishedAt                DateTime?    
   Company    Company      @relation(fields: [companyId], references: [id])
   companyId  Int
   Allocation Allocation[]
@@ -98,6 +99,7 @@ model Schedule {
   status String
   dateSchedule   DateTime
   Report         Report[]
+  description String?
 }
 
 model Report {
@@ -105,9 +107,11 @@ model Report {
   createdAt      DateTime     @default(now())
   description    String
   User           User         @relation(fields: [userId], references: [id])
-  Schedule       Schedule     @relation(fields: [scheduleId], references: [id])
+  Schedule       Schedule?     @relation(fields: [scheduleId], references: [id])
   Construction   Construction @relation(fields: [constructionId], references: [id])
   userId         Int
-  scheduleId     Int
+  scheduleId     Int?
   constructionId Int
+  isValided Boolean?
+  typeReport String?
 }

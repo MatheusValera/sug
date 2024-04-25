@@ -1,6 +1,10 @@
 export enum EStatus {
   active = 'active',
-  inactive = 'inactive'
+  inactive = 'inactive',
+  canceled = 'canceled',
+  suspended = 'suspended',
+  finished = 'finished',
+  pending = 'pending'
 }
 
 export interface ISchedule {
@@ -12,4 +16,5 @@ export interface ISchedule {
   allocationId: number
   constructionId: number
   status: string
+  description?: string
 }

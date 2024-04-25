@@ -1,4 +1,5 @@
 import { ICompany } from '../../../domain/data/entity/ICompany'
+import { EStatus } from '../../../domain/data/entity/ISchedule'
 import { ICompanyRepository } from '../../../domain/data/repository/company/ICompany'
 import { IConstructionRepository } from '../../../domain/data/repository/construction/IConstructionRepository'
 import { IDeleteCompanyService } from '../../../domain/service/company/deleteCompany/IDeleteCompanyService'
@@ -14,7 +15,7 @@ export class DeleteCompanyService implements IDeleteCompanyService {
 
     const constructions = await this._constructionRepository.getConstructions()
 
-    const hasConstructionsActive = constructions.some(c => c.companyId === id && c.status === 'active')
+    const hasConstructionsActive = constructions.some(c => c.companyId === id && c.status === EStatus.active)
 
     if (hasConstructionsActive) {
       throw new Error('Possui construção ativa para essa companhia.')

@@ -26,6 +26,7 @@ block content
                   th Cargo do colaborador
                   th Nome da construção
                   th Data do agendamento
+                  th Está validado?
                   if canEdit === true
                     th Ações
               tbody
@@ -33,11 +34,12 @@ block content
                   tr
                     td= report.id
                     td= report.createdAt.toLocaleString('pt-Br').split(',')[0]
-                    td= report.description
+                    td= report.description.substring(0, 50) + '...'
                     td= report.user.name
                     td= report.user.office
                     td= report.construction.name
-                    td= report.schedule.dateSchedule.toLocaleString('pt-Br').split(',')[0]
+                    td= report.schedule.dateSchedule ? report.schedule.dateSchedule.toLocaleString('pt-Br').split(',')[0] : ''
+                    td= report.isValided ? 'Sim' : 'Não'
                     if canEdit === true
                       td
                         button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" onclick=`openModalDelete({ id: ${report.id}, name: '${report.construction.name}'})` data-id=report.id) Excluir

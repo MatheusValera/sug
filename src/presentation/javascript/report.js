@@ -91,7 +91,9 @@ function requestModal () {
     constructionId: parseInt(construction.value),
     allocationId: parseInt(allocation.value),
     dateSchedule: new Date(dateSchedule.value),
-    status: status.value
+    status: 'pending',
+    typeReport: 'mensal',
+    isValided: false
   }
   payload.dateSchedule.setHours(payload.dateSchedule.getHours() + 3)
   if (id.value) {
