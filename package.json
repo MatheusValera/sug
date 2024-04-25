@@ -15,7 +15,7 @@
     "test:unit": "npm test -- --watchAll -c jest-unit.config.js",
     "prisma:format": "npx prisma format --schema ./src/infra/prisma/schema.prisma",
     "test:ci": "export NODE_ENV=test && npm test -- -c jest-unit.config.js --coverage --forceExit",
-    "prisma:migrate": "npx prisma migrate deploy --name init --schema ./src/infra/prisma/schema.prisma"
+    "prisma:migrate": "npx prisma migrate deploy --schema ./src/infra/prisma/schema.prisma"
   },
   "author": "",
   "license": "ISC",
