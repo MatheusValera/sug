@@ -90,7 +90,13 @@ html
           button.navbar-toggler.navbar-toggler-right.d-lg-none.align-self-center(type='button', data-bs-toggle='offcanvas')
             span.mdi.mdi-menu
 
+        
       .container-fluid.page-body-wrapper
+        a(target="_blank" href= `${user.admin === true ? '/static/manualUserAdmin.html': '/static/manualUser.html'}`)
+          .theme-setting-wrapper
+            #settings-trigger
+              i.ti-settings
+          
         nav#sidebar.sidebar.sidebar-offcanvas
           ul.nav
             li.nav-item.active
