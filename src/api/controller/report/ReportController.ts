@@ -135,7 +135,7 @@ export class ReportController implements IController {
       constructions,
       allocations,
       reports,
-      canEdit: false,
+      canEdit: true,
       hasFilterText: true,
       searchBy: 'nome do colaborador ou cargo',
       hasFilterDate: true,

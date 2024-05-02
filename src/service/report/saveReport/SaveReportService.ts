@@ -8,6 +8,7 @@ import { IUserRepository } from '../../../domain/data/repository/user/IUserRepos
 import { IConstructionRepository } from '../../../domain/data/repository/construction/IConstructionRepository'
 import { EmailService } from '../../../utils/sendEmail'
 import { IAllocationRepository } from '../../../domain/data/repository/allocation/IAllocationRepository'
+import { PrismaNotificationRepository } from '../../../data/repository/notification/NotificationRepository'
 
 export class SaveReportService implements ISaveReportService {
   constructor (
@@ -16,7 +17,8 @@ export class SaveReportService implements ISaveReportService {
     private readonly _scheduleRepository: ISchedulesRepository,
     private readonly _allocationRepository: IAllocationRepository,
     private readonly _userRepository: IUserRepository,
-    private readonly _constructionRepository: IConstructionRepository) {}
+    private readonly _constructionRepository: IConstructionRepository,
+    private readonly _notificationRepository: PrismaNotificationRepository) {}
 
   async handler (report: Omit<IReport, 'id'>): Promise<IReport|Error> {
     // @ts-expect-error
@@ -55,6 +57,7 @@ export class SaveReportService implements ISaveReportService {
     }
 
     const construction = await this._constructionRepository.getConstruction('id', report.constructionId)
+    const allocations = await this._allocationRepository.getAllocationByConstructionId(result.constructionId)
 
     if (result) {
       const user = await this._userRepository.getUser('id', result.userId)
@@ -70,11 +73,26 @@ export class SaveReportService implements ISaveReportService {
         'Você entregou um Relatório!',
         'Venha ver...'
       )
+
+      if (user.office !== 'Engenheiro') {
+        const allocationMap: any = await allocations.map(async (x) => {
+          const user = await this._userRepository.getUser('id', result.userId)
+          return {
+            ...x,
+            user: { ...user }
+          }
+        })
+
+        const engineer = allocationMap.filter(x => x?.user?.office === 'Engenheiro')[0]
+        await this._notificationRepository.insertNotification({
+          createdAt: new Date(),
+          userId: engineer.user.id,
+          description: `O colaborador ${user.name} entregou o relatório da construção ${construction.name}`
+        })
+      }
     }
 
     if (result.typeReport === 'final') {
-      const allocations = await this._allocationRepository.getAllocationByConstructionId(result.constructionId)
-
       for (const allocation of allocations) {
         await this._allocationRepository.updateAllocation({ ...allocation, updatedAt: new Date(), status: EStatus.inactive })
       }

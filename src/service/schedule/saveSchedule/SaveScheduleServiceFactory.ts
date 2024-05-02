@@ -5,6 +5,7 @@ import { PrismaSchedulesRepository } from '../../../data/repository/schedules/Sc
 import { makePrismaUserRepository } from '../../../data/repository/user/UserRepositoryFactory'
 import { PrismaConstructionRepository } from '../../../data/repository/construction/ConstructionRepository'
 import { Validation } from '../../../domain/utils/validator'
+import { PrismaNotificationRepository } from '../../../data/repository/notification/NotificationRepository'
 
 interface FactoryTypes {
   saveScheduleService: ISaveScheduleService
@@ -15,8 +16,9 @@ export const makeSaveScheduleService = (validator: Validation): FactoryTypes => 
 
   const userRepo = makePrismaUserRepository()
   const constructionRepository = new PrismaConstructionRepository(prismaClient.getClient())
+  const notificationRepository = new PrismaNotificationRepository(prismaClient.getClient())
 
-  const saveScheduleService = new SaveScheduleService(repository, validator, userRepo, constructionRepository)
+  const saveScheduleService = new SaveScheduleService(repository, validator, userRepo, constructionRepository, notificationRepository)
 
   return { saveScheduleService }
 }

@@ -2,8 +2,12 @@
 /* eslint-disable no-unused-vars */
 
 const id = document.getElementById('id')
+const userId = document.getElementById('userId')
+const allocationId = document.getElementById('allocationId')
+const constructionId = document.getElementById('constructionId')
+const scheduleId = document.getElementById('scheduleId')
 const createdAt = document.getElementById('createdAt')
-const user = document.getElementById('userId')
+const user = document.getElementById('username')
 const construction = document.getElementById('constructionId')
 const allocation = document.getElementById('allocationSelect')
 const description = document.getElementById('description')
@@ -13,6 +17,10 @@ const editModal = document.getElementById('editModal')
 const deleteModal = document.getElementById('deleteModal')
 const errorMessage = document.getElementById('errorMessage')
 const errorMessageDelete = document.getElementById('errorMessageDelete')
+
+const informationModal = document.getElementById('informationModal')
+const messageToModal = document.getElementById('message')
+const messageToModalP = document.getElementById('messageP')
 
 async function completeAllocation () {
   try {
@@ -75,9 +83,13 @@ function openModal (schedule) {
   } else {
     id.value = schedule.id
     createdAt.value = schedule.createdAt
-    user.value = schedule.userId
+    user.value = schedule.user.name
+    userId.value = schedule.userId
+    scheduleId.value = schedule.scheduleId
+    allocationId.value = schedule.allocationId
+    constructionId.value = schedule.constructionId
     construction.value = schedule.constructionId
-    allocation.value = schedule.allocationId
+    allocation.value = schedule.construction.name
     description.value = schedule.description
   }
   editModal.style.display = 'block'
@@ -87,26 +99,29 @@ function requestModal () {
   let message = 'Sua operação foi concluída com sucesso'
 
   const payload = {
-    userId: parseInt(user.value),
-    constructionId: parseInt(construction.value),
-    allocationId: parseInt(allocation.value),
-    dateSchedule: new Date(dateSchedule.value),
-    status: 'pending',
+    userId: parseInt(userId.value),
+    scheduleId: parseInt(scheduleId.value),
+    description: description.value,
     typeReport: 'mensal',
     isValided: false
   }
-  payload.dateSchedule.setHours(payload.dateSchedule.getHours() + 3)
   if (id.value) {
     payload.id = parseInt(id.value)
-    payload.createdAt = createdAt.value
-
-    const a = axios.post('/schedule/updateSchedule', payload)
-      .then(result => (result))
-      .catch(function () {
+    closeModal()
+    const a = axios.post('/report/updateReport', payload)
+      .then(result => {
+        let message = 'Operação realizada com sucesso!'
         if (result.message) {
           message = result.message
         }
-        messageToModal.innerHTML = message
+        messageToModalP.textContent = message
+        messageToModalP.style.display = 'block'
+        informationModal.style.display = 'block'
+      })
+      .catch(function () {
+        console.log(e)
+        messageToModal.textContent = e.response.data.message
+        messageToModal.style.display = 'block'
         informationModal.style.display = 'block'
       })
   } else {
@@ -171,6 +186,10 @@ function filter () {
       }
     }
   }
+}
+
+function reload () {
+  window.location.href = '/meus-relatorios'
 }
 
 // eslint-disable-next-line no-unused-vars

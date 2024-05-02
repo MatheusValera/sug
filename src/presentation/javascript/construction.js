@@ -138,7 +138,7 @@ function deleteModalRequest () {
     })
     .catch(error => {
       message = error.message
-      errorMessageDelete.textContent = 'Você não pode excluir essa alocação!'
+      errorMessageDelete.textContent = error?.response?.data?.message
       errorMessageDelete.style.display = 'block'
     })
 }

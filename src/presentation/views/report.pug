@@ -42,6 +42,8 @@ block content
                     td= report.isValided ? 'Sim' : 'Não'
                     if canEdit === true
                       td
+                        if report.isValided !== true && report.userId === user.id
+                          button.btn.btn-warning.btn-rounded.btn-fw(onclick=`openModal(${JSON.stringify(report)})` data-id=report.id ) Editar
                         button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" onclick=`openModalDelete({ id: ${report.id}, name: '${report.construction.name}'})` data-id=report.id) Excluir
 
     #editModal.modal
@@ -49,26 +51,26 @@ block content
         h4.card-title Relatório
         form(id="editUserForm")
           input(type="hidden", id="id", name="id")
-          input(type="hidden", id="createdAt", name="createdAt")
+          input(type="hidden", id="userId", name="userId")
+          input(type="hidden", id="allocationId", name="allocationId")
           input(type="hidden", id="constructionId", name="constructionId")
-
+          input(type="hidden", id="createdAt", name="createdAt")
+          input(type="hidden", id="scheduleId", name="scheduleId")
 
           .form-group
             label(for="userId") Usuario:
-            select.form-control(id="userId")
-              option(value=user.id)= user.name
+            input.form-control(id="username" readonly)
 
           .form-group
-            label(for="allocationSelect") Data do agendamento - Construção:
-            select.form-control(id="allocationSelect")
-              option(value=0)
+            label(for="allocationSelect") Construção:
+            input.form-control(id="allocationSelect" readonly)
 
           .form-group
             label(for="description") Descrição:
-            input.form-control(type="text", id="description", name="description", required)
+            textarea.form-control(style="height: 20rem;" type="text", id="description", name="description", required)
 
           .form-group
-            button.btn.btn-primary.me-2n(onclick='requestModal()') Salvar
+            button.btn.btn-primary.me-2n(type="button" onclick='requestModal()') Salvar
             button.btn.btn-light(onclick='closeModal()') Cancelar
             label(id="errorMessage", style="display: none; color: red;")
 
@@ -84,5 +86,12 @@ block content
             button.btn.btn-danger.btn-rounded.btn-fw.deleteBtn(onclick='deleteModalRequest()') Excluir
             button.btn.btn-light(onclick='closeModalDelete()') Cancelar
             label(id="errorMessageDelete", style="display: none; color: red;")
+
+    #informationModal.modal
+      .modal-content
+        h4.card-title Informação:
+          label(id="message", style="display: none; color: red;")
+          label(id="messageP", style="display: none; color: green;")
+        button.btn.btn-light(onclick="reload()") Fechar
 
     script(src="./javascript/report.js")

@@ -7,6 +7,7 @@ import { Validation } from '../../../domain/utils/validator'
 import { PrismaConstructionRepository } from '../../../data/repository/construction/ConstructionRepository'
 import { PrismaUserRepository } from '../../../data/repository/user/UserRepository'
 import { PrismaAllocationRepository } from '../../../data/repository/allocation/AllocationRepository'
+import { PrismaNotificationRepository } from '../../../data/repository/notification/NotificationRepository'
 
 interface FactoryTypes {
   saveReportService: ISaveReportService
@@ -18,12 +19,14 @@ export const makeSaveReportService = (validator: Validation): FactoryTypes => {
   const userRepository = new PrismaUserRepository(prismaClient.getClient())
   const constructionRepository = new PrismaConstructionRepository(prismaClient.getClient())
   const allocationRepository = new PrismaAllocationRepository(prismaClient.getClient())
+  const notificationRepository = new PrismaNotificationRepository(prismaClient.getClient())
 
   const saveReportService = new SaveReportService(
     repository, validator,
     scheduleRepository,
     allocationRepository,
-    userRepository, constructionRepository)
+    userRepository, constructionRepository,
+    notificationRepository)
 
   return { saveReportService }
 }
