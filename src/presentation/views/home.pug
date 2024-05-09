@@ -19,6 +19,7 @@ block content
                           div
                             h4.card-title.card-title-dash Relatórios pendentes
                             p.card-subtitle.card-subtitle-dash= `Você tem ${schedules.length} relatórios para enviar.`
+
                         .table-responsive.mt-1
                           table.table.select-table
                             thead
@@ -50,8 +51,16 @@ block content
                             div
                               h4.card-title.card-title-dash Construções
                               p.card-subtitle.card-subtitle-dash= `Tem ${constructionsIncomplete} construções em andamento.`
+                            div
+                              .dropdown
+                                select.btn.btn-secondary.dropdown-toggle.toggle-dark.btn-lg.mb-0.me-0(id='filterTable', onchange='filter()', data-bs-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                  option.dropdown-item(value='all') Todos
+                                  option.dropdown-item(value='Concluída') Concluídos
+                                  option.dropdown-item(value='Em progresso') Em progresso
+                                  option.dropdown-item(value='Cancelada') Canceladas
+                                  option.dropdown-item(value='Suspenso') Suspensas
                           .table-responsive.mt-1
-                            table.table.select-table
+                            table.table.select-table(id='table')
                               thead
                                 tr
                                   th Construção
@@ -86,3 +95,5 @@ block content
                                         .badge.badge-opacity-danger Suspenso
                                       else
                                         .badge.badge-opacity-danger Cancelada
+
+  script(src="./javascript/home.js")
