@@ -67,7 +67,7 @@ async function completeReports () {
     }
 
     for (const report of reports) {
-      if (report.typeReport === 'mensalEngenheiro') { continue }
+      if (report.typeReport !== 'mensalEngenheiro') { continue }
       const userResponse = await axios.post('/user/getUser', { value: report.userId, key: 'id' })
       const user = JSON.parse(userResponse.data)
       const tr = document.createElement('tr')

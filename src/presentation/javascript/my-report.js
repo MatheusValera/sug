@@ -84,6 +84,8 @@ async function completeReports () {
       const userResponse = await axios.post('/user/getUser', { value: report.userId, key: 'id' })
       const user = JSON.parse(userResponse.data)
       const tr = document.createElement('tr')
+      const cel1 = document.createElement('td')
+      cel1.textContent = report.id
       const cel2 = document.createElement('td')
       const cel3 = document.createElement('td')
       cel3.textContent = user.name
@@ -99,8 +101,10 @@ async function completeReports () {
       div.style.maxHeight = '200px'
       div.style.overflowY = 'scroll'
       div.style.whiteSpace = 'break-spaces'
+      cel1.style.display = 'none'
       cel2.appendChild(div)
 
+      tr.appendChild(cel1)
       tr.appendChild(cel2)
       tr.appendChild(cel3)
       tr.appendChild(cel4)
