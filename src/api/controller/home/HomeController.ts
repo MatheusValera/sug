@@ -46,7 +46,7 @@ export class HomeController implements IController {
       }
     })
 
-    const constructions = constructionsRaw.filter(x => x.status !== EStatus.finished).map(y => {
+    const constructions = constructionsRaw.filter(x => x.status).map(y => {
       const allocationCount = allocationsRaw.filter(x => x.constructionId === y.id).length
       const allocationActiveCount = allocationsRaw.filter(x => x.constructionId === y.id && x.status === EStatus.active).length
       const schedulesCount = schedulesRaw.filter(x => x.constructionId === y.id).length
