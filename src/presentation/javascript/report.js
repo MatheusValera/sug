@@ -148,20 +148,28 @@ function closeModalDelete () {
 }
 
 function deleteModalRequest () {
-  let message = ''
   const payload = {
     id: idDelete.value
   }
 
   axios.post('/report/deleteReport', payload)
-    .then(() => {
-      window.location.href = '/relatorio'
+    .then((r) => {
+      closeModalDelete()
+      let message = 'Operação realizada com sucesso!'
+      if (r?.message) {
+        message = r.message
+      }
+      messageToModalP.textContent = message
+      messageToModalP.style.display = 'block'
+      informationModal.style.display = 'block'
     })
-    .catch(error => {
-      message = error.message
+    .catch(e => {
+      closeModalDelete()
+      console.log(e)
+      messageToModal.textContent = e.response?.data?.message
+      messageToModal.style.display = 'block'
+      informationModal.style.display = 'block'
     })
-
-  errorMessageDelete.value = message
 }
 
 // eslint-disable-next-line no-unused-vars

@@ -91,19 +91,28 @@ function closeModalDelete () {
 }
 
 async function deleteModalRequest () {
-  let message = ''
+  const message = ''
   const payload = {
     id: parseInt(idDelete.value)
   }
 
   await axios.post('/allocation/deleteAllocation', payload)
-    .then(() => {
-      window.location.href = '/alocacao'
+    .then((r) => {
+      closeModalDelete()
+      let message = 'Operação realizada com sucesso!'
+      if (r?.message) {
+        message = r.message
+      }
+      messageToModalP.textContent = message
+      messageToModalP.style.display = 'block'
+      informationModal.style.display = 'block'
     })
-    .catch(error => {
-      message = error.message
-      errorMessageDelete.textContent = 'Você não pode excluir essa alocação!'
-      errorMessageDelete.style.display = 'block'
+    .catch(e => {
+      closeModalDelete()
+      console.log(e)
+      messageToModal.textContent = e.response?.data?.message
+      messageToModal.style.display = 'block'
+      informationModal.style.display = 'block'
     })
 }
 

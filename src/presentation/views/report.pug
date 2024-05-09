@@ -27,8 +27,10 @@ block content
                   th Nome da construção
                   th Data do agendamento
                   th Está validado?
+                  th Veja completo
                   if canEdit === true
-                    th Ações
+                    th Editar
+                    th Excluir
               tbody
                 each report in reports
                   tr
@@ -40,11 +42,15 @@ block content
                     td= report.construction.name
                     td= report.schedule.dateSchedule ? report.schedule.dateSchedule.toLocaleString('pt-Br').split(',')[0] : ''
                     td= report.isValided ? 'Sim' : 'Não'
+                    td
+                      a.btn.btn-outline-secondary.btn-rounded.btn-icon(href=`/relatorios/${report.id}` target="_blank")
+                        i.ti-stats-up.text-success
                     if canEdit === true
                       td
                         if report.isValided !== true && report.userId === user.id
                           button.btn.btn-warning.btn-rounded.btn-fw(onclick=`openModal(${JSON.stringify(report)})` data-id=report.id ) Editar
-                        button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" onclick=`openModalDelete({ id: ${report.id}, name: '${report.construction.name}'})` data-id=report.id) Excluir
+                      td  
+                        button.btn.btn-danger.btn-rounded.btn-fw(onclick=`openModalDelete({ id: ${report.id}, name: '${report.construction.name}'})` data-id=report.id) Excluir
 
     #editModal.modal
       .modal-content

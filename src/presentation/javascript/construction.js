@@ -126,20 +126,27 @@ function closeModalDelete () {
 }
 
 function deleteModalRequest () {
-  let message = ''
   const payload = {
     id: parseInt(idDelete.value)
   }
 
   axios.post('/construction/deleteConstruction', payload)
     .then((r) => {
-      console.log(r)
-      window.location.href = '/construcao'
+      closeModalDelete()
+      let message = 'Operação realizada com sucesso!'
+      if (r?.message) {
+        message = r.message
+      }
+      messageToModalP.textContent = message
+      messageToModalP.style.display = 'block'
+      informationModal.style.display = 'block'
     })
-    .catch(error => {
-      message = error.message
-      errorMessageDelete.textContent = error?.response?.data?.message
-      errorMessageDelete.style.display = 'block'
+    .catch(e => {
+      closeModalDelete()
+      console.log(e)
+      messageToModal.textContent = e.response?.data?.message
+      messageToModal.style.display = 'block'
+      informationModal.style.display = 'block'
     })
 }
 

@@ -1,6 +1,10 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 
+const informationModal = document.getElementById('informationModal')
+const messageToModal = document.getElementById('message')
+const messageToModalP = document.getElementById('messageP')
+
 document.addEventListener('DOMContentLoaded', function () {
   const editUserForm = document.getElementById('editUserForm')
   const editButtons = document.querySelectorAll('.editBtn')
@@ -28,10 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const createdAtInput = document.getElementById('createdAt')
   const userIdInput = document.getElementById('userId')
   const adminInput = document.getElementById('admin')
-
-  const informationModal = document.getElementById('informationModal')
-  const messageToModal = document.getElementById('message')
-  const messageToModalP = document.getElementById('messageP')
 
   VMasker(zipCodeInput).maskPattern('99999-999')
   VMasker(phoneInput).maskPattern('(99) 99999-9999')
@@ -249,22 +249,28 @@ function openModalDelete (obj) {
 }
 
 function deleteModalRequest () {
-  let message = ''
   const payload = {
     id: idDelete.value
   }
 
   axios.post('/user/deleteUser', payload)
-    .then(() => {
-      window.location.href = '/usuarios'
+    .then((r) => {
+      closeModalDelete()
+      let message = 'Operação realizada com sucesso!'
+      if (r?.message) {
+        message = r.message
+      }
+      messageToModalP.textContent = message
+      messageToModalP.style.display = 'block'
+      informationModal.style.display = 'block'
     })
-    .catch(error => {
-      message = error.message
-      errorMessageDelete.textContent = 'Você não pode excluir esse usuário!'
-      errorMessageDelete.style.display = 'block'
+    .catch(e => {
+      closeModalDelete()
+      console.log(e)
+      messageToModal.textContent = e?.response?.data?.message
+      messageToModal.style.display = 'block'
+      informationModal.style.display = 'block'
     })
-
-  errorMessageDelete.value = message
 }
 
 function closeModalDelete () {

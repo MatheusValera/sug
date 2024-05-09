@@ -12,6 +12,7 @@ const dateSchedule = document.getElementById('dateSchedule')
 const status = document.getElementById('statusSelect')
 const idDelete = document.getElementById('idDelete')
 const nameDelete = document.getElementById('nameDelete')
+const nameDelete2 = document.getElementById('nameDelete2')
 const editModal = document.getElementById('editModal')
 const deleteModal = document.getElementById('deleteModal')
 const errorMessage = document.getElementById('errorMessage')
@@ -169,7 +170,8 @@ function closeModal () {
 
 function openModalDelete (obj) {
   idDelete.value = parseInt(obj.id)
-  nameDelete.value = obj.name
+  nameDelete.value = `${obj.name}`
+  nameDelete2.value = `${obj.name2}`
   deleteModal.style.display = 'block'
 }
 
@@ -178,22 +180,28 @@ function closeModalDelete () {
 }
 
 function deleteModalRequest () {
-  let message = ''
   const payload = {
     id: idDelete.value
   }
 
   axios.post('/schedule/deleteSchedule', payload)
-    .then(() => {
-      window.location.href = '/agendamento'
+    .then((r) => {
+      closeModalDelete()
+      let message = 'Operação realizada com sucesso!'
+      if (r?.message) {
+        message = r.message
+      }
+      messageToModalP.textContent = message
+      messageToModalP.style.display = 'block'
+      informationModal.style.display = 'block'
     })
-    .catch(error => {
-      message = error.message
-      errorMessageDelete.textContent = 'Você não pode excluir esse agendamento!'
-      errorMessageDelete.style.display = 'block'
+    .catch(e => {
+      closeModalDelete()
+      console.log(e)
+      messageToModal.textContent = e.response?.data?.message
+      messageToModal.style.display = 'block'
+      informationModal.style.display = 'block'
     })
-
-  errorMessageDelete.value = message
 }
 
 // eslint-disable-next-line no-unused-vars

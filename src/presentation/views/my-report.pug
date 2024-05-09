@@ -41,8 +41,6 @@ block content
                           table.table(id="tableReports")
                             thead
                               tr
-                                th ID
-                                th Data da criação
                                 th Conteúdo
                                 th Nome do colaborador
                                 th Cargo do colaborador
@@ -58,7 +56,7 @@ block content
                     input.form-check-input(id="confirm" type='checkbox')
                     | Confirma a conclusão do agendamento?
                     i.input-helper
-                button.btn.btn-primary.me-2(type="button" onclick="saveReport()") Enviar
+                button.btn.btn-primary.me-2(type="button" onclick=`saveReport('${user.office}')`) Enviar
                 label(id="errorMessage", style="display: none; color: red;")
         
     #informationModal.modal

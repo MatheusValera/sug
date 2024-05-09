@@ -54,6 +54,11 @@ async function completeReports () {
   try {
     tableReports.getElementsByTagName('tbody')[0].innerHTML = ''
     const id = parseInt(scheduleId.value)
+
+    if (!id) {
+      return
+    }
+
     const response = await axios.post('/report/getReport', { id, option: 5 })
     const reports = JSON.parse(response.data)
 
@@ -62,20 +67,25 @@ async function completeReports () {
     }
 
     for (const report of reports) {
-      if (report.typeReport !== 'mensalEngenheiro') { continue }
+      if (report.typeReport === 'mensalEngenheiro') { continue }
       const userResponse = await axios.post('/user/getUser', { value: report.userId, key: 'id' })
       const user = JSON.parse(userResponse.data)
       const tr = document.createElement('tr')
-      const cel1 = document.createElement('td')
-      cel1.textContent = new Date(report.createdAt)?.toLocaleString('pt-Br').split(',')[0]
       const cel2 = document.createElement('td')
-      cel2.textContent = report.description
       const cel3 = document.createElement('td')
       cel3.textContent = user.name
       const cel4 = document.createElement('td')
       cel4.textContent = user.office
 
-      tr.appendChild(cel1)
+      const div = document.createElement('div')
+      div.textContent = report.description
+      div.style.wordBreak = 'break-word'
+      div.style.width = '248px'
+      div.style.maxHeight = '200px'
+      div.style.overflowY = 'scroll'
+      div.style.whiteSpace = 'break-spaces'
+      cel2.appendChild(div)
+
       tr.appendChild(cel2)
       tr.appendChild(cel3)
       tr.appendChild(cel4)

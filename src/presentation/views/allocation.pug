@@ -28,7 +28,8 @@ block content
                   th Nome da construção
                   th Status
                   if canEdit === true
-                    th Ações
+                    th Editar
+                    th Excluir
               tbody
                 each allocation in allocations
                   tr
@@ -45,8 +46,9 @@ block content
                     if canEdit === true
                       td
                         if allocation.status == 'active'
-                          button.btn.btn-warning.btn-rounded.btn-fw(onclick=`openModal(${JSON.stringify(allocation)})` data-id=allocation.id ) Editar
-                        button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" onclick=`openModalDelete({ id: ${allocation.id}, name: '${allocation.user.name}'})` data-id=allocation.id) Excluir
+                          button.btn.btn-warning.btn-rounded.btn-fw(type="button" onclick=`openModal(${JSON.stringify(allocation)})` data-id=allocation.id ) Editar
+                      td
+                        button.btn.btn-danger.btn-rounded.btn-fw(type="button" onclick=`openModalDelete({ id: ${allocation.id}, name: '${allocation.user.name}'})` data-id=allocation.id) Excluir
 
     #editModal.modal
       .modal-content

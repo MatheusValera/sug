@@ -84,7 +84,7 @@ export class SaveAllocationService implements ISaveAllocationService {
             allocationId: result.id,
             constructionId: construction.id,
             status: 'active'
-          })
+          })  
         }
       }
 

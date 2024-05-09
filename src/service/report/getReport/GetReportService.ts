@@ -6,7 +6,7 @@ import { IGetReportService } from '../../../domain/service/report/getReport/IGet
 export class GetReportService implements IGetReportService {
   constructor (private readonly _reportRepository: IReportRepository) {}
 
-  async handler (id: number, option: EOptions): Promise<IReport|Error> {
+  async handler (id: any, option: EOptions): Promise<IReport[]|Error> {
     if (!id) {
       return new Error('No id provided')
     }

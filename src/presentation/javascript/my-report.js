@@ -10,7 +10,7 @@ const messageToModal = document.getElementById('message')
 const messageToModalP = document.getElementById('messageP')
 const tableReports = document.getElementById('tableReports')
 
-async function saveReport () {
+async function saveReport (office) {
   const trs = tableReports?.getElementsByTagName('tbody')[0]?.getElementsByTagName('tr') ?? []
   if (scheduleId.value === '0') {
     errorMessage.textContent = 'Você não tem relatórios pendentes.'
@@ -24,8 +24,8 @@ async function saveReport () {
       userId: parseInt(userId.value),
       scheduleId: parseInt(scheduleId.value),
       description: description.value,
-      typeReport: trs.length ? 'mensalEngenheiro' : 'mensal',
-      isValided: false
+      typeReport: office === 'Engenheiro' ? 'mensalEngenheiro' : 'mensal',
+      isValided: office === 'Engenheiro'
     }
 
     await axios.post('/report/saveReport', payload).then(result => (result))
@@ -64,6 +64,11 @@ function reload () {
 async function completeReports () {
   try {
     const id = parseInt(scheduleId.value)
+
+    if (!id) {
+      return
+    }
+
     const schedule = JSON.parse((await axios.post('/schedule/getSchedule', { id, option: 3 })).data)[0]
     tableReports.getElementsByTagName('tbody')[0].innerHTML = ''
     const response = await axios.post('/report/getReport', { id: schedule.constructionId, option: 5 })
@@ -79,21 +84,23 @@ async function completeReports () {
       const userResponse = await axios.post('/user/getUser', { value: report.userId, key: 'id' })
       const user = JSON.parse(userResponse.data)
       const tr = document.createElement('tr')
-      const cel1 = document.createElement('td')
-      cel1.textContent = new Date(report.createdAt)?.toLocaleString('pt-Br').split(',')[0]
       const cel2 = document.createElement('td')
-      cel2.textContent = report.description
       const cel3 = document.createElement('td')
       cel3.textContent = user.name
       const cel4 = document.createElement('td')
       cel4.textContent = user.office
       const cel5 = document.createElement('td')
-      const cel6 = document.createElement('td')
-      cel6.textContent = report.id
       cel5.innerHTML = `<div class="form-check form-check-flat form-check-primary"><label class="form-check-label" for="admin">Aprovado<input class="form-check-input" type="checkbox" id="approved${report.id}" name="approved"=""><i class="input-helper"></i></label></div>`
 
-      tr.appendChild(cel6)
-      tr.appendChild(cel1)
+      const div = document.createElement('div')
+      div.textContent = report.description
+      div.style.wordBreak = 'break-word'
+      div.style.width = '248px'
+      div.style.maxHeight = '200px'
+      div.style.overflowY = 'scroll'
+      div.style.whiteSpace = 'break-spaces'
+      cel2.appendChild(div)
+
       tr.appendChild(cel2)
       tr.appendChild(cel3)
       tr.appendChild(cel4)

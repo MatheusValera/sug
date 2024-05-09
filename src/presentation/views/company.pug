@@ -27,7 +27,8 @@ block content
                   th Nome da companhia
                   th Nome do responsável
                   th Contato do responsável
-                  th Ações
+                  th Editar
+                  th Excluir
               tbody
                 for company in companies
                   tr
@@ -40,7 +41,8 @@ block content
                     td= company.contactResponsiblePerson
                     td
                       button.btn.btn-warning.btn-rounded.btn-fw(onclick=`openModal(${JSON.stringify(company)})` data-id=company.id ) Editar
-                      button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" onclick=`openModalDelete({id:${company.id}, name: '${company.nameCompany}'})` data-id=company.id) Excluir
+                    td 
+                      button.btn.btn-danger.btn-rounded.btn-fw(onclick=`openModalDelete({id:${company.id}, name: '${company.nameCompany}'})` data-id=company.id) Excluir
 
       #editModal.modal
         .modal-content

@@ -1,5 +1,4 @@
 import { IConstruction } from '../../../domain/data/entity/IConstruction'
-import { EStatus } from '../../../domain/data/entity/ISchedule'
 import { IAllocationRepository } from '../../../domain/data/repository/allocation/IAllocationRepository'
 import { IConstructionRepository } from '../../../domain/data/repository/construction/IConstructionRepository'
 import { IDeleteConstructionService } from '../../../domain/service/construction/deleteConstruction/IDeleteConstructionService'
@@ -15,10 +14,10 @@ export class DeleteConstructionService implements IDeleteConstructionService {
 
     const allocationsToConstruction = await this._allocationRepository.getAllocations()
 
-    const hasAllocationActive = allocationsToConstruction.some(a => a.status === EStatus.active)
+    const hasAllocationActive = allocationsToConstruction.some(a => a.constructionId === id)
 
     if (hasAllocationActive) {
-      throw new Error('Construção possui alocações ativas')
+      throw new Error('Construção possui alocações.')
     }
 
     const constructionDeleted = await this._constructionRepository.deleteConstruction(id)

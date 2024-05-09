@@ -5,7 +5,7 @@ block head
   link(rel="stylesheet", href="./styles/user.css")
   script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
   script(src="https://unpkg.com/vanilla-masker@1.1.1/lib/vanilla-masker.js")
-  script(src="./javascript/user.js")
+
 
 block content
   .row
@@ -35,7 +35,8 @@ block content
                   th Bairro
                   th Cargo
                   th Nível de acesso
-                  th Ações
+                  th Editar
+                  th Excluir
               tbody
                 for userTable in users
                   tr
@@ -56,7 +57,8 @@ block content
                     td= userTable.categoryRules
                     td
                       button.btn.btn-warning.btn-rounded.btn-fw(class="editBtn" data-id=userTable.id ) Editar
-                      button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" onclick=`openModalDelete({ id: ${userTable.id}, name: '${userTable.name}'})` data-id=userTable.id) Excluir
+                    td  
+                      button.btn.btn-danger.btn-rounded.btn-fw(onclick=`openModalDelete({ id: ${userTable.id}, name: '${userTable.name}'})` data-id=userTable.id) Excluir
 
     // Modal para edição de usuário
     #editModal.modal
@@ -138,3 +140,5 @@ block content
             button.btn.btn-danger.btn-rounded.btn-fw.deleteBtn(onclick='deleteModalRequest()') Excluir
             button.btn.btn-light(onclick='closeModalDelete()') Cancelar
             label(id="errorMessageDelete", style="display: none; color: red;")
+
+    script(src="./javascript/user.js")

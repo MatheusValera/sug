@@ -31,8 +31,10 @@ block content
                   th ID da companhia
                   th Nome da companhia
                   th Status
+                  th Veja completo
                   if canEdit === true
-                    th Ações
+                    th Editar
+                    th Excluir
               tbody
                 each construction in constructions
                   tr
@@ -54,11 +56,15 @@ block content
                         label.badge.badge-danger Cancelada
                       else
                         label.badge.badge-info Concluída
+                    td
+                      a.btn.btn-outline-secondary.btn-rounded.btn-icon(href=`/construcoes/${construction.id}` target="_blank")
+                        i.ti-stats-up.text-success
                     if canEdit === true
                       td
                         if construction.status !== 'finished'
                           button.btn.btn-warning.btn-rounded.btn-fw(onclick=`openModal(${JSON.stringify(construction)})` data-id=construction.id ) Editar
-                        button.btn.btn-danger.btn-rounded.btn-fw(style="margin-left: 1rem;" onclick=`openModalDelete({ id: ${construction.id}, name: '${construction.name}'})` data-id=construction.id) Excluir
+                      td
+                        button.btn.btn-danger.btn-rounded.btn-fw(onclick=`openModalDelete({ id: ${construction.id}, name: '${construction.name}'})` data-id=construction.id) Excluir
 
     #editModal.modal
       .modal-content

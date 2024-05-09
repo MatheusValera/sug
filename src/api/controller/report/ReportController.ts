@@ -37,6 +37,7 @@ export class ReportController implements IController {
     this.router.get('/entregar-relatorio', requireLogin, this.sendMyReport.bind(this))
     this.router.get('/entregar-relatorio-final', requireLogin, this.sendMyReportFinal.bind(this))
     this.router.get('/meus-relatorios', requireLogin, this.viewMyReports.bind(this))
+    this.router.get('/relatorios/:id', requireLogin, this.viewReports.bind(this))
     this.router.post('/report/getReport', requireLogin, this.getReport.bind(this))
     this.router.post('/report/getReports', requireLogin, this.getReports.bind(this))
     this.router.post('/report/saveReport', requireLogin, this.saveReport.bind(this))
@@ -139,6 +140,57 @@ export class ReportController implements IController {
       hasFilterText: true,
       searchBy: 'nome do colaborador ou cargo',
       hasFilterDate: true,
+      notificationsPopUp
+    })
+  }
+
+  async viewReports (request: IRequest, response: IResponse): Promise<any> {
+    const id = request.params.id
+
+    if (!id) {
+      return
+    }
+
+    const email = request.user.email
+    const user = await this._userService.getUserService.handler('email', email) as IUser
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
+    const buttons = await getUserButtons(user)
+    const reportsRaw = await this._reportService.getReportsService.handler() as IReport[]
+
+    const schedules = await this._scheduleService.getSchedulesService.handler() as ISchedule[]
+
+    const users = await this._userService.getUsersService.handler() as IUser[]
+
+    const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
+
+    const reports = reportsRaw.filter(x => x.id === parseInt(id)).map(x => {
+      const user = users.filter(u => u.id === x.userId)[0]
+      const construction = constructions.filter(c => c.id === x.constructionId)[0]
+      const schedule = schedules.filter(c => c.id === x.scheduleId)[0]
+      return {
+        ...x,
+        user: {
+          name: user.name,
+          office: user.office
+        },
+        construction: {
+          name: construction.name
+        },
+        schedule: {
+          dateSchedule: schedule?.dateSchedule
+        }
+      }
+    })
+    const canAddReport = schedules.some(s => s.userId === user.id && s.status === EStatus.active)
+    response.status(200).render('./report-complete.pug', {
+      user,
+      ...buttons,
+      canAddReport,
+      report: reports[0],
+      canEdit: true,
+      hasFilterText: false,
+      searchBy: '',
+      hasFilterDate: false,
       notificationsPopUp
     })
   }
