@@ -25,7 +25,7 @@ async function saveReport (office) {
       scheduleId: parseInt(scheduleId.value),
       description: description.value,
       typeReport: office === 'Engenheiro' ? 'mensalEngenheiro' : 'mensal',
-      isValided: office === 'Engenheiro'
+      isValided: false
     }
 
     await axios.post('/report/saveReport', payload).then(result => (result))

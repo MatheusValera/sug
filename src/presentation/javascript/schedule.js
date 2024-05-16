@@ -236,7 +236,7 @@ function filterDate () {
   const trs = table.getElementsByTagName('tr')
 
   for (const tr of trs) {
-    const td1 = tr.getElementsByTagName('td')[8]
+    const td1 = tr.getElementsByTagName('td')[6]
 
     const value1 = td1?.textContent || td1?.innerText
     if (value1) {

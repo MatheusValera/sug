@@ -45,11 +45,22 @@ function requestModal () {
 
     const a = axios.post('/allocation/updateAllocation', payload)
       .then(result => {
-        if (result?.data?.message) { errorMessage.textContent = result.data.message } else { window.location.reload() }
-        errorMessage.style.display = 'block'
+        const r = JSON.parse(result.data)
+        closeModal()
+        let message = 'Operação realizada com sucesso!'
+        if (r.message) {
+          message = r.message
+        }
+        messageToModalP.textContent = message
+        messageToModalP.style.display = 'block'
+        informationModal.style.display = 'block'
       })
       .catch(function () {
-        window.location.href = '/alocacao'
+        closeModal()
+        console.log(messageToModal)
+        messageToModal.textContent = e.response.data.message
+        messageToModal.style.display = 'block'
+        informationModal.style.display = 'block'
       })
 
     console.log(a)
@@ -124,13 +135,13 @@ function filter () {
   const trs = table.getElementsByTagName('tr')
 
   for (const tr of trs) {
-    const td1 = tr.getElementsByTagName('td')[3]
-    const td2 = tr.getElementsByTagName('td')[6]
+    const td1 = tr.getElementsByTagName('td')[2]
+    const td2 = tr.getElementsByTagName('td')[4]
 
     const value1 = td1?.textContent || td1?.innerText
     const value2 = td2?.textContent || td2?.innerText
     if (value1) {
-      if (value1.toLowerCase().indexOf(input.toLowerCase()) > -1 || value2.toLowerCase().indexOf(input.toLowerCase()) > -1) {
+      if (value1.toLowerCase().indexOf(input.toLowerCase()) > -1 || value2?.toLowerCase().indexOf(input.toLowerCase()) > -1) {
         tr.style.display = ''
       } else {
         tr.style.display = 'none'

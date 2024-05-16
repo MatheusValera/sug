@@ -32,6 +32,7 @@ export class ScheduleController implements IController {
   setupRoutes (): void {
     this.router.get('/agendamento', requireLogin, isAdmin, this.handler.bind(this))
     this.router.get('/meus-agendamentos', requireLogin, this.handlerViewUserSchedules.bind(this))
+    this.router.get('/agendamentos', requireLogin, this.handlerViewAllSchedules.bind(this))
     this.router.post('/schedule/getSchedule', requireLogin, this.getSchedule.bind(this))
     this.router.post('/schedule/getSchedules', requireLogin, this.getSchedules.bind(this))
     this.router.post('/schedule/saveSchedule', requireLogin, isAdmin, this.saveSchedule.bind(this))
@@ -116,10 +117,55 @@ export class ScheduleController implements IController {
       ...buttons,
       schedules,
       users,
+      canPrint: false,
       constructions,
       allocations,
       hasFilterDate: true,
       hasFilterText: true,
+      searchBy: 'nome do colaborador ou construção',
+      notificationsPopUp
+    })
+  }
+
+  async handlerViewAllSchedules (request: IRequest, response: IResponse): Promise<any> {
+    const email = request.user.email
+    const user = await this._usersService.getUserService.handler('email', email) as IUser
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
+    const buttons = await getUserButtons(user)
+    const schedulesRaw = await this._scheduleService.getSchedulesService.handler() as ISchedule[]
+    const users = await this._usersService.getUsersService.handler() as IUser[]
+    const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
+    const allocations = await this._allocationService.getAllocationsService.handler() as IAllocation[]
+
+    const schedules = schedulesRaw.map(s => {
+      const user = users.filter(u => u.id === s.userId)[0]
+      const construction = constructions.filter(c => c.id === s.constructionId)[0]
+      const allocation = allocations.filter(a => a.id === s.allocationId)[0]
+
+      return {
+        ...s,
+        construction: {
+          name: construction.name
+        },
+        allocation: {
+          createdAt: allocation.createdAt
+        },
+        user: {
+          name: user.name
+        }
+      }
+    })
+    response.status(200).render('./schedule.pug', {
+      user,
+      canEdit: false,
+      ...buttons,
+      schedules,
+      users,
+      canPrint: true,
+      constructions,
+      allocations,
+      hasFilterText: true,
+      hasFilterDate: true,
       searchBy: 'nome do colaborador ou construção',
       notificationsPopUp
     })
@@ -160,8 +206,11 @@ export class ScheduleController implements IController {
       schedules,
       users,
       constructions,
+      canPrint: true,
       allocations,
+      hasFilterText: true,
       hasFilterDate: true,
+      searchBy: 'nome do colaborador ou construção',
       notificationsPopUp
     })
   }

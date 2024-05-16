@@ -21,7 +21,7 @@ export class SaveAllocationService implements ISaveAllocationService {
   async handler (allocation: Omit<IAllocation, 'id'>): Promise<IAllocation|Error> {
     // @ts-expect-error
     if (allocation.id) {
-      return new Error('A allocation who already has an ID cannot be saved.')
+      throw new Error('A allocation who already has an ID cannot be saved.')
     }
 
     const hasIncorrectValue = await this._validator.validate(allocation)
@@ -35,7 +35,7 @@ export class SaveAllocationService implements ISaveAllocationService {
     const hasAllocationToUSerInConstruction = allocationsToUser.some(x => x.constructionId === allocation.constructionId && x.status === EStatus.active)
 
     if (hasAllocationToUSerInConstruction) {
-      return new Error('Já existe uma alocação ativa para essa construção desse usuário')
+      throw new Error('Já existe uma alocação ativa para essa construção desse usuário')
     }
 
     allocation.createdAt = new Date()
@@ -47,13 +47,14 @@ export class SaveAllocationService implements ISaveAllocationService {
 
     if (user.office === 'Engenheiro') {
       const allocationToConstruction = await this._allocationRepository.getAllocationByConstructionId(allocation.constructionId)
-      const hasEngineer = allocationToConstruction.some(async (x) => {
-        const userA = await this._userRepository.getUser('id', x.userId)
+      let hasEngineer = false
+      for (const a of allocationToConstruction) {
+        const userA = await this._userRepository.getUser('id', a.userId)
         if (userA.office === 'Engenheiro') {
-          return true
+          hasEngineer = true
         }
-        return false
-      })
+        hasEngineer = false
+      }
 
       if (hasEngineer) {
         throw new Error('Já existe um engenheiro para essa construção')
@@ -84,7 +85,7 @@ export class SaveAllocationService implements ISaveAllocationService {
             allocationId: result.id,
             constructionId: construction.id,
             status: 'active'
-          })  
+          })
         }
       }
 
@@ -119,5 +120,5 @@ function getLastDaysOfMonth (startDate, endDate): any[] {
     dates.push(endDate)
   }
 
-  return dates
+  return dates.filter((item, index) => dates.indexOf(item) === index)
 }

@@ -66,7 +66,7 @@ block content
                       br
                       h5.mb-4=`👨‍🔧 Colaborador: ${report.user.name} - ${report.user.office}`
                       h5.mb-4=`📆 Data da criação do relatório: ${report.createdAt.toLocaleString('pt-Br').split(',')[0]}`
-                      h5.mb-4=`🔸 Status: ${report.isValided ? 'Sim' : 'Não'}`
+                      h5.mb-4=`🔸 Validado: ${report.isValided ? 'Sim' : 'Não'}`
                       .pws_none.pws_tabs_container.pws_tabs_horizontal.pws_tabs_horizontal_top.pws_tabs_noeffect
                         ul.pws_tabs_controll
                           li

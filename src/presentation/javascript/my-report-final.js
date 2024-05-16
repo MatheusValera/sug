@@ -24,7 +24,7 @@ async function saveReport () {
       scheduleId: parseInt(scheduleId.value),
       description: description.value,
       typeReport: 'final',
-      isValided: true
+      isValided: false
     }
 
     const result = await axios.post('/report/saveReport', payload).then(result => (result))
@@ -48,6 +48,22 @@ async function saveReport () {
 
 function reload () {
   window.location.href = '/meus-relatorios'
+}
+
+function concat (id) {
+  const elementoA = document.getElementById(id)
+  const elementoB = document.getElementById('description')
+
+  if (elementoA && elementoB) {
+    const valorElementoA = elementoA.textContent
+    const valorElementoB = elementoB.value
+
+    const novoValorB = valorElementoB + valorElementoA
+
+    elementoB.value = novoValorB
+  } else {
+    console.error('Um ou ambos os elementos não foram encontrados.')
+  }
 }
 
 async function completeReports () {
@@ -78,17 +94,25 @@ async function completeReports () {
       cel4.textContent = user.office
 
       const div = document.createElement('div')
+      div.id = report.id
       div.textContent = report.description
       div.style.wordBreak = 'break-word'
       div.style.width = '248px'
       div.style.maxHeight = '200px'
       div.style.overflowY = 'scroll'
       div.style.whiteSpace = 'break-spaces'
+
+      const cel5 = document.createElement('td')
+      cel5.innerHTML = `<button onclick="concat(${report.id})" type="button" class="btn btn-outline-secondary btn-rounded btn-icon">
+      <i class="ti-star text-primary"></i>
+    </button>`
+
       cel2.appendChild(div)
 
       tr.appendChild(cel2)
       tr.appendChild(cel3)
       tr.appendChild(cel4)
+      tr.appendChild(cel5)
       tableReports.getElementsByTagName('tbody')[0].appendChild(tr)
     }
   } catch (error) {

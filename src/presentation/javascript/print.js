@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 function print_specific_div_content () {
-  const win = window.open('', '', 'left=0,top=0,width=552,height=477,toolbar=0,scrollbars=0,status =0')
+  const win = window.open('', '', 'left=0,top=0,width=auto,height=auto,toolbar=0,scrollbars=0,status =0')
 
   let content = `<html>
 <link rel="stylesheet" href="/vendors/feather/feather.css"/>

@@ -30,6 +30,7 @@ export class AllocationController implements IController {
   setupRoutes (): void {
     this.router.get('/alocacao', requireLogin, this.handler.bind(this))
     this.router.get('/minhas-alocacoes', requireLogin, this.handlerViewMyAllocations.bind(this))
+    this.router.get('/alocacoes', requireLogin, this.handlerViewAllocations.bind(this))
     this.router.post('/allocation/getAllocation', requireLogin, this.getAllocation.bind(this))
     this.router.post('/allocation/getAllocations', requireLogin, this.getAllocations.bind(this))
     this.router.post('/allocation/saveAllocation', requireLogin, isAdmin, this.saveAllocation.bind(this))
@@ -73,9 +74,49 @@ export class AllocationController implements IController {
       user,
       ...buttons,
       allocations,
+      canPrint: false,
       users,
       constructions: constructionsToSelect,
       canEdit: true,
+      hasFilterDate: false,
+      hasFilterText: true,
+      searchBy: 'colaborador ou construção',
+      notificationsPopUp
+    })
+  }
+
+  async handlerViewAllocations (request: IRequest, response: IResponse): Promise<any> {
+    const email = request.user.email
+    const user = await this._userService.getUserService.handler('email', email) as IUser
+    const notificationsPopUp = await this._notifications.handler(user.id) || []
+    const buttons = await getUserButtons(user)
+    const users = await this._userService.getUsersService.handler() as IUser[]
+    const constructions = await this._constructionService.getConstructionsService.handler() as IConstruction[]
+
+    const allocationsRaw = await this._allocationService.getAllocationsService.handler() as IAllocation[]
+    const allocations = allocationsRaw.map(a => {
+      const user = users.filter(u => u.id === a.userId)[0]
+      const construction = constructions.filter(c => c.id === a.constructionId)[0]
+
+      return {
+        ...a,
+        user: {
+          name: user.name,
+          office: user.office
+        },
+        construction: {
+          name: construction.name
+        }
+      }
+    })
+    response.status(200).render('./allocation.pug', {
+      user,
+      ...buttons,
+      allocations,
+      users,
+      constructions,
+      canPrint: true,
+      canEdit: false,
       hasFilterDate: false,
       hasFilterText: true,
       searchBy: 'colaborador ou construção',
@@ -114,6 +155,7 @@ export class AllocationController implements IController {
       users,
       constructions,
       canEdit: false,
+      canPrint: true,
       hasFilterDate: false,
       hasFilterText: true,
       searchBy: 'colaborador ou construção',
@@ -156,11 +198,7 @@ export class AllocationController implements IController {
         return BadRequestResponse.handler(res, 'No data provided.')
       }
 
-      let allocation = await this._allocationService.saveAllocationService.handler(allocationRaw)
-
-      if (allocation instanceof Error) {
-        allocation = { message: allocation.message } as unknown as Error
-      }
+      const allocation = await this._allocationService.saveAllocationService.handler(allocationRaw)
 
       return SuccessResponse.handler(res, JSON.stringify(allocation))
     } catch (error) {

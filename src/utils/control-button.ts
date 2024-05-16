@@ -16,6 +16,12 @@ const buttonsAllocationFeature = [
   },
   {
     category: 3,
+    href: '/alocacoes',
+    name: 'Todas as alocações',
+    adminHasNecessary: false
+  },
+  {
+    category: 3,
     href: '/alocacao',
     name: 'Gerenciar alocações',
     adminHasNecessary: false
@@ -49,6 +55,12 @@ const buttonsScheduleFeature = [
   },
   {
     category: 3,
+    href: '/agendamentos',
+    name: 'Ver todos agendamentos',
+    adminHasNecessary: false
+  },
+  {
+    category: 3,
     href: '/agendamento',
     name: 'Gerenciar agendamentos',
     adminHasNecessary: false
@@ -72,6 +84,12 @@ const buttonsReportFeature = [
     category: 3,
     href: '/relatorio',
     name: 'Gerenciar relatórios',
+    adminHasNecessary: false
+  },
+  {
+    category: 3,
+    href: '/relatorios',
+    name: 'Ver todos relatórios',
     adminHasNecessary: false
   },
   {

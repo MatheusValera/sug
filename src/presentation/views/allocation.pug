@@ -7,15 +7,20 @@ block head
   script(src="https://unpkg.com/vanilla-masker@1.1.1/lib/vanilla-masker.js")
 
 block content
-  .row
+  .row(id= 'divToPrint')
     .col-lg-16.grid-margin.stretch-card
       .card
         .card-body
-          h4.card-title Alocações
-          p.card-description
-            | Aqui você pode ver as alocações
-          if canEdit === true 
-            button.btn.btn-primary.btn-lg.btn-block(onclick="openModal()") Adicionar
+          .d-sm-flex.justify-content-between.align-items-start
+            h4.card-title Alocações
+              p.card-description
+                | Aqui você pode ver as alocações
+            if canPrint === true
+              div.btn.btn-otline-dark(onclick="print_specific_div_content()")
+                i.icon-printer
+                |  Print
+            if canEdit === true 
+              button.btn.btn-primary.btn-lg.btn-block(onclick="openModal()") Adicionar
 
           .table-responsive
             table.table(id="table")
