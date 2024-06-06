@@ -212,8 +212,8 @@ function filter () {
   const trs = table.getElementsByTagName('tr')
 
   for (const tr of trs) {
-    const td1 = tr.getElementsByTagName('td')[3]
-    const td2 = tr.getElementsByTagName('td')[5]
+    const td1 = tr.getElementsByTagName('td')[2]
+    const td2 = tr.getElementsByTagName('td')[3]
 
     const value1 = td1?.textContent || td1?.innerText
     const value2 = td2?.textContent || td2?.innerText

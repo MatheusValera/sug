@@ -159,7 +159,7 @@ function filter () {
 
   for (const tr of trs) {
     const td1 = tr.getElementsByTagName('td')[1]
-    const td2 = tr.getElementsByTagName('td')[6]
+    const td2 = tr.getElementsByTagName('td')[8]
 
     const value1 = td1?.textContent || td1?.innerText
     const value2 = td2?.textContent || td2?.innerText
