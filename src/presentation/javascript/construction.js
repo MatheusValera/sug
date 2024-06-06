@@ -144,7 +144,7 @@ function deleteModalRequest () {
     .catch(e => {
       closeModalDelete()
       console.log(e)
-      messageToModal.textContent = 'Erro ao excluir essa construção. Existe alocação para essa construção.'
+      messageToModal.textContent = e.response.data.message
       messageToModal.style.display = 'block'
       informationModal.style.display = 'block'
     })

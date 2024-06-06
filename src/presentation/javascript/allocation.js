@@ -121,7 +121,7 @@ async function deleteModalRequest () {
     .catch(e => {
       closeModalDelete()
       console.log(e)
-      messageToModal.textContent = 'Erro ao excluir essa alocação. Existe agendamento para essa alocação.'
+      messageToModal.textContent = e.response.data.message
       messageToModal.style.display = 'block'
       informationModal.style.display = 'block'
     })
